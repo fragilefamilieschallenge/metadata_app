@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>FFCWS Metadata | {% block title %}{% endblock %}</title>
+
+        <!-- Styling -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}?1">
+        <link rel="stylesheet" href="{{ url_for('static', filename='open-iconic.min.css') }}?1">
+        <link rel="stylesheet" href="{{ url_for('static', filename='ff_metadata.css') }}?4">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato|Comfortaa">
+
+        <!-- Scripts -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+    </head>
+
+    <body>
+
+        <nav class="navbar navbar-default">
+          <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                <li role="presentation"><a href="{{ url_for('index') }}"><span class="oi" data-glyph="home"></span> Home </a></li>
+                <li role="presentation"><a href="{{ url_for('search') }}"><span class="oi" data-glyph="puzzle-piece"></span> Browse variables</a></li>
+                <!-- <li role="presentation"><a href="{{ url_for('metadata') }}"><span class="oi" data-glyph="book"></span> Download metadata</a></li> -->
+                <li role="presentation"><a href="http://fragilefamilies.princeton.edu/"><span class="oi" data-glyph="globe"></span> About FFCWS</a></li>
+            </ul>
+          </div>
+        </nav>
+
+        <div class="mainblock">
+            {% block body %}{% endblock %}
+        </div>
+
+    </body>

@@ -1,0 +1,219 @@
+{% extends "wireframe.html" %}
+
+{% macro toggle(i, j) -%}
+    {% if i == j %}
+        btn-success
+    {% endif %}
+{%- endmacro %}
+
+{% block title %}{{ var_data.new_name }}{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>{{ var_data.new_name }}</h2>
+            <p class="lead">{{ var_data.varlab }}</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Variable metadata -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" href="#collapse_meta">
+                            Metadata
+                        </a>
+                    </h4>
+                </div>
+                <!-- TODO: I don't like how these toggles are hard-coded in here. This logic belongs in the dispatch script -->
+                <div id="collapse_meta" class="panel-collapse collapse in" role="tabpanel">
+                    <div class="panel-body">
+                        <h5>Wave</h5>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-default {{ toggle(i=1, j=var_data.wave|int) }}">Baseline</button>
+                            <button type="button" class="btn btn-default {{ toggle(i=2, j=var_data.wave|int) }}">Year 1</button>
+                            <button type="button" class="btn btn-default {{ toggle(i=3, j=var_data.wave|int) }}">Year 3</button>
+                            <button type="button" class="btn btn-default {{ toggle(i=4, j=var_data.wave|int) }}">Year 5</button>
+                            <button type="button" class="btn btn-default {{ toggle(i=5, j=var_data.wave|int) }}">Year 9</button>
+                            <button type="button" class="btn btn-default {{ toggle(i=6, j=var_data.wave|int) }}">Year 15</button>
+                        </div>
+                        <br/><br/>
+
+                        <h5>Respondent</h5>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-default {{ toggle(i='k', j=var_data.respondent) }}">Child</button>
+                            <button type="button" class="btn btn-default {{ toggle(i='f', j=var_data.respondent) }}">Father</button>
+                            <button type="button" class="btn btn-default {{ toggle(i='m', j=var_data.respondent) }}">Mother</button>
+                            <button type="button" class="btn btn-default {{ toggle(i='q', j=var_data.respondent) }}">Couple</button>
+                            <button type="button" class="btn btn-default {{ toggle(i='t', j=var_data.respondent) }}">Teacher</button>
+                            <button type="button" class="btn btn-default {{ toggle(i='n', j=var_data.respondent) }}">Non-parental primary caregiver</button>
+                            <button type="button" class="btn btn-default {{ toggle(i='d', j=var_data.respondent) }}">Child care center (survey)</button>
+                            <button type="button" class="btn btn-default {{ toggle(i='e', j=var_data.respondent) }}">Child care center (observation)</button>
+                            <button type="button" class="btn btn-default {{ toggle(i='h', j=var_data.respondent) }}">In-home (survey)</button>
+                            <button type="button" class="btn btn-default {{ toggle(i='o', j=var_data.respondent) }}">In-home (observation)</button>
+                            <button type="button" class="btn btn-default {{ toggle(i='r', j=var_data.respondent) }}">Family care (survey)</button>
+                            <button type="button" class="btn btn-default {{ toggle(i='s', j=var_data.respondent) }}">Family care (observation)</button>
+                            <button type="button" class="btn btn-default {{ toggle(i='u', j=var_data.respondent) }}">Post child and family care observation</button>
+                        </div>
+                        <br/><br/>
+
+                        <h5>Source</h5>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-default {{ toggle(i='questionnaire', j=var_data.data_source) }}">Questionnaire</button>
+                            <button type="button" class="btn btn-default {{ toggle(i='constructed', j=var_data.data_source) }}">Constructed</button>
+                            <button type="button" class="btn btn-default {{ toggle(i='weight', j=var_data.data_source) }}">Survey weight</button>
+                            <button type="button" class="btn btn-default {{ toggle(i='idnum', j=var_data.data_source) }}">ID number</button>
+                        </div>
+                        <br/><br/>
+
+                        <h5>City scope</h5>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-default {{ toggle(i=2, j=var_data.scope|int) }}">2 cities</button>
+                            <button type="button" class="btn btn-default {{ toggle(i=18, j=var_data.scope|int) }}">18 cities</button>
+                            <button type="button" class="btn btn-default {{ toggle(i=19, j=var_data.scope|int) }}">19 cities</button>
+                            <button type="button" class="btn btn-default {{ toggle(i=20, j=var_data.scope|int) }}">20 cities</button>
+                        </div>
+                        <br/><br/>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data type and data quality -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" href="#collapse_type">
+                            Data type and quality
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse_type" class="panel-collapse collapse in" role="tabpanel">
+                    <div class="panel-body">
+                        <h5>Type</h5>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-default {{ toggle(i='bin', j=var_data.data_type) }}">Binary</button>
+                            <button type="button" class="btn btn-default {{ toggle(i='uc', j=var_data.data_type) }}">Categorical</button>
+                            <button type="button" class="btn btn-default {{ toggle(i='oc', j=var_data.data_type) }}">Ordinal</button>
+                            <button type="button" class="btn btn-default {{ toggle(i='cont', j=var_data.data_type) }}">Continuous</button>
+                            <button type="button" class="btn btn-default {{ toggle(i='string', j=var_data.data_type) }}">String</button>
+                        </div>
+                        <br/><br/>
+
+                        <h5>Warnings</h5>
+                        {% if var_data.warning|int == 0 %}
+                            <em>None.</em>
+                        {% elif var_data.warning|int == 1%}
+                            <em>Misordered categorical, outcomes do not have constant scale</em>
+                        {% elif var_data.warning|int == 2%}
+                            <em>Variable has outcome(s) which override a continuous answer set</em>
+                        {% elif var_data.warning|int == 3%}
+                            <em>Variable pertaining to period of time has misordered outcomes</em>
+                        {% elif var_data.warning|int == 4%}
+                            <em>A unique outcome is coded as a negative value</em>
+                        {% elif var_data.warning|int == 5%}
+                            <em>Missing data is coded as something other than the default, i.e as a positive value</em>
+                        {% elif var_data.warning|int == 6%}
+                            <em>A non-constructed Yes/No variable that has “No” coded to 0 instead of 2</em>
+                        {% else %}
+                            <em>Warning: {{ var_data.warning|int }}</em>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <!-- Responses -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" href="#collapse_response">
+                            Response codes
+                        </a>
+                        <!-- TODO: Split by missing codes, substantive codes -->
+                    </h4>
+                </div>
+                <div id="collapse_response" class="panel-collapse collapse in" role="tabpanel">
+                    <div class="panel-body">
+                        <ul>
+                        <!-- TODO: This could be formatted a little more nicely (why is the numeric code also in the label field?) -->
+                        {% for r in responses %}
+                            <li>{{ r.label }}</li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Topic and survey section -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" href="#collapse_topic">
+                            Topic
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse_topic" class="panel-collapse collapse in" role="tabpanel">
+                    <div class="panel-body">
+                        <!-- TODO: Make these click through to a search on this topic? -->
+                        {% for t in topics %}
+                            <p>{{ t.topic }}</p>
+                        {% endfor %}
+                        <!-- TODO: Need data mapping the survey section code to the name of that section -->
+                        <p><strong>Survey section:</strong> {{ var_data.section|capitalize }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related variables -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" href="#collapse_related">
+                            Related variables
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse_related" class="panel-collapse collapse in" role="tabpanel">
+
+                    <table class="table table-hover">
+                        <tr>
+                            <th>Variable</th>
+                            <th>Description</th>
+                            <th>Wave</th>
+                            <th>Respondent</th>
+                            <th>Source</th>
+                            <th>Scope</th>
+                            <th>Type</th>
+                        </tr>
+                        {% for var in neighbors %}
+                        <tr>
+                            <td><a href="{{ url_for('var_page', new_name = var.new_name) }}">{{var.new_name}}</a></td>
+                            <td>{{var.varlab}}</td>
+                            <td><span class="label label-success">{{var.wave}}</span></td>
+                            <td><span class="label label-success">{{var.respondent}}</span></td>
+                            <td><span class="label label-success">{{var.data_source}}</span></td>
+                            <td><span class="label label-success">{{var.scope}}</span></td>
+                            <td><span class="label label-success">{{var.data_type}}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+
+                    <!-- <div class="panel-body">
+                        <ul>
+                        {% for var in neighbors %}
+                            {% if var.new_name != var_data.new_name %}
+                            <li><a href="{{ url_for('var_page', new_name=var.new_name) }}">{{ var.new_name }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
