@@ -8,6 +8,7 @@
 from csv import DictReader
 import subprocess
 import os
+import logging
 
 from flask import Flask, render_template, url_for, g, redirect, request
 from dbutils import with_db, query
@@ -103,15 +104,23 @@ def search(db):
         # Find results matching search string
         if len(request.form["variable-search"]) > 0 or len(request.form.keys()) > 0:
             q = """SELECT *
-                   FROM variable
-                   WHERE ((new_name LIKE CONCAT('%%','%s','%%'))
-                    OR (varlab LIKE CONCAT('%%','%s','%%')))
-                   AND wave IN %s
+                   FROM (SELECT DISTINCT new_name
+                         FROM variable
+                         WHERE ((new_name LIKE CONCAT('%%','%s','%%'))
+                             OR (varlab LIKE CONCAT('%%','%s','%%')))
+                         UNION ALL
+                         SELECT DISTINCT new_name
+                         FROM response
+                         WHERE label LIKE CONCAT('%%','%s','%%')) q
+                   LEFT JOIN variable v
+                   ON q.new_name = v.new_name
+                   WHERE wave IN %s
                    AND respondent IN %s
                    AND data_source IN %s
                    AND scope IN %s
-                   AND data_type IN %s
+                   AND data_type IN %s;
                    """ % (request.form["variable-search"],
+                          request.form["variable-search"],
                           request.form["variable-search"],
                           repr(constraints["wave"]).replace("[", "(").replace("]", ")").replace("u'", "'"),
                           repr(constraints["respondent"]).replace("[", "(").replace("]", ")").replace("u'", "'"),
@@ -119,6 +128,23 @@ def search(db):
                           repr(constraints["scope"]).replace("[", "(").replace("]", ")").replace("u'", "'"),
                           repr(constraints["data_type"]).replace("[", "(").replace("]", ")").replace("u'", "'"))
             results = query(db, q, fetchall=True)
+
+            # for result in results:
+            #   for key in result.keys()
+            #       if key = "wave":
+            #           if result[key] = 1:
+            #
+
+            # Log query
+            print "\n Session ID: %s" % request.cookies["session"]
+            print "Searched for: %s" % request.form["variable-search"]
+            print "Filters: %s \n" % repr(constraints)
+            application.logger.info("Searched: %s" % q)
+    else:
+        # Log that we're starting a new search
+        print "\n Session ID: %s" % request.cookies["session"]
+        print "Navigated to search \n"
+        application.logger.info("Navigated to search")
 
     return render_template('search.html', results=results, constraints=constraints, search_query=search_query)
 
@@ -146,6 +172,11 @@ def var_page(db, new_name):
     # Topic
     q4 = "SELECT * FROM topic WHERE new_name = '%s'" % new_name
     topics = query(db, q4, fetchall=True)
+
+    # Log query
+    print "\n Session ID: %s" % request.cookies["session"]
+    print "Variable displayed: %s \n" % new_name
+    application.logger.info("Variable displayed: %s" % new_name)
 
     # Render page
     return render_template('variable.html', var_data=var_data, neighbors=neighbors, responses=responses, topics=topics)
