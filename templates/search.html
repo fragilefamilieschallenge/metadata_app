@@ -15,15 +15,14 @@
             <div class="col-md-12">
                 <h2>Search variables</h2>
                 <p></p>
+                <hr>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
-                <hr>
+            <div class="col-md-4">
                 <form action="{{ url_for('search')}}" method="POST">
                     <div class="form-group">
                         <div class="input-group">
-                            <!-- TODO: Search response fields -->
                             <input type="search-term" class="form-control" name="variable-search" placeholder="Search for..." {% if search_query %} value="{{ search_query }}" {% endif %}>
                             <span class="input-group-btn">
                                 <button type="submit" class="btn btn-default">Search &#187;</button>
@@ -39,8 +38,6 @@
                                 </a>
                             </h4>
                         </div>
-                        <!-- TODO: I don't like how these toggles are hard-coded in here. This logic belongs in the dispatch script -->
-                        <!-- TODO: Toggle selected by default -->
                         <div id="collapse_filter" class="panel-collapse collapse in" role="tabpanel">
                             <div class="panel-body">
                                 <h5>Wave</h5>
@@ -91,56 +88,85 @@
                                 <br/><br/>
 
                                 <h5>Type</h5>
-                                <!-- TODO: Ordinal to ordered categorical, categorical to unordered categorical -->
                                 <div class="btn-group" role="group" data-toggle="buttons">
                                     <label class="btn btn-default {{selected('bin', 'data_type')}}"><input type="checkbox" name="data_type" value="bin" autocomplete="off">Binary</label>
-                                    <label class="btn btn-default {{selected('uc', 'data_type')}}"><input type="checkbox" name="data_type" value="uc" autocomplete="off">Categorical</label>
-                                    <label class="btn btn-default {{selected('oc', 'data_type')}}"><input type="checkbox" name="data_type" value="oc" autocomplete="off">Ordinal</label>
+                                    <label class="btn btn-default {{selected('uc', 'data_type')}}"><input type="checkbox" name="data_type" value="uc" autocomplete="off">Unordered categorical</label>
+                                    <label class="btn btn-default {{selected('oc', 'data_type')}}"><input type="checkbox" name="data_type" value="oc" autocomplete="off">Ordered categorical</label>
                                     <label class="btn btn-default {{selected('cont', 'data_type')}}"><input type="checkbox" name="data_type" value="cont" autocomplete="off">Continuous</label>
                                     <label class="btn btn-default {{selected('string', 'data_type')}}"><input type="checkbox" name="data_type" value="string" autocomplete="off">String</label>
                                 </div>
                                 <br/><br/>
 
-                                <!-- TODO: Filter/search by topic/tag -->
                             </div>
                         </div>
                     </div>
 
                 </form>
 
+
             </div>
-            <div class="col-md-6">
+            <div class="col-md-8">
                 {% if results %}
-                <!-- TODO: Enable "start over" -->
+
+                <!-- Display search results -->
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4 class="panel-title">Search results</h4>
+                        <h4 class="panel-title">Search results ({{results|length}})</h4>
                     </div>
-                    <table class="table table-hover">
-                        <tr>
-                            <th>Variable</th>
-                            <th>Description</th>
-                            <th>Wave</th>
-                            <th>Respondent</th>
-                            <th>Source</th>
-                            <th>Scope</th>
-                            <th>Type</th>
-                        </tr>
-                        {% for rvar in results %}
-                        <tr>
-                            <td><a href="{{ url_for('var_page', new_name = rvar.new_name) }}">{{rvar.new_name}}</a></td>
-                            <td>{{rvar.varlab}}</td>
-                            <td><span class="label label-success">{{rvar.wave}}</span></td>
-                            <td><span class="label label-success">{{rvar.respondent}}</span></td>
-                            <td><span class="label label-success">{{rvar.data_source}}</span></td>
-                            <td><span class="label label-success">{{rvar.scope}}</span></td>
-                            <td><span class="label label-success">{{rvar.data_type}}</span></td>
-                        </tr>
-                        {% endfor %}
-                    </table>
+                    <div class="table-responsive" style="padding: 1%">
+                        <table id="results" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Variable</th>
+                                    <th>Description</th>
+                                    <th>Wave</th>
+                                    <th>Respondent</th>
+                                    <th>Source</th>
+                                    <th>Scope</th>
+                                    <th>Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for rvar in results %}
+                                <tr>
+                                    <td><a href="{{ url_for('var_page', new_name = rvar.new_name) }}">{{rvar.new_name}}</a></td>
+                                    <td>{{rvar.varlab}}</td>
+                                    <td><span class="label label-success">{{rvar.wave}}</span></td>
+                                    <td><span class="label label-success">{{rvar.respondent}}</span></td>
+                                    <td><span class="label label-success">{{rvar.data_source}}</span></td>
+                                    <td><span class="label label-success">{{rvar.scope}}</span></td>
+                                    <td><span class="label label-success">{{rvar.data_type}}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Manipulate results (reset, copy)-->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">Options</h4>
+                    </div>
+                    <div class="panel-body">
+                        <a href="{{ url_for('search') }}" role="button" class="btn btn-danger"><span class="oi" data-glyph="trash"></span> Start over </a>
+                        <!-- <a href="{{ url_for('search') }}" role="button" class="btn btn-success"><span class="oi" data-glyph="clipboard"></span> Copy variable names</a> -->
+                        <!-- <a href="{{ url_for('search') }}" role="button" class="btn btn-success"><span class="oi" data-glyph="data-transfer-download"></span> Download as CSV</a> -->
+                    </div>
                 </div>
                 {% endif %}
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block foot %}
+    <script>
+        $(document).ready(function(){
+            $('#results').DataTable( {
+                "searching": false,
+                "lengthChange": false
+            });
+        });
+    </script>
 {% endblock %}

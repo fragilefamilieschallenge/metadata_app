@@ -8,11 +8,14 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}?1">
         <link rel="stylesheet" href="{{ url_for('static', filename='open-iconic.min.css') }}?1">
         <link rel="stylesheet" href="{{ url_for('static', filename='ff_metadata.css') }}?4">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato|Comfortaa">
+        <link rel="icon" href="data:,"> <!-- TODO: Make a favicon instead of suppressing it -->
 
         <!-- Scripts -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+        <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     </head>
 
     <body>
@@ -33,3 +36,9 @@
         </div>
 
     </body>
+
+    <footer>
+            {% block foot %}{% endblock %}
+    </footer>
+
+</html>
