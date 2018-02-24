@@ -106,6 +106,7 @@
 
             </div>
             <div class="col-md-8">
+
                 {% if results %}
 
                 <!-- Display search results -->
@@ -129,8 +130,8 @@
                             <tbody>
                                 {% for rvar in results %}
                                 <tr>
-                                    <td><a href="{{ url_for('var_page', new_name = rvar.new_name) }}">{{rvar.new_name}}</a></td>
-                                    <td>{{rvar.varlab}}</td>
+                                    <td>{{rvar.name}}</td>
+                                    <td>{{rvar.label}}</td>
                                     <td><span class="label label-success">{{rvar.wave}}</span></td>
                                     <td><span class="label label-success">{{rvar.respondent}}</span></td>
                                     <td><span class="label label-success">{{rvar.data_source}}</span></td>
@@ -143,7 +144,7 @@
                     </div>
                 </div>
 
-                <!-- Manipulate results (reset, copy)-->
+                <!-- Manipulate results (reset, copy, export)-->
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">Options</h4>
