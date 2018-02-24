@@ -231,8 +231,8 @@ def search():
         # Filter by search query
         search_query = request.form["variable-search"]
         if len(search_query) > 0:
-            # TODO: This doesn't work
-            qobj = qobj.filter(Variable.label.like('%{}%'.format(search_query)))
+            qobj = qobj.filter(Variable.label.like('%%{}%%'.format(search_query)))
+            # TODO: Should this search other fields?
 
         # Filter by fields
         constraints = dict()
