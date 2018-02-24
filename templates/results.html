@@ -1,0 +1,10 @@
+{% block results %}
+<h3>Search results</h3>
+<hr>
+<ul>
+{% for rvar in results %}
+    <li>{{rvar.new_name}}</li>
+{% endfor %}
+<!-- <li><a href="{{ url_for('grit') }}">grit &#187;</a></li> -->
+</ul>
+{% endblock %}
