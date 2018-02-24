@@ -17,7 +17,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-5">
             <!-- Variable metadata -->
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -125,7 +125,7 @@
             </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-7">
             <!-- Responses -->
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -171,15 +171,7 @@
 
             <!-- Related variables -->
             <div class="panel panel-default">
-                <!-- <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a role="button" data-toggle="collapse" href="#collapse_related">
-                            Related variables
-                        </a>
-                    </h4>
-                </div> -->
                 <div id="collapse_related" class="panel-collapse collapse in" role="tabpanel">
-
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h4 class="panel-title">Similar variables ({{results|length}})</h4>
@@ -215,34 +207,9 @@
                             </table>
                         </div>
                     </div>
-
-                    <!-- <table class="table table-hover">
-                        <tr>
-                            <th>Variable</th>
-                            <th>Description</th>
-                            <th>Wave</th>
-                            <th>Respondent</th>
-                            <th>Source</th>
-                            <th>Scope</th>
-                            <th>Type</th>
-                        </tr>
-                        {% for var in neighbors %}
-                            {% if var.name != var_data.name %}
-                            <tr>
-                                <td><a href="{{ url_for('var_page', varname = var.name) }}">{{var.name}}</a></td>
-                                <td>{{var.varlab}}</td>
-                                <td><span class="label label-success">{{var.wave}}</span></td>
-                                <td><span class="label label-success">{{var.respondent}}</span></td>
-                                <td><span class="label label-success">{{var.data_source}}</span></td>
-                                <td><span class="label label-success">{{var.scope}}</span></td>
-                                <td><span class="label label-success">{{var.data_type}}</span></td>
-                            </tr>
-                            {% endif %}
-                        {% endfor %}
-                    </table> -->
-
                 </div>
             </div>
+
         </div>
     </div>
 </div>
