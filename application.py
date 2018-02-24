@@ -151,8 +151,7 @@ def load_db():
 ## User views ##
 
 @application.route('/variables', methods=['GET', 'POST'])
-@with_db(dbms)
-def search(db):
+def search():
     results = None
     constraints = None
     search_query = None
