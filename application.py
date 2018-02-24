@@ -156,6 +156,7 @@ def search():
     constraints = None
     search_query = None
     if request.method == "POST":
+        print request.form.items()
         # search_query = request.form["variable-search"]
         #
         # # Set filtering constraints
@@ -168,6 +169,7 @@ def search():
         #
         # # Find results matching search string
         # if len(request.form["variable-search"]) > 0 or len(request.form.keys()) > 0:
+        #     results = Variable.query.filter_by()
         #     q = """SELECT *
         #            FROM (SELECT DISTINCT new_name
         #                  FROM variable
