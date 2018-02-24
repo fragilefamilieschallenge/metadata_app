@@ -3,9 +3,11 @@
 # Author: Alex Kindel
 # Last modified: 23 February 2018
 
+import os
 from csv import DictReader
+from collections import OrderedDict
 
-from flask import Flask, render_template, url_for, request
+from flask import Flask, render_template, url_for, request, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_basicauth import BasicAuth
 
@@ -150,22 +152,46 @@ def load_db():
 
 ## User views ##
 
-valid_filters = {"wave": ["1", "2", "3", "4", "5", "6"],
-                 "respondent": ["k", "f", "m", "q", "t", "n", "d", "e", "h", "o", "r", "s", "u"],
-                 "data_source": ["questionnaire", "constructed", "weight", "idnum"],
-                 "scope": ["2", "18", "19", "20"],
-                 "data_type": ["bin", "uc", "oc", "cont", "string"]}
-
-def filter_x(query_obj, field, domain):
-    # Construct argument to filter for each value in domain
-    filt = "Variable.{}.in_(domain)".format(field)
-    query_obj = query_obj.filter(eval(filt))
-
-    # Return modified query
-    return query_obj
-
 @application.route('/variables', methods=['GET', 'POST'])
 def search():
+    # Define valid search filters + domain-label map for each filter
+    filter_labels = OrderedDict([("wave", "Wave"),
+                                 ("respondent", "Respondent"),
+                                 ("data_source", "Source"),
+                                 ("scope", "City scope"),
+                                 ("data_type", "Variable type")])
+    valid_filters = {"wave": OrderedDict([("1", "Baseline"),
+                                         ("2", "Year 1"),
+                                         ("3", "Year 3"),
+                                         ("4", "Year 5"),
+                                         ("5", "Year 9"),
+                                         ("6", "Year 15")]),
+                     "respondent": OrderedDict([("k", "Child"),
+                                               ("f", "Father"),
+                                               ("m", "Mother"),
+                                               ("q", "Couple"),
+                                               ("t", "Teacher"),
+                                               ("n", "Non-parental primary caregiver"),
+                                               ("d", "Child care center (survey)"),
+                                               ("e", "Child care center (observation)"),
+                                               ("h", "In-home (survey)"),
+                                               ("o", "In-home (observation)"),
+                                               ("r", "Family care (survey)"),
+                                               ("s", "Family care (observation)"),
+                                               ("u", "Post child and family care observation")]),
+                     "data_source": OrderedDict([("questionnaire", "Questionnaire"),
+                                                ("constructed", "Constructed"),
+                                                ("weight", "Survey weight"),
+                                                ("idnum", "ID number")]),
+                     "scope": OrderedDict([("2", "2 cities"),
+                                          ("18", "18 cities"),
+                                          ("19", "19 cities"),
+                                          ("20", "20 cities")]),
+                     "data_type": OrderedDict([("bin", "Binary"),
+                                              ("uc", "Unordered categorica"),
+                                              ("oc", "Ordered categorical"),
+                                              ("cont", "Continuous"),
+                                              ("string", "String")])}
     results = None
     constraints = None
     search_query = None
@@ -181,7 +207,9 @@ def search():
         # Filter by fields
         constraints = dict()
         for field in set(valid_filters.keys()).intersection(request.form.keys()):
-            qobj = filter_x(qobj, field, request.form.getlist(field))
+            domain = request.form.getlist(field)
+            filt = "Variable.{}.in_(domain)".format(field)
+            qobj = qobj.filter(eval(filt))
             constraints[field] = request.form.getlist(field)
 
         # Get all matches
@@ -194,33 +222,44 @@ def search():
         # TODO
         pass
 
-    return render_template('search.html', results=results, constraints=constraints, search_query=search_query)
+    return render_template('search.html', results=results, constraints=constraints,
+                           search_query=search_query, filtermeta=valid_filters, filterlabs=filter_labels)
 
 @application.route('/<varname>')
 def var_page(varname):
-    # Get variable data
-    var_data = Variable.query.filter(Variable.name == varname).first()
+    if not varname:
+        # Abort early if Flask tries to load this page with no variable
+        return redirect(url_for('search'))
+    else:
+        # Get variable data
+        var_data = Variable.query.filter(Variable.name == varname).first()
 
-    # Grouped variables
-    neighbors = Variable.query.filter(Variable.group_id == var_data.group_id).all()
+        # Grouped variables
+        neighbors = Variable.query.filter(Variable.group_id == var_data.group_id).all()
 
-    # Responses
-    responses = Response.query.filter(Response.name == varname).all()
-    if responses:
-        responses = sorted(responses, key=lambda x: int(x.label.strip().replace(":", "").split(" ")[0]), reverse=True)
+        # Responses
+        responses = Response.query.filter(Response.name == varname).all()
+        if responses:
+            responses = sorted(responses, key=lambda x: int(x.label.strip().replace(":", "").split(" ")[0]), reverse=True)
 
-    # Topic
-    topics = Topic.query.filter(Topic.name == varname).all()
+        # Topic
+        topics = Topic.query.filter(Topic.name == varname).all()
 
-    # Log query
-    # TODO
+        # Log query
+        # TODO
 
-    # Render page
-    return render_template('variable.html', var_data=var_data, neighbors=neighbors, responses=responses, topics=topics)
+        # Render page
+        return render_template('variable.html', var_data=var_data, neighbors=neighbors, responses=responses, topics=topics)
 
 
 
 ## Static pages ##
+
+# Favicon
+@application.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(application.root_path, 'static'),
+                               'glyphicons-508-cluster.png', mimetype='image/vnd.microsoft.icon')
 
 # Full metadata file download page
 @application.route('/metadata')
