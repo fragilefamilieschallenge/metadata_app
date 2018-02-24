@@ -3,7 +3,7 @@
 {% macro selected(val, var) -%}
     {% if constraints %}
         {% if val in request.form[var] %}
-            btn-success
+            checked
         {% endif %}
     {% endif %}
 {%- endmacro %}
@@ -40,60 +40,64 @@
                         </div>
                         <div id="collapse_filter" class="panel-collapse collapse in" role="tabpanel">
                             <div class="panel-body">
-                                <h5>Wave</h5>
-                                <div class="btn-group" role="group" data-toggle="buttons">
-                                    <label class="btn btn-default {{selected('1', 'wave')}}"><input type="checkbox" name="wave" value="1" autocomplete="off">Baseline</label>
-                                    <label class="btn btn-default {{selected('2', 'wave')}}"><input type="checkbox" name="wave" value="2" autocomplete="off">Year 1</label>
-                                    <label class="btn btn-default {{selected('3', 'wave')}}"><input type="checkbox" name="wave" value="3" autocomplete="off">Year 3</label>
-                                    <label class="btn btn-default {{selected('4', 'wave')}}"><input type="checkbox" name="wave" value="4" autocomplete="off">Year 5</label>
-                                    <label class="btn btn-default {{selected('5', 'wave')}}"><input type="checkbox" name="wave" value="5" autocomplete="off">Year 9</label>
-                                    <label class="btn btn-default {{selected('6', 'wave')}}"><input type="checkbox" name="wave" value="6" autocomplete="off">Year 15</label>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">Wave</div>
+                                    <div class="panel-body">
+                                        <div class="checkbox"><label><input type="checkbox" name="wave" value="1" autocomplete="off" {{selected('1', 'wave')}}> Baseline</label></div>
+                                        <div class="checkbox"><label><input type="checkbox" name="wave" value="2" autocomplete="off" {{selected('2', 'wave')}}> Year 1</label></div>
+                                        <div class="checkbox"><label><input type="checkbox" name="wave" value="3" autocomplete="off" {{selected('3', 'wave')}}> Year 3</label></div>
+                                        <div class="checkbox"><label><input type="checkbox" name="wave" value="4" autocomplete="off" {{selected('4', 'wave')}}> Year 5</label></div>
+                                        <div class="checkbox"><label><input type="checkbox" name="wave" value="5" autocomplete="off" {{selected('5', 'wave')}}> Year 9</label></div>
+                                        <div class="checkbox"><label><input type="checkbox" name="wave" value="6" autocomplete="off" {{selected('6', 'wave')}}> Year 15</label></div>
+                                    </div>
                                 </div>
-                                <br/><br/>
 
                                 <h5>Respondent</h5>
-                                <div class="btn-group" role="group" data-toggle="buttons">
-                                    <label class="btn btn-default {{selected('k', 'respondent')}}"><input type="checkbox" name="respondent" value="k" autocomplete="off">Child</label>
-                                    <label class="btn btn-default {{selected('f', 'respondent')}}"><input type="checkbox" name="respondent" value="f" autocomplete="off">Father</label>
-                                    <label class="btn btn-default {{selected('m', 'respondent')}}"><input type="checkbox" name="respondent" value="m" autocomplete="off">Mother</label>
-                                    <label class="btn btn-default {{selected('q', 'respondent')}}"><input type="checkbox" name="respondent" value="q" autocomplete="off">Couple</label>
-                                    <label class="btn btn-default {{selected('t', 'respondent')}}"><input type="checkbox" name="respondent" value="t" autocomplete="off">Teacher</label>
-                                    <label class="btn btn-default {{selected('n', 'respondent')}}"><input type="checkbox" name="respondent" value="n" autocomplete="off">Non-parental primary caregiver</label>
-                                    <label class="btn btn-default {{selected('d', 'respondent')}}"><input type="checkbox" name="respondent" value="d" autocomplete="off">Child care center (survey)</label>
-                                    <label class="btn btn-default {{selected('e', 'respondent')}}"><input type="checkbox" name="respondent" value="e" autocomplete="off">Child care center (observation)</label>
-                                    <label class="btn btn-default {{selected('h', 'respondent')}}"><input type="checkbox" name="respondent" value="h" autocomplete="off">In-home (survey)</label>
-                                    <label class="btn btn-default {{selected('o', 'respondent')}}"><input type="checkbox" name="respondent" value="o" autocomplete="off">In-home (observation)</label>
-                                    <label class="btn btn-default {{selected('r', 'respondent')}}"><input type="checkbox" name="respondent" value="r" autocomplete="off">Family care (survey)</label>
-                                    <label class="btn btn-default {{selected('s', 'respondent')}}"><input type="checkbox" name="respondent" value="s" autocomplete="off">Family care (observation)</label>
-                                    <label class="btn btn-default {{selected('u', 'respondent')}}"><input type="checkbox" name="respondent" value="u" autocomplete="off">Post child and family care observation</label>
+                                <div class="btn-group-vertical btn-group-sm" role="group" data-toggle="buttons">
+                                    <div class="checkbox"><label><input type="checkbox" name="respondent" value="k" autocomplete="off" {{selected('k', 'respondent')}}> Child</label></div>
+                                    <div class="checkbox"><label><input type="checkbox" name="respondent" value="f" autocomplete="off" {{selected('f', 'respondent')}}> Father</label></div>
+                                    <div class="checkbox"><label><input type="checkbox" name="respondent" value="m" autocomplete="off" {{selected('m', 'respondent')}}> Mother</label></div>
+                                    <div class="checkbox"><label><input type="checkbox" name="respondent" value="q" autocomplete="off" {{selected('q', 'respondent')}}> Couple</label></div>
+                                    <div class="checkbox"><label><input type="checkbox" name="respondent" value="t" autocomplete="off" {{selected('t', 'respondent')}}> Teacher</label></div>
+                                    <a class="btn btn-sm" data-toggle="collapse" href="#collapseRespondent">Show all</a>
+                                    <div class="collapse" id="collapseRespondent">
+                                        <div class="checkbox"><label><input type="checkbox" name="respondent" value="n" autocomplete="off" {{selected('n', 'respondent')}}> Non-parental primary caregiver</label></div>
+                                        <div class="checkbox"><label><input type="checkbox" name="respondent" value="d" autocomplete="off" {{selected('d', 'respondent')}}> Child care center (survey)</label></div>
+                                        <div class="checkbox"><label><input type="checkbox" name="respondent" value="e" autocomplete="off" {{selected('e', 'respondent')}}> Child care center (observation)</label></div>
+                                        <div class="checkbox"><label><input type="checkbox" name="respondent" value="h" autocomplete="off" {{selected('h', 'respondent')}}> In-home (survey)</label></div>
+                                        <div class="checkbox"><label><input type="checkbox" name="respondent" value="o" autocomplete="off" {{selected('o', 'respondent')}}> In-home (observation)</label></div>
+                                        <div class="checkbox"><label><input type="checkbox" name="respondent" value="r" autocomplete="off" {{selected('r', 'respondent')}}> Family care (survey)</label></div>
+                                        <div class="checkbox"><label><input type="checkbox" name="respondent" value="s" autocomplete="off" {{selected('s', 'respondent')}}> Family care (observation)</label></div>
+                                        <div class="checkbox"><label><input type="checkbox" name="respondent" value="u" autocomplete="off" {{selected('e', 'respondent')}}> Post child and family care observation</label></div>
+                                    </div>
                                 </div>
                                 <br/><br/>
 
                                 <h5>Source</h5>
-                                <div class="btn-group" role="group" data-toggle="buttons">
-                                    <label class="btn btn-default {{selected('questionnaire', 'data_source')}}"><input type="checkbox" name="data_source" value="questionnaire" autocomplete="off">Questionnaire</label>
-                                    <label class="btn btn-default {{selected('constructed', 'data_source')}}"><input type="checkbox" name="data_source" value="constructed" autocomplete="off">Constructed</label>
-                                    <label class="btn btn-default {{selected('weight', 'data_source')}}"><input type="checkbox" name="data_source" value="weight" autocomplete="off">Survey weight</label>
-                                    <label class="btn btn-default {{selected('idnum', 'data_source')}}"><input type="checkbox" name="data_source" value="idnum" autocomplete="off">ID number</label>
+                                <div class="btn-group btn-group-sm" role="group" data-toggle="buttons">
+                                    <div class="checkbox"><label><input type="checkbox" name="data_source" value="questionnaire" autocomplete="off" {{selected('questionnaire', 'data_source')}}> Questionnaire</label></div>
+                                    <div class="checkbox"><label><input type="checkbox" name="data_source" value="constructed" autocomplete="off" {{selected('constructed', 'data_source')}}> Constructed</label></div>
+                                    <div class="checkbox"><label><input type="checkbox" name="data_source" value="weight" autocomplete="off" {{selected('weight', 'data_source')}}> Survey weight</label></div>
+                                    <div class="checkbox"><label><input type="checkbox" name="data_source" value="idnum" autocomplete="off" {{selected('idnum', 'data_source')}}> ID number</label></div>
                                 </div>
                                 <br/><br/>
 
                                 <h5>City scope</h5>
-                                <div class="btn-group" role="group" data-toggle="buttons">
-                                    <label class="btn btn-default {{selected('2', 'scope')}}"><input type="checkbox" name="scope" value="2" autocomplete="off">2 cities</label>
-                                    <label class="btn btn-default {{selected('18', 'scope')}}"><input type="checkbox" name="scope" value="18" autocomplete="off">18 cities</label>
-                                    <label class="btn btn-default {{selected('19', 'scope')}}"><input type="checkbox" name="scope" value="19" autocomplete="off">19 cities</label>
-                                    <label class="btn btn-default {{selected('20', 'scope')}}"><input type="checkbox" name="scope" value="20" autocomplete="off">20 cities</label>
+                                <div class="btn-group-vertical btn-group-sm" role="group" data-toggle="buttons">
+                                    <div class="checkbox"><label><input type="checkbox" name="scope" value="2" autocomplete="off" {{selected('2', 'scope')}}> 2 cities</label></div>
+                                    <div class="checkbox"><label><input type="checkbox" name="scope" value="18" autocomplete="off" {{selected('18', 'scope')}}> 18 cities</label></div>
+                                    <div class="checkbox"><label><input type="checkbox" name="scope" value="19" autocomplete="off" {{selected('19', 'scope')}}> 19 cities</label></div>
+                                    <div class="checkbox"><label><input type="checkbox" name="scope" value="20" autocomplete="off" {{selected('20', 'scope')}}> 20 cities</label></div>
                                 </div>
                                 <br/><br/>
 
                                 <h5>Type</h5>
-                                <div class="btn-group" role="group" data-toggle="buttons">
-                                    <label class="btn btn-default {{selected('bin', 'data_type')}}"><input type="checkbox" name="data_type" value="bin" autocomplete="off">Binary</label>
-                                    <label class="btn btn-default {{selected('uc', 'data_type')}}"><input type="checkbox" name="data_type" value="uc" autocomplete="off">Unordered categorical</label>
-                                    <label class="btn btn-default {{selected('oc', 'data_type')}}"><input type="checkbox" name="data_type" value="oc" autocomplete="off">Ordered categorical</label>
-                                    <label class="btn btn-default {{selected('cont', 'data_type')}}"><input type="checkbox" name="data_type" value="cont" autocomplete="off">Continuous</label>
-                                    <label class="btn btn-default {{selected('string', 'data_type')}}"><input type="checkbox" name="data_type" value="string" autocomplete="off">String</label>
+                                <div class="btn-group btn-group-sm" role="group" data-toggle="buttons">
+                                    <div class="checkbox"><label><input type="checkbox" name="data_type" value="bin" autocomplete="off" {{selected('bin', 'data_type')}}> Binary</label></div>
+                                    <div class="checkbox"><label><input type="checkbox" name="data_type" value="uc" autocomplete="off" {{selected('uc', 'data_type')}}> Unordered categorical</label></div>
+                                    <div class="checkbox"><label><input type="checkbox" name="data_type" value="oc" autocomplete="off" {{selected('oc', 'data_type')}}> Ordered categorical</label></div>
+                                    <div class="checkbox"><label><input type="checkbox" name="data_type" value="cont" autocomplete="off" {{selected('cont', 'data_type')}}> Continuous</label></div>
+                                    <div class="checkbox"><label><input type="checkbox" name="data_type" value="string" autocomplete="off" {{selected('string', 'data_type')}}>  String</label></div>
                                 </div>
                                 <br/><br/>
 
