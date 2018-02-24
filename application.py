@@ -187,19 +187,37 @@ def search():
         # Get all matches
         results = qobj.all()
 
-        #     # Log query
-        #     print "\n Session ID: %s" % request.cookies["session"]
-        #     print "Searched for: %s" % request.form["variable-search"]
-        #     print "Filters: %s \n" % repr(constraints)
-        #     application.logger.info("Searched: %s" % q)
+        # Log query
+        # TODO
     else:
         # Log that we're starting a new search
-        # print "\n Session ID: %s" % request.cookies["session"]
-        # print "Navigated to search \n"
-        # application.logger.info("Navigated to search")
+        # TODO
         pass
 
     return render_template('search.html', results=results, constraints=constraints, search_query=search_query)
+
+@application.route('/<varname>')
+def var_page(varname):
+    # Get variable data
+    var_data = Variable.query.filter(Variable.name == varname).first()
+
+    # Grouped variables
+    neighbors = Variable.query.filter(Variable.group_id == var_data.group_id).all()
+
+    # Responses
+    responses = Response.query.filter(Response.name == varname).all()
+    if responses:
+        responses = sorted(responses, key=lambda x: int(x.label.strip().replace(":", "").split(" ")[0]), reverse=True)
+
+    # Topic
+    topics = Topic.query.filter(Topic.name == varname).all()
+
+    # Log query
+    # TODO
+
+    # Render page
+    return render_template('variable.html', var_data=var_data, neighbors=neighbors, responses=responses, topics=topics)
+
 
 
 ## Static pages ##

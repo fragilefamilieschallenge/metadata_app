@@ -130,7 +130,7 @@
                             <tbody>
                                 {% for rvar in results %}
                                 <tr>
-                                    <td>{{rvar.name}}</td>
+                                    <td><a href="{{ url_for('var_page', varname = rvar.name) }}">{{rvar.name}}</a></td>
                                     <td>{{rvar.label}}</td>
                                     <td><span class="label label-success">{{rvar.wave}}</span></td>
                                     <td><span class="label label-success">{{rvar.respondent}}</span></td>
