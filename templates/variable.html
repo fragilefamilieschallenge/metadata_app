@@ -171,16 +171,52 @@
 
             <!-- Related variables -->
             <div class="panel panel-default">
-                <div class="panel-heading">
+                <!-- <div class="panel-heading">
                     <h4 class="panel-title">
                         <a role="button" data-toggle="collapse" href="#collapse_related">
                             Related variables
                         </a>
                     </h4>
-                </div>
+                </div> -->
                 <div id="collapse_related" class="panel-collapse collapse in" role="tabpanel">
 
-                    <table class="table table-hover">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Similar variables ({{results|length}})</h4>
+                        </div>
+                        <div class="table-responsive" style="padding: 1%">
+                            <table id="results" class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Variable</th>
+                                        <th>Description</th>
+                                        <th>Wave</th>
+                                        <th>Respondent</th>
+                                        <th>Source</th>
+                                        <th>Scope</th>
+                                        <th>Type</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for var in neighbors %}
+                                        {% if var.name != var_data.name %}
+                                        <tr>
+                                            <td><a href="{{ url_for('var_page', varname = var.name) }}">{{var.name}}</a></td>
+                                            <td>{{var.label}}</td>
+                                            <td><span class="label label-success">{{var.wave}}</span></td>
+                                            <td><span class="label label-success">{{var.respondent}}</span></td>
+                                            <td><span class="label label-success">{{var.data_source}}</span></td>
+                                            <td><span class="label label-success">{{var.scope}}</span></td>
+                                            <td><span class="label label-success">{{var.data_type}}</span></td>
+                                        </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- <table class="table table-hover">
                         <tr>
                             <th>Variable</th>
                             <th>Description</th>
@@ -191,30 +227,34 @@
                             <th>Type</th>
                         </tr>
                         {% for var in neighbors %}
-                        <tr>
-                            <td><a href="{{ url_for('var_page', varname = var.name) }}">{{var.name}}</a></td>
-                            <td>{{var.varlab}}</td>
-                            <td><span class="label label-success">{{var.wave}}</span></td>
-                            <td><span class="label label-success">{{var.respondent}}</span></td>
-                            <td><span class="label label-success">{{var.data_source}}</span></td>
-                            <td><span class="label label-success">{{var.scope}}</span></td>
-                            <td><span class="label label-success">{{var.data_type}}</span></td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-
-                    <!-- <div class="panel-body">
-                        <ul>
-                        {% for var in neighbors %}
-                            {% if var.new_name != var_data.new_name %}
-                            <li><a href="{{ url_for('var_page', new_name=var.new_name) }}">{{ var.new_name }}</a></li>
+                            {% if var.name != var_data.name %}
+                            <tr>
+                                <td><a href="{{ url_for('var_page', varname = var.name) }}">{{var.name}}</a></td>
+                                <td>{{var.varlab}}</td>
+                                <td><span class="label label-success">{{var.wave}}</span></td>
+                                <td><span class="label label-success">{{var.respondent}}</span></td>
+                                <td><span class="label label-success">{{var.data_source}}</span></td>
+                                <td><span class="label label-success">{{var.scope}}</span></td>
+                                <td><span class="label label-success">{{var.data_type}}</span></td>
+                            </tr>
                             {% endif %}
                         {% endfor %}
-                        </ul>
-                    </div> -->
+                    </table> -->
+
                 </div>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block foot %}
+    <script>
+        $(document).ready(function(){
+            $('#results').DataTable( {
+                "searching": false,
+                "lengthChange": false
+            });
+        });
+    </script>
 {% endblock %}
