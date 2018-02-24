@@ -158,9 +158,8 @@ valid_filters = {"wave": ["1", "2", "3", "4", "5", "6"],
 
 def filter_x(query_obj, field, domain):
     # Construct argument to filter for each value in domain
-    for d in domain:
-        filt = 'eval("Variable.{}") == "{}"'.format(field, d)
-        query_obj = query_obj.filter(eval(filt))
+    filt = "Variable.{}.in_(domain)".format(field)
+    query_obj = query_obj.filter(eval(filt))
 
     # Return modified query
     return query_obj
@@ -176,6 +175,7 @@ def search():
         # Filter by search query
         search_query = request.form["variable-search"]
         if len(search_query) > 0:
+            # TODO: This doesn't work
             qobj = qobj.filter(Variable.label.like('%{}%'.format(search_query)))
 
         # Filter by fields
