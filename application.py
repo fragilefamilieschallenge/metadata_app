@@ -150,7 +150,72 @@ def load_db():
 
 ## User views ##
 
-# TODO
+@application.route('/variables', methods=['GET', 'POST'])
+@with_db(dbms)
+def search(db):
+    results = None
+    constraints = None
+    search_query = None
+    if request.method == "POST":
+        # search_query = request.form["variable-search"]
+        #
+        # # Set filtering constraints
+        # constraints = dict()
+        # constraints["wave"] = request.form.getlist("wave") if "wave" in request.form.keys() else ["1", "2", "3", "4", "5", "6"]
+        # constraints["respondent"] = request.form.getlist("respondent") if "respondent" in request.form.keys() else ["k", "f", "m", "q", "t", "n", "d", "e", "h", "o", "r", "s", "u"]
+        # constraints["data_source"] = request.form.getlist("data_source") if "data_source" in request.form.keys() else ["questionnaire", "constructed", "weight", "idnum"]
+        # constraints["scope"] = request.form.getlist("scope") if "scope" in request.form.keys() else ["2", "18", "19", "20"]
+        # constraints["data_type"] = request.form.getlist("data_type") if "data_type" in request.form.keys() else ["bin", "uc", "oc", "cont", "string"]
+        #
+        # # Find results matching search string
+        # if len(request.form["variable-search"]) > 0 or len(request.form.keys()) > 0:
+        #     q = """SELECT *
+        #            FROM (SELECT DISTINCT new_name
+        #                  FROM variable
+        #                  WHERE ((new_name LIKE CONCAT('%%','%s','%%'))
+        #                      OR (varlab LIKE CONCAT('%%','%s','%%')))
+        #                  UNION ALL
+        #                  SELECT DISTINCT new_name
+        #                  FROM response
+        #                  WHERE label LIKE CONCAT('%%','%s','%%')) q
+        #            LEFT JOIN variable v
+        #            ON q.new_name = v.new_name
+        #            WHERE wave IN %s
+        #            AND respondent IN %s
+        #            AND data_source IN %s
+        #            AND scope IN %s
+        #            AND data_type IN %s;
+        #            """ % (request.form["variable-search"],
+        #                   request.form["variable-search"],
+        #                   request.form["variable-search"],
+        #                   repr(constraints["wave"]).replace("[", "(").replace("]", ")").replace("u'", "'"),
+        #                   repr(constraints["respondent"]).replace("[", "(").replace("]", ")").replace("u'", "'"),
+        #                   repr(constraints["data_source"]).replace("[", "(").replace("]", ")").replace("u'", "'"),
+        #                   repr(constraints["scope"]).replace("[", "(").replace("]", ")").replace("u'", "'"),
+        #                   repr(constraints["data_type"]).replace("[", "(").replace("]", ")").replace("u'", "'"))
+        #     results = query(db, q, fetchall=True)
+        #
+        #     # for result in results:
+        #     #   for key in result.keys()
+        #     #       if key = "wave":
+        #     #           if result[key] = 1:
+        #     #
+        #
+        #     # Log query
+        #     print "\n Session ID: %s" % request.cookies["session"]
+        #     print "Searched for: %s" % request.form["variable-search"]
+        #     print "Filters: %s \n" % repr(constraints)
+        #     application.logger.info("Searched: %s" % q)
+        pass
+    else:
+        # Log that we're starting a new search
+        # print "\n Session ID: %s" % request.cookies["session"]
+        # print "Navigated to search \n"
+        # application.logger.info("Navigated to search")
+        pass
+
+    return render_template('search.html', results=results, constraints=constraints, search_query=search_query)
+
 
 ## Static pages ##
 
