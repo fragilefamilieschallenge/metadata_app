@@ -4,8 +4,10 @@
 # Last modified: 23 February 2018
 
 import os
-from csv import DictReader
-from collections import OrderedDict
+import datetime
+import random
+from csv import DictReader, DictWriter
+from collections import OrderedDict, Counter
 
 from flask import Flask, render_template, url_for, request, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
@@ -84,6 +86,19 @@ class Response(db.Model):
     def __repr__(self):
         return "<Response %r>" % self.label
 
+class Group(db.Model):
+    __tablename__ = "group"
+
+    id = db.Column(db.Integer, primary_key=True)
+    group_id = db.Column(db.Text)
+    count = db.Column(db.Integer)
+
+    def __init__(self, group_id, count):
+        self.group_id = group_id
+        self.count = count
+
+    def __repr__(self):
+        return "<Group %r>" % self.group_id
 
 ## Adminstration views ##
 
@@ -96,6 +111,8 @@ def build_db():
     return "Rebuilt database tables."
 
 # Load metadata to database
+# TODO: Update to use new metadata file
+# TODO: Test group table build
 @application.route('/admin/load')
 @auth.required
 def load_db():
@@ -104,6 +121,7 @@ def load_db():
         rows = list(DictReader(t))
         vars_loaded = 0
         commit_increment = 1000
+        group_ids = []
         for row in rows:
             # Write variable data
             var = Variable(name=row["new_name"],
@@ -136,6 +154,9 @@ def load_db():
                     resp = Response(name=row["new_name"], label=row[key])
                     db.session.add(resp)
 
+            # Increment group list
+            group_ids.append(str(row["group"]))
+
             # Increment variable counter
             vars_loaded += 1
 
@@ -146,53 +167,62 @@ def load_db():
         # Commit any remaining rows
         db.session.commit()
 
+        # Build groups table
+        groups = Counter(group_ids)
+        for group_id, group_n in groups.items():
+            grp = Group(group_id=group_id, count=group_n)
+            db.session.add(grp)
+        db.session.commit()
+
     # Yield result
     return "Loaded {} rows to database.".format(str(vars_loaded))
 
 
 ## User views ##
 
+# Define valid search filters + domain-label map for each filter
+filter_labels = OrderedDict([("wave", "Wave"),
+                             ("respondent", "Respondent"),
+                             ("data_source", "Source"),
+                             ("scope", "City scope"),
+                             ("data_type", "Variable type")])
+valid_filters = {"wave": OrderedDict([("1", "Baseline"),
+                                     ("2", "Year 1"),
+                                     ("3", "Year 3"),
+                                     ("4", "Year 5"),
+                                     ("5", "Year 9"),
+                                     ("6", "Year 15")]),
+                 "respondent": OrderedDict([("k", "Child"),
+                                           ("f", "Father"),
+                                           ("m", "Mother"),
+                                           ("q", "Couple"),
+                                           ("t", "Teacher"),
+                                           ("n", "Non-parental primary caregiver"),
+                                           ("d", "Child care center (survey)"),
+                                           ("e", "Child care center (observation)"),
+                                           ("h", "In-home (survey)"),
+                                           ("o", "In-home (observation)"),
+                                           ("r", "Family care (survey)"),
+                                           ("s", "Family care (observation)"),
+                                           ("u", "Post child and family care observation")]),
+                 "data_source": OrderedDict([("questionnaire", "Questionnaire"),
+                                            ("constructed", "Constructed"),
+                                            ("weight", "Survey weight"),
+                                            ("idnum", "ID number")]),
+                 "scope": OrderedDict([("2", "2 cities"),
+                                      ("18", "18 cities"),
+                                      ("19", "19 cities"),
+                                      ("20", "20 cities")]),
+                 "data_type": OrderedDict([("bin", "Binary"),
+                                          ("uc", "Unordered categorical"),
+                                          ("oc", "Ordered categorical"),
+                                          ("cont", "Continuous"),
+                                          ("string", "String")])}
+
 @application.route('/variables', methods=['GET', 'POST'])
 def search():
-    # Define valid search filters + domain-label map for each filter
-    filter_labels = OrderedDict([("wave", "Wave"),
-                                 ("respondent", "Respondent"),
-                                 ("data_source", "Source"),
-                                 ("scope", "City scope"),
-                                 ("data_type", "Variable type")])
-    valid_filters = {"wave": OrderedDict([("1", "Baseline"),
-                                         ("2", "Year 1"),
-                                         ("3", "Year 3"),
-                                         ("4", "Year 5"),
-                                         ("5", "Year 9"),
-                                         ("6", "Year 15")]),
-                     "respondent": OrderedDict([("k", "Child"),
-                                               ("f", "Father"),
-                                               ("m", "Mother"),
-                                               ("q", "Couple"),
-                                               ("t", "Teacher"),
-                                               ("n", "Non-parental primary caregiver"),
-                                               ("d", "Child care center (survey)"),
-                                               ("e", "Child care center (observation)"),
-                                               ("h", "In-home (survey)"),
-                                               ("o", "In-home (observation)"),
-                                               ("r", "Family care (survey)"),
-                                               ("s", "Family care (observation)"),
-                                               ("u", "Post child and family care observation")]),
-                     "data_source": OrderedDict([("questionnaire", "Questionnaire"),
-                                                ("constructed", "Constructed"),
-                                                ("weight", "Survey weight"),
-                                                ("idnum", "ID number")]),
-                     "scope": OrderedDict([("2", "2 cities"),
-                                          ("18", "18 cities"),
-                                          ("19", "19 cities"),
-                                          ("20", "20 cities")]),
-                     "data_type": OrderedDict([("bin", "Binary"),
-                                              ("uc", "Unordered categorica"),
-                                              ("oc", "Ordered categorical"),
-                                              ("cont", "Continuous"),
-                                              ("string", "String")])}
     results = None
+    rnames = None
     constraints = None
     search_query = None
     if request.method == "POST":
@@ -214,6 +244,15 @@ def search():
 
         # Get all matches
         results = qobj.all()
+        r2 = results
+
+        # TODO: Zero results should return something different from the blank search page
+        # Can handle this with a yes/no flag
+
+        # Return variable names separately
+        rnames = []
+        for result in r2:
+            rnames.append(str(unicode(result.name)))
 
         # Log query
         # TODO
@@ -222,10 +261,10 @@ def search():
         # TODO
         pass
 
-    return render_template('search.html', results=results, constraints=constraints,
+    return render_template('search.html', results=results, rnames=rnames, constraints=constraints,
                            search_query=search_query, filtermeta=valid_filters, filterlabs=filter_labels)
 
-@application.route('/<varname>')
+@application.route('/variables/<varname>')
 def var_page(varname):
     if not varname:
         # Abort early if Flask tries to load this page with no variable
@@ -249,8 +288,44 @@ def var_page(varname):
         # TODO
 
         # Render page
-        return render_template('variable.html', var_data=var_data, neighbors=neighbors, responses=responses, topics=topics)
+        return render_template('variable.html', var_data=var_data, neighbors=neighbors,
+                               responses=responses, topics=topics, filtermeta=valid_filters, filterlabs=filter_labels)
 
+# @application.route('/export')
+# def export(*varlist):
+#
+#
+#     if not varlist or varlist[0] != '[':
+#         return redirect(url_for('search'))
+#     else:
+#         # Get requested variable data
+#         varlist = eval(varlist)
+#         var_data = Variable.query.filter(Variable.name.in_(varlist)).all()
+#         header = var_data[0].keys()
+#
+#         # Write to CSV
+#         outfile = datetime.datetime.strftime(datetime.datetime.now(), "%d%b%Y_") + str(random.randint(1, 10000)) + ".csv"
+#         ofdir = os.path.join(application.root_path, "data")
+#         print "Writing: " + ofdir + "/" + outfile + "\n"
+#         with open(os.path.join(ofdir, outfile), "w") as of:
+#             ofwrite = DictWriter(of)
+#             ofwrite.writeheader()
+#             for vd in var_data:
+#                 write.writerow({k: v for k, v in vd.items()})
+#         print "Wrote: " + ofdir + "/" + outfile + "\n"
+#
+#         # Scrub old files
+#         # TODO
+#
+#     # Dispatch CSV download
+#     return redirect(url_for("download_file", path=outfile))
+#
+# @application.route("/export/<path>")
+# def download_file(path):
+#     if not Path:
+#         return redirect(url_for('search'))
+#     else:
+#         return send_file(path, as_attachment=True)
 
 
 ## Static pages ##

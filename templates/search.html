@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <form action="{{ url_for('search')}}" method="POST">
                     <div class="form-group">
                         <div class="input-group">
@@ -72,14 +72,14 @@
 
 
             </div>
-            <div class="col-md-8">
+            <div class="col-md-9">
 
                 {% if results %}
 
                 <!-- Display search results -->
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4 class="panel-title">Search results ({{results|length}})</h4>
+                        <h4 class="panel-title">Search results <span class="badge">{{results|length}}</span></h4>
                     </div>
                     <div class="table-responsive" style="padding: 1%">
                         <table id="results" class="table table-hover">
@@ -97,13 +97,13 @@
                             <tbody>
                                 {% for rvar in results %}
                                 <tr>
-                                    <td><a href="{{ url_for('var_page', varname = rvar.name) }}">{{rvar.name}}</a></td>
+                                    <td><a type="button" class="btn btn-default" href="{{ url_for('var_page', varname = rvar.name) }}">{{rvar.name}}</button></td>
                                     <td>{{rvar.label}}</td>
-                                    <td><span class="label label-success">{{rvar.wave}}</span></td>
-                                    <td><span class="label label-success">{{rvar.respondent}}</span></td>
-                                    <td><span class="label label-success">{{rvar.data_source}}</span></td>
-                                    <td><span class="label label-success">{{rvar.scope}}</span></td>
-                                    <td><span class="label label-success">{{rvar.data_type}}</span></td>
+                                    <td><small>{{filtermeta.wave[rvar.wave]}}</small></td>
+                                    <td><small>{{filtermeta.respondent[rvar.respondent]}}</small></td>
+                                    <td><small>{{filtermeta.data_source[rvar.data_source]}}</small></td>
+                                    <td><small>{{filtermeta.scope[rvar.scope]}}</small></td>
+                                    <td><small>{{filtermeta.data_type[rvar.data_type]}}</small></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -114,12 +114,11 @@
                 <!-- Manipulate results (reset, copy, export)-->
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4 class="panel-title">Options</h4>
+                        <h4 class="panel-title">Tools</h4>
                     </div>
                     <div class="panel-body">
+                        <button data-clipboard-text="{{rnames}}" class="btn btn-success"><span class="oi" data-glyph="clipboard"></span> Copy variable names</button>
                         <a href="{{ url_for('search') }}" role="button" class="btn btn-danger"><span class="oi" data-glyph="trash"></span> Start over </a>
-                        <!-- <a href="{{ url_for('search') }}" role="button" class="btn btn-success"><span class="oi" data-glyph="clipboard"></span> Copy variable names</a> -->
-                        <!-- <a href="{{ url_for('search') }}" role="button" class="btn btn-success"><span class="oi" data-glyph="data-transfer-download"></span> Download as CSV</a> -->
                     </div>
                 </div>
 
@@ -136,6 +135,8 @@
                 "searching": false,
                 "lengthChange": false
             });
+
+            new Clipboard('.btn');
         });
     </script>
 {% endblock %}
