@@ -21,12 +21,16 @@
 
     <body>
 
+
+
         <nav class="navbar navbar-default">
           <div class="container-fluid">
             <ul class="nav navbar-nav">
+                <span class="navbar-brand">FFCWS Metadata</span>
                 <li role="presentation"><a href="{{ url_for('index') }}"><span class="oi" data-glyph="home"></span> Home </a></li>
                 <li role="presentation"><a href="{{ url_for('search') }}"><span class="oi" data-glyph="puzzle-piece"></span> Browse variables</a></li>
-                <li role="presentation"><a href="{{ url_for('metadata') }}"><span class="oi" data-glyph="book"></span> Download metadata</a></li>
+                <li role="presentation"><a href="{{ url_for('metadata') }}"><span class="oi" data-glyph="data-transfer-download"></span> Download metadata</a></li>
+                <li role="presentation"><a href="{{ url_for('feedback') }}"><span class="oi" data-glyph="comment-square"></span> Feedback</a></li>
                 <li role="presentation"><a href="http://fragilefamilies.princeton.edu/"><span class="oi" data-glyph="globe"></span> About FFCWS</a></li>
             </ul>
           </div>
