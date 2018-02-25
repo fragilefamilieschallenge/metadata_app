@@ -26,6 +26,12 @@ db = SQLAlchemy(application)
 auth = BasicAuth(application)
 
 
+# Datetime helper
+epoch_base = datetime.datetime.utcfromtimestamp(0)
+def epochalypse_now():
+    return (datetime.datetime.now() - epoch_base).total_seconds() * 1000.0
+
+
 # Define data models
 class Variable(db.Model):
     __tablename__ = "variable"
@@ -352,10 +358,10 @@ def search():
                 topics[t.name] = t.topic
 
         # Log query
-        application.logger.info("{} searched with filters {}, yielded variables {}".format(request.cookies.get("user_id"), constraints.items(), str(rnames)))
+        application.logger.info("[{}] {} searched with filters {}, yielded variables {}".format(epochalypse_now(), request.cookies.get("user_id"), constraints.items(), str(rnames)))
     else:
         # Log that we're starting a new search
-        application.logger.info("{} started new search.".format(request.cookies.get("user_id")))
+        application.logger.info("[{}] {} started new search.".format(epochalypse_now(), request.cookies.get("user_id")))
 
     return render_template('search.html', results=results, rnames=rnames, constraints=constraints, topics=topics,
                            search_query=search_query, filtermeta=valid_filters, filterlabs=filter_labels)
@@ -390,7 +396,7 @@ def var_page(varname):
         umbrellas = Umbrella.query.filter(Umbrella.topic.in_([str(t.topic) for t in topics])).all()
 
         # Log query
-        application.logger.info("{} viewed variable: {}".format(request.cookies.get("user_id"), varname))
+        application.logger.info("[{}] {} viewed variable: {}".format(epochalypse_now(), request.cookies.get("user_id"), varname))
 
         # Render page
         return render_template('variable.html', var_data=var_data, neighbors=neighbors, neighbor_topics=neighbor_topics,
@@ -433,9 +439,10 @@ def index():
 # Execute app directly when invoked
 if __name__ == "__main__":
     # Configure logging (save 10mb of logs in chunks of 1mb)
-    handler = RotatingFileHandler('app.log', maxBytes=1000000, backupCount=10)
+    handler = RotatingFileHandler('app.log', maxBytes=1024 * 1024, backupCount=10)
     handler.setLevel(logging.INFO)
     application.logger.addHandler(handler)
+    application.logger.info("[{}] App launched.".format(epochalypse_now()))
 
     # Launch application
     application.run(host="0.0.0.0")
