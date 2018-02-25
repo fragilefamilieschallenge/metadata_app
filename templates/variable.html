@@ -57,7 +57,7 @@
                         <ul>
                         <!-- TODO: This could be formatted a little more nicely (why is the numeric code also in the label field?) -->
                         {% for r in responses %}
-                            <li>{{ r.label }}</li>
+                            <li>{{r.value}}: {{ r.label }}</li>
                         {% endfor %}
                         </ul>
                     </div>
@@ -75,7 +75,6 @@
                 </div>
                 <div id="collapse_type" class="panel-collapse collapse in" role="tabpanel">
                     <div class="panel-body">
-                        <h5>Warnings</h5>
                         {% if var_data.warning|int == 0 %}
                             <em>None.</em>
                         {% elif var_data.warning|int == 1%}

@@ -10,7 +10,7 @@ import random
 from csv import DictReader, DictWriter
 from collections import OrderedDict, Counter
 
-from flask import Flask, render_template, url_for, request, send_from_directory
+from flask import Flask, render_template, url_for, request, send_from_directory, send_file
 from flask_sqlalchemy import SQLAlchemy
 from flask_basicauth import BasicAuth
 
@@ -338,7 +338,7 @@ def var_page(varname):
         # Responses
         responses = Response.query.filter(Response.name == varname).all()
         if responses:
-            responses = sorted(responses, key=lambda x: int(x.label.strip().replace(":", "").split(" ")[0]), reverse=True)
+            responses = sorted(responses, key=lambda x: int(x.value), reverse=True)
 
         # Topic
         topics = Topic.query.filter(Topic.name == varname).all()
