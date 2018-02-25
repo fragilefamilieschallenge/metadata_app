@@ -29,7 +29,7 @@ auth = BasicAuth(application)
 # Datetime helper
 epoch_base = datetime.datetime.utcfromtimestamp(0)
 def epochalypse_now():
-    return (datetime.datetime.now() - epoch_base).total_seconds() * 1000.0
+    return (datetime.datetime.now() - epoch_base).total_seconds() * 1000
 
 
 # Define data models
@@ -358,7 +358,7 @@ def search():
                 topics[t.name] = t.topic
 
         # Log query
-        application.logger.info("[{}] {} searched with filters {}, yielded variables {}".format(epochalypse_now(), request.cookies.get("user_id"), constraints.items(), str(rnames)))
+        application.logger.info("[{}] {} searched with filters {}".format(epochalypse_now(), request.cookies.get("user_id"), constraints.items(), str(rnames)))
     else:
         # Log that we're starting a new search
         application.logger.info("[{}] {} started new search.".format(epochalypse_now(), request.cookies.get("user_id")))
