@@ -214,6 +214,7 @@ def load_db():
         db.session.commit()
 
         # Build groups table
+        # TODO: The groups quality is bad -- revisit this tomorrow
         groups = Counter(group_ids)
         for group_id, group_n in groups.items():
             grp = Group(group_id=group_id, count=group_n)
@@ -305,8 +306,8 @@ def search():
         results = qobj.all()
         r2 = results
 
-        # TODO: Zero results should return something different from the blank search page
-        # Can handle this with a yes/no flag
+        # TODO: Maybe zero results should return something different from the blank search page
+        # Can handle this with a yes/no flag?
 
         # Return variable names separately
         rnames = []
@@ -396,7 +397,7 @@ def var_page(varname):
 @application.route('/favicon.ico')
 def favicon():
     return send_from_directory(os.path.join(application.root_path, 'static'),
-                               'glyphicons-508-cluster.png', mimetype='image/vnd.microsoft.icon')
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 # Full metadata file download
 @application.route('/get_metadata')
