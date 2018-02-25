@@ -18,6 +18,27 @@
 
     <div class="row">
         <div class="col-md-5">
+            <!-- Topic and survey section -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" href="#collapse_topic">
+                            Topic
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse_topic" class="panel-collapse collapse in" role="tabpanel">
+                    <div class="panel-body">
+                        <!-- TODO: Make these click through to a search on this topic? -->
+                        {% for u in umbrellas %}
+                            <p>
+                                <span class="umbrella">{{u.umbrella}}</span>───┤ <em>{{ u.topic }}</em><br/>
+                           </p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
             <!-- Variable metadata -->
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -53,14 +74,22 @@
                     </h4>
                 </div>
                 <div id="collapse_response" class="panel-collapse collapse in" role="tabpanel">
-                    <div class="panel-body">
-                        <ul>
-                        <!-- TODO: This could be formatted a little more nicely (why is the numeric code also in the label field?) -->
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Value</th>
+                                <th>Label</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                         {% for r in responses %}
-                            <li>{{r.value}}: {{ r.label }}</li>
+                            <tr>
+                                <td>{{r.value}}</td>
+                                <td>{{r.label}}</td>
+                            </tr>
                         {% endfor %}
-                        </ul>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -98,27 +127,6 @@
         </div>
 
         <div class="col-md-7">
-            <!-- Topic and survey section -->
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a role="button" data-toggle="collapse" href="#collapse_topic">
-                            Topic
-                        </a>
-                    </h4>
-                </div>
-                <div id="collapse_topic" class="panel-collapse collapse in" role="tabpanel">
-                    <div class="panel-body">
-                        <!-- TODO: Make these click through to a search on this topic? -->
-                        {% for u in umbrellas %}
-                            <p>
-                                <span class="umbrella">{{u.umbrella}}</span>───┤ <em>{{ u.topic }}</em><br/>
-                           </p>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-
             <!-- Related variables -->
             <div class="panel panel-default">
                 <div id="collapse_related" class="panel-collapse collapse in" role="tabpanel">
