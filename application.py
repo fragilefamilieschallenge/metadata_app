@@ -354,42 +354,6 @@ def var_page(varname):
         return render_template('variable.html', var_data=var_data, neighbors=neighbors,
                                responses=responses, umbrellas=umbrellas, filtermeta=valid_filters, filterlabs=filter_labels)
 
-# @application.route('/export')
-# def export(*varlist):
-#
-#
-#     if not varlist or varlist[0] != '[':
-#         return redirect(url_for('search'))
-#     else:
-#         # Get requested variable data
-#         varlist = eval(varlist)
-#         var_data = Variable.query.filter(Variable.name.in_(varlist)).all()
-#         header = var_data[0].keys()
-#
-#         # Write to CSV
-#         outfile = datetime.datetime.strftime(datetime.datetime.now(), "%d%b%Y_") + str(random.randint(1, 10000)) + ".csv"
-#         ofdir = os.path.join(application.root_path, "data")
-#         print "Writing: " + ofdir + "/" + outfile + "\n"
-#         with open(os.path.join(ofdir, outfile), "w") as of:
-#             ofwrite = DictWriter(of)
-#             ofwrite.writeheader()
-#             for vd in var_data:
-#                 write.writerow({k: v for k, v in vd.items()})
-#         print "Wrote: " + ofdir + "/" + outfile + "\n"
-#
-#         # Scrub old files
-#         # TODO
-#
-#     # Dispatch CSV download
-#     return redirect(url_for("download_file", path=outfile))
-#
-# @application.route("/export/<path>")
-# def download_file(path):
-#     if not Path:
-#         return redirect(url_for('search'))
-#     else:
-#         return send_file(path, as_attachment=True)
-
 
 ## Static pages ##
 
