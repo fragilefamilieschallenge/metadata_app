@@ -336,12 +336,12 @@ def var_page(varname):
         neighbors = Variable.query.filter(Variable.group_id == var_data.group_id).all()
 
         # Responses
-        responses = Response.query.filter(Response.name == varname).all()
+        responses = Response.query.filter(Response.name == varname).group_by(Response.label).all()
         if responses:
             responses = sorted(responses, key=lambda x: int(x.value), reverse=True)
 
         # Topic
-        topics = Topic.query.filter(Topic.name == varname).all()
+        topics = Topic.query.filter(Topic.name == varname).distinct(Topic.topic).all()
 
         # Log query
         # TODO
