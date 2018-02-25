@@ -29,7 +29,7 @@ auth = BasicAuth(application)
 # Datetime helper
 epoch_base = datetime.datetime.utcfromtimestamp(0)
 def epochalypse_now():
-    return (datetime.datetime.now() - epoch_base).total_seconds() * 1000
+    return int((datetime.datetime.now() - epoch_base).total_seconds())
 
 
 # Define data models
@@ -442,8 +442,8 @@ if __name__ == "__main__":
     handler = RotatingFileHandler('app.log', maxBytes=1024 * 1024, backupCount=10)
     handler.setLevel(logging.INFO)
     application.logger.addHandler(handler)
-    application.logger.info("[{}] App launched.".format(epochalypse_now()))
     application.logger.setLevel(logging.INFO)
+    application.logger.info("[{}] App launched.".format(epochalypse_now()))
 
     # Launch application
     application.run(host="0.0.0.0")
