@@ -54,7 +54,7 @@
                             {% if desc != "Topic" %}
                                 {% for val, lab in filtermeta[filt].items() %}
                                     {% if var_data[filt] == val %}
-                                        <span class="label label-default label-metadata" data-toggle="tooltip" data-placement="left" title="{{desc}}">{{lab}}</span><br/>
+                                        <span class="label label-default label-metadata" data-toggle="tooltip" data-placement="left" title="{{desc}}">{{lab}}</span><br/><br/>
                                     {% endif %}
                                 {% endfor %}
                             {% endif %}
