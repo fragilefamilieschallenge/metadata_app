@@ -440,7 +440,7 @@ def index():
 if __name__ == "__main__":
     # Configure logging (save 10mb of logs in chunks of 1mb)
     handler = RotatingFileHandler('app.log', maxBytes=1024 * 1024, backupCount=10)
-    handler.setLevel(logging.INFO)
+    handler.setLevel(logging.DEBUG)
     application.logger.addHandler(handler)
     application.logger.info("[{}] App launched.".format(epochalypse_now()))
 
