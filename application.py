@@ -435,7 +435,7 @@ if __name__ == "__main__":
     # Configure logging (save 10mb of logs in chunks of 1mb)
     handler = RotatingFileHandler('app.log', maxBytes=1000000, backupCount=10)
     handler.setLevel(logging.INFO)
-    appplication.logger.addHandler(handler)
+    application.logger.addHandler(handler)
 
     # Launch application
     application.run(host="0.0.0.0")
