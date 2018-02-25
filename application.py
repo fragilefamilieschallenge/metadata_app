@@ -7,10 +7,13 @@ import os
 import re
 import datetime
 import random
+import logging
+import uuid
+from logging.handlers import RotatingFileHandler
 from csv import DictReader, DictWriter
 from collections import OrderedDict, Counter
 
-from flask import Flask, render_template, url_for, request, send_from_directory, send_file
+from flask import Flask, render_template, url_for, request, send_from_directory, send_file, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_basicauth import BasicAuth
 
@@ -349,11 +352,10 @@ def search():
                 topics[t.name] = t.topic
 
         # Log query
-        # TODO
+        application.logger.info("{} searched with filters {}, yielded variables {}".format(request.cookies.get("user_id"), constraints.items(), str(rnames)))
     else:
         # Log that we're starting a new search
-        # TODO
-        pass
+        application.logger.info("{} started new search.".format(request.cookies.get("user_id")))
 
     return render_template('search.html', results=results, rnames=rnames, constraints=constraints, topics=topics,
                            search_query=search_query, filtermeta=valid_filters, filterlabs=filter_labels)
@@ -388,7 +390,7 @@ def var_page(varname):
         umbrellas = Umbrella.query.filter(Umbrella.topic.in_([str(t.topic) for t in topics])).all()
 
         # Log query
-        # TODO
+        application.logger.info("{} viewed variable: {}".format(request.cookies.get("user_id"), varname))
 
         # Render page
         return render_template('variable.html', var_data=var_data, neighbors=neighbors, neighbor_topics=neighbor_topics,
@@ -413,11 +415,27 @@ def feedback():
     return render_template('feedback.html')
 
 # Main page
+# Also, set a unique ID for this user
 @application.route('/')
 def index():
-    return render_template('index.html')
+    resp = make_response(render_template('index.html'))
+
+    # Set cookie data if not found
+    if not request.cookies.get("user_id"):
+        expire_date = datetime.datetime.now() + datetime.timedelta(days=90)
+        g_uuid = str(uuid.uuid4())
+        resp.set_cookie("user_id", g_uuid, expires=expire_date)
+
+    # Render index page
+    return resp
 
 
 # Execute app directly when invoked
 if __name__ == "__main__":
+    # Configure logging (save 10mb of logs in chunks of 1mb)
+    handler = RotatingFileHandler('app.log', maxBytes=1000000, backupCount=10)
+    handler.setLevel(logging.INFO)
+    appplication.logger.addHandler(handler)
+
+    # Launch application
     application.run(host="0.0.0.0")
