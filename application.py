@@ -341,14 +341,17 @@ def var_page(varname):
             responses = sorted(responses, key=lambda x: int(x.value), reverse=True)
 
         # Topic
-        topics = Topic.query.filter(Topic.name == varname).distinct(Topic.topic).all()
+        topics = Topic.query.filter(Topic.name == varname).group_by(Topic.topic).all()
+
+        # Umbrellas
+        umbrellas = Umbrella.query.filter(Umbrella.topic.in_([str(t.topic) for t in topics])).all()
 
         # Log query
         # TODO
 
         # Render page
         return render_template('variable.html', var_data=var_data, neighbors=neighbors,
-                               responses=responses, topics=topics, filtermeta=valid_filters, filterlabs=filter_labels)
+                               responses=responses, umbrellas=umbrellas, filtermeta=valid_filters, filterlabs=filter_labels)
 
 # @application.route('/export')
 # def export(*varlist):

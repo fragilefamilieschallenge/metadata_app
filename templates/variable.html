@@ -110,11 +110,11 @@
                 <div id="collapse_topic" class="panel-collapse collapse in" role="tabpanel">
                     <div class="panel-body">
                         <!-- TODO: Make these click through to a search on this topic? -->
-                        {% for t in topics %}
-                            <p>{{ t.topic }}</p>
+                        {% for u in umbrellas %}
+                            <p>
+                                <span class="umbrella">{{u.umbrella}}</span>───┤ <em>{{ u.topic }}</em><br/>
+                           </p>
                         {% endfor %}
-                        <!-- TODO: Need data mapping the survey section code to the name of that section -->
-                        <p><strong>Survey section:</strong> {{ var_data.section|capitalize }}</p>
                     </div>
                 </div>
             </div>
