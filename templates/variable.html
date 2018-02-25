@@ -30,13 +30,13 @@
                 <div id="collapse_filter" class="panel-collapse collapse in" role="tabpanel">
                     <div class="panel-body">
                         {% for filt, desc in filterlabs.items() %}
-                            <strong>{{desc}}:</strong>
-                            {% for val, lab in filtermeta[filt].items() %}
-                                {% if var_data[filt] == val %}
-                                    <span class="label label-default">{{lab}}</span>
-                                {% endif %}
-                            {% endfor %}
-                            <br/><br/>
+                            {% if desc != "Topic" %}
+                                {% for val, lab in filtermeta[filt].items() %}
+                                    {% if var_data[filt] == val %}
+                                        <span class="label label-default label-metadata" data-toggle="tooltip" data-placement="bottom" title="{{desc}}">{{lab}}</span>&ensp;
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
                         {% endfor %}
                     </div>
                 </div>
@@ -132,11 +132,11 @@
                                     <tr>
                                         <th>Variable</th>
                                         <th>Description</th>
-                                        <th>Wave</th>
+                                        <th>Topics</th>
                                         <th>Respondent</th>
-                                        <th>Source</th>
-                                        <th>Scope</th>
+                                        <th>Wave</th>
                                         <th>Type</th>
+                                        <th>Source</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -145,11 +145,11 @@
                                         <tr>
                                             <td><a type="button" class="btn btn-default" href="{{ url_for('var_page', varname = var.name) }}">{{var.name}}</button></td>
                                             <td>{{var.label}}</td>
-                                            <td><small>{{filtermeta.wave[var.wave]}}</small></td>
+                                            <td><small>{{neighbor_topics[var.name]}}</small></td>
                                             <td><small>{{filtermeta.respondent[var.respondent]}}</small></td>
-                                            <td><small>{{filtermeta.data_source[var.data_source]}}</small></td>
-                                            <td><small>{{filtermeta.scope[var.scope]}}</small></td>
+                                            <td><small>{{filtermeta.wave[var.wave]}}</small></td>
                                             <td><small>{{filtermeta.data_type[var.data_type]}}</small></td>
+                                            <td><small>{{filtermeta.data_source[var.data_source]}}</small></td>
                                         </tr>
                                         {% endif %}
                                     {% endfor %}
@@ -172,6 +172,8 @@
                 "searching": false,
                 "lengthChange": false
             });
+
+            $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
 {% endblock %}

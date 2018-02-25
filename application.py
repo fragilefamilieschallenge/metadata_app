@@ -367,25 +367,31 @@ def var_page(varname):
         # Get variable data
         var_data = Variable.query.filter(Variable.name == varname).first()
 
-        # Grouped variables
+        # Grouped variables + topic membership
         neighbors = Variable.query.filter(Variable.group_id == var_data.group_id).all()
+        neighbor_names = [n.name for n in neighbors]
+        neighbor_tdat = Topic.query.filter(Topic.name.in_(neighbor_names)).group_by(Topic.topic, Topic.name).all()
+        neighbor_topics = {}
+        for t in neighbor_tdat:
+            if t.name in neighbor_topics.keys():
+                neighbor_topics[t.name] = "{}, {}".format(neighbor_topics[t.name], t.topic)
+            else:
+                neighbor_topics[t.name] = t.topic
 
         # Responses
         responses = Response.query.filter(Response.name == varname).group_by(Response.label).all()
         if responses:
             responses = sorted(responses, key=lambda x: int(x.value), reverse=True)
 
-        # Topic
+        # Umbrella data
         topics = Topic.query.filter(Topic.name == varname).group_by(Topic.topic).all()
-
-        # Umbrellas
         umbrellas = Umbrella.query.filter(Umbrella.topic.in_([str(t.topic) for t in topics])).all()
 
         # Log query
         # TODO
 
         # Render page
-        return render_template('variable.html', var_data=var_data, neighbors=neighbors,
+        return render_template('variable.html', var_data=var_data, neighbors=neighbors, neighbor_topics=neighbor_topics,
                                responses=responses, umbrellas=umbrellas, filtermeta=valid_filters, filterlabs=filter_labels)
 
 
