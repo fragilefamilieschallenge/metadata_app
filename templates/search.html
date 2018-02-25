@@ -87,11 +87,11 @@
                                 <tr>
                                     <th>Variable</th>
                                     <th>Description</th>
-                                    <th>Wave</th>
+                                    <th>Topics</th>
                                     <th>Respondent</th>
-                                    <th>Source</th>
-                                    <th>Scope</th>
+                                    <th>Wave</th>
                                     <th>Type</th>
+                                    <th>Source</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -99,11 +99,11 @@
                                 <tr>
                                     <td><a type="button" class="btn btn-default" href="{{ url_for('var_page', varname = rvar.name) }}">{{rvar.name}}</button></td>
                                     <td>{{rvar.label}}</td>
-                                    <td><small>{{filtermeta.wave[rvar.wave]}}</small></td>
+                                    <td><small>{{topics[rvar.name]}}</small></td>
                                     <td><small>{{filtermeta.respondent[rvar.respondent]}}</small></td>
-                                    <td><small>{{filtermeta.data_source[rvar.data_source]}}</small></td>
-                                    <td><small>{{filtermeta.scope[rvar.scope]}}</small></td>
+                                    <td><small>{{filtermeta.wave[rvar.wave]}}</small></td>
                                     <td><small>{{filtermeta.data_type[rvar.data_type]}}</small></td>
+                                    <td><small>{{filtermeta.data_source[rvar.data_source]}}</small></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

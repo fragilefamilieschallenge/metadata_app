@@ -235,15 +235,30 @@ def load_db():
 
 # Define valid search filters
 # This object determines what filter groups show up in the search view
-filter_labels = OrderedDict([("wave", "Wave"),
+filter_labels = OrderedDict([("topic", "Topic"),
+                             ("wave", "Wave"),
                              ("respondent", "Respondent"),
                              ("data_source", "Source"),
-                             ("scope", "City scope"),
                              ("data_type", "Variable type")])
 
 # Define domain-label map for each filter
 # This defines what values are valid to filter on for each filter group
-valid_filters = {"wave": OrderedDict([("1", "Baseline"),
+valid_filters = {"topic": OrderedDict([("Attitudes and expectations", "Attitudes and expectations"),
+                                      ("Childcare", "Childcare"),
+                                      ("Cognitive and behavioral development", "Cognitive and behavioral development"),
+                                      ("Community", "Community"),
+                                      ("Demographics", "Demographics"),
+                                      ("Education and school", "Education and school"),
+                                      ("Employment", "Employment"),
+                                      ("Family and social support", "Family and social support"),
+                                      ("Finances", "Finances"),
+                                      ("Health and health behavior", "Health and health behavior"),
+                                      ("Home and housing", "Home and housing"),
+                                      ("Legal system", "Legal system"),
+                                      ("Paradata and weights", "Paradata and weights"),
+                                      ("Parental relationships", "Parental relationships"),
+                                      ("Parenting", "Parenting")]),
+                 "wave": OrderedDict([("1", "Baseline"),
                                      ("2", "Year 1"),
                                      ("3", "Year 3"),
                                      ("4", "Year 5"),
@@ -267,11 +282,6 @@ valid_filters = {"wave": OrderedDict([("1", "Baseline"),
                                             ("constructed", "Constructed"),
                                             ("weight", "Survey weight"),
                                             ("idnum", "ID number")]),
-                 "scope": OrderedDict([("2", "2 cities"),
-                                      ("15", "15 cities"),
-                                      ("16", "16 cities"),
-                                      ("18", "18 cities"),
-                                      ("20", "20 cities")]),
                  "data_type": OrderedDict([("bin", "Binary"),
                                           ("uc", "Unordered categorical"),
                                           ("oc", "Ordered categorical"),
@@ -285,6 +295,7 @@ def search():
     rnames = None
     constraints = None
     search_query = None
+    topics = None
     if request.method == "POST":
         qobj = Variable.query
 
@@ -297,9 +308,23 @@ def search():
         # Filter by fields
         constraints = dict()
         for field in set(valid_filters.keys()).intersection(request.form.keys()):
-            domain = request.form.getlist(field)
-            filt = "Variable.{}.in_(domain)".format(field)
-            qobj = qobj.filter(eval(filt))
+            if field == "topic":
+                # Get list of names in provided umbrellas
+                # XXX: This works but could be much cleaner (also I think this query is expensive)
+                ulist = str([str(unicode(x)) for x in request.form.getlist(field)]).strip("[]")
+                vquery = "SELECT DISTINCT `name` \
+                          FROM topic LEFT JOIN umbrella \
+                          ON topic.topic = umbrella.topic \
+                          WHERE umbrella IN ({})".format(ulist)
+                vnames = [v["name"] for v in db.session.execute(vquery).fetchall()]
+
+                # Filter by name list
+                qobj = qobj.filter(Variable.name.in_(vnames))
+            else:
+                # Filter by metadata field in variables table
+                domain = request.form.getlist(field)
+                filt = "Variable.{}.in_(domain)".format(field)
+                qobj = qobj.filter(eval(filt))
             constraints[field] = request.form.getlist(field)
 
         # Get all matches
@@ -309,10 +334,19 @@ def search():
         # TODO: Maybe zero results should return something different from the blank search page
         # Can handle this with a yes/no flag?
 
-        # Return variable names separately
+        # Determine variable names
         rnames = []
         for result in r2:
             rnames.append(str(unicode(result.name)))
+
+        # Get topic data
+        tdat = Topic.query.filter(Topic.name.in_(rnames)).group_by(Topic.topic, Topic.name).all()
+        topics = {}
+        for t in tdat:
+            if t.name in topics.keys():
+                topics[t.name] = "{}, {}".format(topics[t.name], t.topic)
+            else:
+                topics[t.name] = t.topic
 
         # Log query
         # TODO
@@ -321,7 +355,7 @@ def search():
         # TODO
         pass
 
-    return render_template('search.html', results=results, rnames=rnames, constraints=constraints,
+    return render_template('search.html', results=results, rnames=rnames, constraints=constraints, topics=topics,
                            search_query=search_query, filtermeta=valid_filters, filterlabs=filter_labels)
 
 @application.route('/variables/<varname>')
