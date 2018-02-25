@@ -4,6 +4,7 @@
 # Last modified: 23 February 2018
 
 import os
+import re
 import datetime
 import random
 from csv import DictReader, DictWriter
@@ -34,6 +35,7 @@ class Variable(db.Model):
     data_type = db.Column(db.Text)
     warning = db.Column(db.Integer)
     group_id = db.Column(db.Text)
+    group_subid = db.Column(db.Text)
     data_source = db.Column(db.Text)
     respondent = db.Column(db.Text)
     wave = db.Column(db.Text)
@@ -41,13 +43,14 @@ class Variable(db.Model):
     section = db.Column(db.Text)
     leaf = db.Column(db.Text)
 
-    def __init__(self, name, label, old_name, data_type, warning, group_id, data_source, respondent, wave, scope, section, leaf):
+    def __init__(self, name, label, old_name, data_type, warning, group_id, group_subid, data_source, respondent, wave, scope, section, leaf):
         self.name = name
         self.label = label
         self.old_name = old_name
         self.data_type = data_type
         self.warning = warning
         self.group_id = group_id
+        self.group_subid = group_subid
         self.data_source = data_source
         self.respondent = respondent
         self.wave = wave
@@ -72,16 +75,32 @@ class Topic(db.Model):
     def __repr__(self):
         return "<Topic %r>" % self.topic
 
+class Umbrella(db.Model):
+    __tablename__ = "umbrella"
+
+    id = db.Column(db.Integer, primary_key=True)
+    topic = db.Column(db.Text)
+    umbrella = db.Column(db.Text)
+
+    def __init__(self, topic, umbrella):
+        self.topic = topic
+        self.umbrella = umbrella
+
+    def __repr__(self):
+        return "<Umbrella %r>" % self.umbrela
+
 class Response(db.Model):
     __tablename__ = "response"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Text)
     label = db.Column(db.Text)
+    value = db.Column(db.Integer)
 
-    def __init__(self, name, label):
+    def __init__(self, name, label, value):
         self.name = name
         self.label = label
+        self.value = value
 
     def __repr__(self):
         return "<Response %r>" % self.label
@@ -122,56 +141,89 @@ def load_db():
         vars_loaded = 0
         commit_increment = 1000
         group_ids = []
+        umbrella_topics = set()
         for row in rows:
-            # Write variable data
-            var = Variable(name=row["new_name"],
-                           label=row["varlab"].replace('"', "'"),
-                           old_name=row["old_name"],
-                           data_type=row["type"],
-                           warning=int(row["warning"]),
-                           group_id=str(row["group"]),
-                           data_source=row["source"],
-                           respondent=row["respondent"],
-                           wave=str(row["wave"]),
-                           scope=str(row["scope"]),
-                           section=row.get("section"),
-                           leaf=str(row["leaf"]))
-            db.session.add(var)
+            # # Determine group membership
+            # group_no = None
+            # group_sub = None
+            # groupclass = re.search("[A-z]+", str(row["group"]))
+            # if not groupclass:
+            #     group_no = str(row["group"])
+            # else:
+            #     group_sub = re.search("[A-z]+", str(row["group"])).group(0)
+            #     group_no = str(row["group"]).replace(group_sub, "")
+            #
+            # # Write variable data
+            # var = Variable(name=row["new_name"],
+            #                label=row["varlab"].replace('"', "'"),
+            #                old_name=row["old_name"],
+            #                data_type=row["type"],
+            #                warning=int(row["warning"]),
+            #                group_id=group_no,
+            #                group_subid=group_sub,
+            #                data_source=row["source"],
+            #                respondent=row["respondent"],
+            #                wave=str(row["wave"]),
+            #                scope=str(row["scope"]),
+            #                section=row.get("section"),
+            #                leaf=str(row["leaf"]))
+            # db.session.add(var)
 
             # Write topic data
-            t1 = "TBD"
-            if row["topic1"] != "* topic1 coming soon! *":
-                t1 = row["topic1"]
-            topic1 = Topic(name=row["new_name"], topic=t1)
-            db.session.add(topic1)
+            # Also, save umbrella data (we add this table later)
+            # topic1 = Topic(name=row["new_name"], topic=row["topic1"])
+            # db.session.add(topic1)
+            umbrella_topics.add((row["topic1"], row["umbrella1"]))
             if len(row["topic2"]) > 0:
-                topic2 = Topic(name=row["new_name"], topic=row["topic2"])
-                db.session.add(topic2)
-
-            # Write response data
-            for key in row.keys():
-                if key.find("label") > -1 and len(row[key]) > 0:
-                    resp = Response(name=row["new_name"], label=row[key])
-                    db.session.add(resp)
-
-            # Increment group list
-            group_ids.append(str(row["group"]))
-
-            # Increment variable counter
-            vars_loaded += 1
-
-            # Commit in k increments
-            if vars_loaded % commit_increment == 0:
-                db.session.commit()
+                # # Some rows have multiple topics (up to 2)
+                # topic2 = Topic(name=row["new_name"], topic=row["topic2"])
+                # db.session.add(topic2)
+                umbrella_topics.add((row["topic2"], row["umbrella2"]))
+            #
+            # # Write response data
+            # for key in row.keys():
+            #     if key.find("label") > -1 and len(row[key]) > 0:
+            #         # Clean up response label
+            #         respidx = key.replace("label", "")
+            #         try:
+            #             lab_pts = row[key].split(" ", 1)
+            #             lab_pref = lab_pts[0]
+            #             val = row["value" + respidx]
+            #             if lab_pref == val:
+            #                 lab = lab_pts[1]  # Drop the prefix if it's the response value
+            #             else:
+            #                 lab = row[key]
+            #         except IndexError:
+            #             lab = row[key]  # Default to the full entry if we can't clean up
+            #
+            #         # Append new response row
+            #         resp = Response(name=row["new_name"], label=lab, value=row["value" + respidx])
+            #         db.session.add(resp)
+            #
+            # # Add to group list
+            # group_ids.append(str(row["group"]))
+            #
+            # # Increment variable counter
+            # vars_loaded += 1
+            #
+            # # Commit in increments of k
+            # if vars_loaded % commit_increment == 0:
+            #     db.session.commit()
 
         # Commit any remaining rows
-        db.session.commit()
+        # db.session.commit()
 
-        # Build groups table
-        groups = Counter(group_ids)
-        for group_id, group_n in groups.items():
-            grp = Group(group_id=group_id, count=group_n)
-            db.session.add(grp)
+        # # Build groups table
+        # groups = Counter(group_ids)
+        # for group_id, group_n in groups.items():
+        #     grp = Group(group_id=group_id, count=group_n)
+        #     db.session.add(grp)
+        # db.session.commit()
+
+        # Build umbrellas table
+        for topic, umbrella in umbrella_topics:
+            umb = Umbrella(topic=topic, umbrella=umbrella)
+            db.session.add(umb)
         db.session.commit()
 
     # Yield result
@@ -180,12 +232,16 @@ def load_db():
 
 ## User views ##
 
-# Define valid search filters + domain-label map for each filter
+# Define valid search filters
+# This object determines what filter groups show up in the search view
 filter_labels = OrderedDict([("wave", "Wave"),
                              ("respondent", "Respondent"),
                              ("data_source", "Source"),
                              ("scope", "City scope"),
                              ("data_type", "Variable type")])
+
+# Define domain-label map for each filter
+# This defines what values are valid to filter on for each filter group
 valid_filters = {"wave": OrderedDict([("1", "Baseline"),
                                      ("2", "Year 1"),
                                      ("3", "Year 3"),
@@ -197,6 +253,7 @@ valid_filters = {"wave": OrderedDict([("1", "Baseline"),
                                            ("m", "Mother"),
                                            ("q", "Couple"),
                                            ("t", "Teacher"),
+                                           ("p", "Primary caregiver"),
                                            ("n", "Non-parental primary caregiver"),
                                            ("d", "Child care center (survey)"),
                                            ("e", "Child care center (observation)"),
@@ -210,14 +267,16 @@ valid_filters = {"wave": OrderedDict([("1", "Baseline"),
                                             ("weight", "Survey weight"),
                                             ("idnum", "ID number")]),
                  "scope": OrderedDict([("2", "2 cities"),
+                                      ("15", "15 cities"),
+                                      ("16", "16 cities"),
                                       ("18", "18 cities"),
-                                      ("19", "19 cities"),
                                       ("20", "20 cities")]),
                  "data_type": OrderedDict([("bin", "Binary"),
                                           ("uc", "Unordered categorical"),
                                           ("oc", "Ordered categorical"),
                                           ("cont", "Continuous"),
-                                          ("string", "String")])}
+                                          ("string", "String"),
+                                          ("id", "ID number")])}
 
 @application.route('/variables', methods=['GET', 'POST'])
 def search():
@@ -336,10 +395,14 @@ def favicon():
     return send_from_directory(os.path.join(application.root_path, 'static'),
                                'glyphicons-508-cluster.png', mimetype='image/vnd.microsoft.icon')
 
-# Full metadata file download page
-@application.route('/metadata')
+# Full metadata file download
+@application.route('/get_metadata')
 def metadata():
-    return render_template('metadata.html')
+    return send_file(application.config["METADATA_FILE"], as_attachment=True),
+
+@application.route("/feedback")
+def feedback():
+    return render_template('feedback.html')
 
 # Main page
 @application.route('/')
