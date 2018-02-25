@@ -52,11 +52,17 @@
                     <div class="panel-body">
                         {% for filt, desc in filterlabs.items() %}
                             {% if desc != "Topic" %}
+                            <div class="container">
+                                <div class="row">
                                 {% for val, lab in filtermeta[filt].items() %}
                                     {% if var_data[filt] == val %}
+                                    <div class="col-md-3">
                                         <span class="label label-default label-metadata" data-toggle="tooltip" data-placement="bottom" title="{{desc}}">{{lab}}</span>&ensp;
+                                    </div>
                                     {% endif %}
                                 {% endfor %}
+                                </div>
+                            </div>
                             {% endif %}
                         {% endfor %}
                     </div>
