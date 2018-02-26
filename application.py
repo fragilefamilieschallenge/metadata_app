@@ -336,8 +336,8 @@ def search():
                 qobj = qobj.filter(eval(filt))
             constraints[field] = request.form.getlist(field)
 
-        # Get all matches
-        results = qobj.all()
+        # Get all unique matches
+        results = qobj.group_by(Variable.name).all()
         r2 = results
 
         # TODO: Maybe zero results should return something different from the blank search page
