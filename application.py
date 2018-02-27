@@ -414,7 +414,7 @@ def favicon():
 # Full metadata file download
 @application.route('/get_metadata')
 def metadata():
-    return send_file(application.config["METADATA_FILE"], as_attachment=True),
+    return send_file(os.path.join(application.root_path, application.config["METADATA_FILE"]), as_attachment=True),
 
 @application.route("/feedback")
 def feedback():
