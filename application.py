@@ -300,6 +300,13 @@ valid_filters = {"topic": OrderedDict([("Attitudes and expectations", "Attitudes
 
 @application.route('/variables', methods=['GET', 'POST'])
 def search():
+    # Set cookie data if not found
+    if not request.cookies.get("user_id"):
+        expire_date = datetime.datetime.now() + datetime.timedelta(days=90)
+        g_uuid = str(uuid.uuid4())
+        resp.set_cookie("user_id", g_uuid, expires=expire_date)
+
+    # Build data objects
     results = None
     rnames = None
     constraints = None
@@ -368,6 +375,12 @@ def search():
 
 @application.route('/variables/<varname>')
 def var_page(varname):
+    # Set cookie data if not found
+    if not request.cookies.get("user_id"):
+        expire_date = datetime.datetime.now() + datetime.timedelta(days=90)
+        g_uuid = str(uuid.uuid4())
+        resp.set_cookie("user_id", g_uuid, expires=expire_date)
+
     if not varname:
         # Abort early if Flask tries to load this page with no variable
         return redirect(url_for('search'))
