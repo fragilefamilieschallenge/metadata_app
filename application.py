@@ -427,6 +427,8 @@ def favicon():
 # Full metadata file download
 @application.route('/get_metadata')
 def metadata():
+    # Log query
+    application.logger.info("[{}] {} downloaded raw file.".format(epochalypse_now(), request.cookies.get("user_id")))
     return send_file(os.path.join(application.root_path, application.config["METADATA_FILE"]), as_attachment=True),
 
 @application.route("/feedback")
@@ -444,6 +446,9 @@ def index():
         expire_date = datetime.datetime.now() + datetime.timedelta(days=90)
         g_uuid = str(uuid.uuid4())
         resp.set_cookie("user_id", g_uuid, expires=expire_date)
+
+    # Log query
+    application.logger.info("[{}] {} went home.".format(epochalypse_now(), request.cookies.get("user_id")))
 
     # Render index page
     return resp
