@@ -312,6 +312,7 @@ def search():
     constraints = None
     search_query = None
     topics = None
+    zero_found = False
     if request.method == "POST":
         qobj = Variable.query
 
@@ -347,13 +348,13 @@ def search():
         results = qobj.group_by(Variable.name).all()
         r2 = results
 
-        # TODO: Maybe zero results should return something different from the blank search page
-        # Can handle this with a yes/no flag?
-
         # Determine variable names
         rnames = []
         for result in r2:
             rnames.append(str(unicode(result.name)))
+
+        if len(rnames) == 0:
+            zero_found = True
 
         # Get topic data
         tdat = Topic.query.filter(Topic.name.in_(rnames)).group_by(Topic.topic, Topic.name).all()
@@ -371,7 +372,7 @@ def search():
         application.logger.info("[{}] {} started new search.".format(epochalypse_now(), request.cookies.get("user_id")))
 
     return render_template('search.html', results=results, rnames=rnames, constraints=constraints, topics=topics,
-                           search_query=search_query, filtermeta=valid_filters, filterlabs=filter_labels)
+                           search_query=search_query, filtermeta=valid_filters, filterlabs=filter_labels, zero_found=zero_found)
 
 @application.route('/variables/<varname>')
 def var_page(varname):
