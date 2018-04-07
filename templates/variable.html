@@ -178,7 +178,8 @@
         $(document).ready(function(){
             $('#results').DataTable( {
                 "searching": false,
-                "lengthChange": false
+                "lengthChange": false,
+                columnDefs: [ { type: 'natural', targets: '_all' } ]
             });
 
             $('[data-toggle="tooltip"]').tooltip();
