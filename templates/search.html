@@ -97,7 +97,7 @@
                             <tbody>
                                 {% for rvar in results %}
                                 <tr>
-                                    <td><a type="button" class="btn btn-default" href="{{ url_for('var_page', varname = rvar.name) }}">{{rvar.name}}</button></td>
+                                    <td><a type="button" class="btn btn-primary" href="{{ url_for('var_page', varname = rvar.name) }}">{{rvar.name}}</button></td>
                                     <td>{{rvar.label}}</td>
                                     <td><small>{{topics[rvar.name]}}</small></td>
                                     <td><small>{{filtermeta.respondent[rvar.respondent]}}</small></td>
