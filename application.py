@@ -436,6 +436,23 @@ def metadata():
 def feedback():
     return render_template('feedback.html')
 
+# About Page
+@application.route('/about')
+def about():
+    resp = make_response(render_template('about.html'))
+
+    # Set cookie data if not found
+    if not request.cookies.get('user_id'):
+        expire_date = datetime.datetime.now() + datetime.timedelta(days=90)
+        g_uuid = str(uuid.uuid4())
+
+    # Log query
+    application.logger.info("[{}] {} looked at the about page.".format(epochalypse_now(), request.cookies.get('user_id')))
+
+    # Render about page
+
+    return resp
+
 # Main page
 # Also, set a unique ID for this user
 @application.route('/')
