@@ -21,7 +21,7 @@ from flask_basicauth import BasicAuth
 application = Flask(__name__)
 
 # Configure application
-application.config.from_envvar('APP_CONFIG', silent=True)
+application.config.from_pyfile('api.config.cfg')
 db = SQLAlchemy(application)
 auth = BasicAuth(application)
 
@@ -328,7 +328,7 @@ def search():
             if field == "topic":
                 # Get list of names in provided umbrellas
                 # XXX: This works but could be much cleaner (also I think this query is expensive)
-                ulist = str([str(unicode(x)) for x in request.form.getlist(field)]).strip("[]")
+                ulist = str([str(x) for x in request.form.getlist(field)]).strip("[]")
                 vquery = "SELECT DISTINCT `name` \
                           FROM topic LEFT JOIN umbrella \
                           ON topic.topic = umbrella.topic \
@@ -351,7 +351,7 @@ def search():
         # Determine variable names
         rnames = []
         for result in r2:
-            rnames.append(str(unicode(result.name)))
+            rnames.append(str(result.name))
 
         if len(rnames) == 0:
             zero_found = True
