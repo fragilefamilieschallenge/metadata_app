@@ -1,0 +1,27 @@
+{% extends "web/ffmetadata.html" %}
+{% block title %}About{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-header"><h2>Available Fragile Families Metadata</h2></div>
+            <p class="lead">Descriptions of the available metadata:</p>
+            <p><b>new_name</b>: Corresponds to what the variable was named after the re-release of February 2018 .</p>
+            <p><b>varlab</b>: A description of the variable, generated from the variable label in the Stata version of the data.</p>
+            <p><b>type</b>: Describes the way the data is stored. Can be one of five categories: Binary (bin), Continuous (cont), Unordered Categorical (uc), Ordered Catergorical (oc) or String (string).</p>
+						<p><b>group</b>: Links the variable to similar variables in other instruments.</p>
+						<p><b>q_group_N</b>: The number of similar variables in the given variables group.</p>
+						<p><b>topic[1,2]</b>: A tag that describes the specific concept measured by the variable.</p>
+						<p><b>umbrella[1,2]</b>: A more general tag describing the concept measured by the variable.</p>
+						<p><b>scope</b>: An indicator of how many cities were asked the question corresponding to this variable. </p>
+						<p><b>warning</b>: An indicator that this variable may have data stored in a way that would be unusual given its type.</p>
+						<p><b>source</b>: The original source of the data, i.e questionnaire, constructed variable, etc.</p>
+						<p><b>respondent</b>: The focus of the source, i.e. father/mother/PCG/. Generated from the varname. </p>
+						<p><b>wave</b>: Which wave of data collection the variable comes from. Generated from the varname. </p>
+						<p><b>section</b>: Which section of the instrument the variable comes from. Generated from the varname. </p>
+						<p><b>leaf</b>: The question number or short descriptor, depending on the source. Generated from the varname. </p>
+						<p><b>q_group_list</b>: A string list seperated by spaces, containing all of the names of similar variables. </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

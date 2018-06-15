@@ -1,0 +1,188 @@
+{% extends "web/ffmetadata.html" %}
+
+{% macro toggle(i, j) -%}
+    {% if i == j %}
+        btn-success
+    {% endif %}
+{%- endmacro %}
+
+{% block title %}{{ var_data.name }}{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>{{ var_data.name }}</h2>
+            <p class="lead">{{ var_data.label }}</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <!-- Topic and survey section -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" href="#collapse_topic">
+                            Topic
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse_topic" class="panel-collapse collapse in" role="tabpanel">
+                    <div class="panel-body">
+                        <!-- TODO: Make these click through to a search on this topic? -->
+                        {% for u in umbrellas %}
+                            <p>
+                                <span class="umbrella">{{u.umbrella}}</span>───┤ <em>{{ u.topic }}</em><br/>
+                           </p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Variable metadata -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" href="#collapse_filter">
+                            Metadata
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse_filter" class="panel-collapse collapse in" role="tabpanel">
+                    <div class="panel-body">
+                        {% for filt, desc in filterlabs.items() %}
+                            {% if desc != "Topic" %}
+                                {% for val, lab in filtermeta[filt].items() %}
+                                    {% if var_data[filt] == val %}
+                                        <span class="label label-default label-metadata" data-toggle="tooltip" data-placement="left" title="{{desc}}">{{lab}}</span><br/><br/>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Responses -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" href="#collapse_response">
+                            Response codes
+                        </a>
+                        <!-- TODO: Split by missing codes, substantive codes -->
+                    </h4>
+                </div>
+                <div id="collapse_response" class="panel-collapse collapse in" role="tabpanel">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Value</th>
+                                <th>Label</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for r in responses %}
+                            <tr>
+                                <td>{{r.value}}</td>
+                                <td>{{r.label}}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Data quality -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" href="#collapse_type">
+                            Warnings
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse_type" class="panel-collapse collapse in" role="tabpanel">
+                    <div class="panel-body">
+                        {% if var_data.warning|int == 0 %}
+                            <em>None.</em>
+                        {% elif var_data.warning|int == 1%}
+                            <em>Misordered categorical, outcomes do not have constant scale</em>
+                        {% elif var_data.warning|int == 2%}
+                            <em>Variable has outcome(s) which override a continuous answer set</em>
+                        {% elif var_data.warning|int == 3%}
+                            <em>Variable pertaining to period of time has misordered outcomes</em>
+                        {% elif var_data.warning|int == 4%}
+                            <em>A unique outcome is coded as a negative value</em>
+                        {% elif var_data.warning|int == 5%}
+                            <em>Missing data is coded as something other than the default, i.e as a positive value</em>
+                        {% elif var_data.warning|int == 6%}
+                            <em>A non-constructed Yes/No variable that has “No” coded to 0 instead of 2</em>
+                        {% else %}
+                            <em>Warning: {{ var_data.warning|int }}</em>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <!-- Related variables -->
+            <div class="panel panel-default">
+                <div id="collapse_related" class="panel-collapse collapse in" role="tabpanel">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Similar variables <span class="badge">{{neighbors|length - 1}}</span></h4>
+                        </div>
+                        <div class="table-responsive" style="padding: 1%">
+                            <table id="results" class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Variable</th>
+                                        <th>Description</th>
+                                        <th>Topics</th>
+                                        <th>Respondent</th>
+                                        <th>Wave</th>
+                                        <th>Type</th>
+                                        <th>Source</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for var in neighbors %}
+                                        {% if var.name != var_data.name %}
+                                        <tr>
+                                            <td><a type="button" class="btn btn-default" href="{{ url_for('web.var_page', varname = var.name) }}">{{var.name}}</button></td>
+                                            <td>{{var.label}}</td>
+                                            <td><small>{{neighbor_topics[var.name]}}</small></td>
+                                            <td><small>{{filtermeta.respondent[var.respondent]}}</small></td>
+                                            <td><small>{{filtermeta.wave[var.wave]}}</small></td>
+                                            <td><small>{{filtermeta.data_type[var.data_type]}}</small></td>
+                                            <td><small>{{filtermeta.data_source[var.data_source]}}</small></td>
+                                        </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block foot %}
+    <script>
+        $(document).ready(function(){
+            $('#results').DataTable( {
+                "searching": false,
+                "lengthChange": false,
+                columnDefs: [ { type: 'natural', targets: '_all' } ]
+            });
+
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+{% endblock %}
