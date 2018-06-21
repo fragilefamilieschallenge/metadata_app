@@ -430,7 +430,7 @@ def favicon():
 def metadata():
     # Log query
     application.logger.info("[{}] {} downloaded raw file.".format(epochalypse_now(), request.cookies.get("user_id")))
-    return send_file(os.path.join(application.root_path, application.config["METADATA_FILE"]), as_attachment=True),
+    return send_file(os.path.join(application.root_path, application.config["METADATA_FILE"]), as_attachment=True)
 
 @application.route("/feedback")
 def feedback():
