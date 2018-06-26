@@ -130,3 +130,46 @@ def searchMetadata():
         resp.set_cookie("user_id", g_uuid, expires=expire_date)
 
     return resp
+
+
+# Static pages #
+
+
+# Favicon
+@bp.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(current_app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
+
+
+# Full metadata file download
+@bp.route('/get_metadata')
+def metadata():
+    # Log query
+    current_app.logger.info("{}\t{}\tfull-file-download".format(epochalypse_now(), request.cookies.get("user_id")))
+    return send_file(current_app.config["METADATA_FILE"], as_attachment=True)
+
+
+# Feedback page
+@bp.route("/feedback")
+def feedback():
+    return render_template('api/feedback.html')
+
+
+# Landing page with API documentation
+# Also, set a unique ID for this user
+@bp.route("/")
+def landing():
+    resp = make_response(render_template('api/index.html'))
+
+    # Set cookie data if not found
+    if not request.cookies.get("user_id"):
+        expire_date = datetime.datetime.now() + datetime.timedelta(days=90)
+        g_uuid = str(uuid.uuid4())
+        resp.set_cookie("user_id", g_uuid, expires=expire_date)
+
+    # Log query
+    current_app.logger.info("{}\t{}\thome".format(epochalypse_now(), request.cookies.get("user_id")))
+
+    # Render index page
+    return resp
