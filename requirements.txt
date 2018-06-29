@@ -1,10 +1,11 @@
 click==6.7
 Flask==1.0.0
 Flask-BasicAuth==0.2.0
-Flask-SQLAlchemy==2.3.2
 itsdangerous==0.24
 Jinja2==2.10
 MarkupSafe==1.0
+pandas==0.22.0
 pymysql==0.8.0
+pytest==3.5.0
 SQLAlchemy==1.2.4
 Werkzeug==0.14.1
