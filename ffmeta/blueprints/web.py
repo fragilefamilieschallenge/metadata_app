@@ -255,3 +255,8 @@ def index():
     return resp
 
 
+@bp.route('/api')
+def api():
+    return render_template("web/api.html")
+
+
