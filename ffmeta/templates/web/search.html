@@ -3,7 +3,7 @@
 {% macro selected(val, var) -%}
     {% if constraints %}
         {% if val in constraints[var] %}
-            checked
+            selected
         {% endif %}
     {% endif %}
 {%- endmacro %}
@@ -17,6 +17,15 @@
 {%- endmacro %}
 
 {% block title %}Variables{% endblock %}
+
+{% block head %}
+<script>
+$(document).ready(function() {
+    $('.select2').select2();
+});
+</script>
+{% endblock %}
+
 {% block body %}
     <div class="container">
         <div class="row">
@@ -50,16 +59,18 @@
                             <div class="panel-body">
                                 {% for filt, desc in filterlabs.items() %}
                                 <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <a role="button" data-toggle="collapse" href="#collapse_{{filt}}">
+                                    <div class="panel-heading" data-toggle="collapse" href="#collapse_{{filt}}">
+                                        <a role="button">
                                             {{desc}}
                                         </a>
                                     </div>
                                     <div id="collapse_{{filt}}" class="panel-collapse collapse {{isin(filt)}}" role="tabpanel">
                                         <div class="panel-body">
+                                            <select class="select2" name="{{filt}}" multiple="multiple" style="width: 100%">
                                             {% for val, lab in filtermeta[filt].items() %}
-                                            <div class="checkbox"><label><input type="checkbox" name="{{filt}}" value="{{val}}" autocomplete="off" {{selected(val, filt)}}> {{lab}}</label></div>
+                                                <option value="{{val}}" {{selected(val, filt)}}>{{lab}}</option>
                                             {% endfor %}
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -88,7 +99,7 @@
                                     <th>Variable</th>
                                     <th>Description</th>
                                     <th>Topics</th>
-                                    <th>Respondent</th>
+                                    <th>Survey</th>
                                     <th>Wave</th>
                                     <th>Type</th>
                                     <th>Source</th>
@@ -100,7 +111,7 @@
                                     <td><a type="button" class="btn btn-primary" href="{{ url_for('web.var_page', varname = rvar.name) }}">{{rvar.name}}</button></td>
                                     <td>{{rvar.label}}</td>
                                     <td><small>{{topics[rvar.name]}}</small></td>
-                                    <td><small>{{filtermeta.respondent[rvar.respondent]}}</small></td>
+                                    <td><small>{{filtermeta.survey[rvar.survey]}}</small></td>
                                     <td><small>{{filtermeta.wave[rvar.wave]}}</small></td>
                                     <td><small>{{filtermeta.data_type[rvar.data_type]}}</small></td>
                                     <td><small>{{filtermeta.data_source[rvar.data_source]}}</small></td>

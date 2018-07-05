@@ -8,6 +8,7 @@ from logging.handlers import RotatingFileHandler
 from csv import DictReader, DictWriter
 from collections import OrderedDict, Counter
 
+from sqlalchemy import or_, and_
 from flask import Flask, Blueprint, render_template, url_for, request, send_from_directory, send_file, make_response, current_app, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_basicauth import BasicAuth
@@ -27,68 +28,89 @@ bp = Blueprint('web', __name__)
 
 # Define valid search filters
 # This object determines what filter groups show up in the search view
-filter_labels = OrderedDict([("topic", "Topic"),
-                             ("wave", "Wave"),
-                             ("respondent", "Respondent"),
-                             ("data_source", "Source"),
-                             ("data_type", "Variable type")])
+filter_labels = OrderedDict([
+    ("topic", "Topic"),
+    ("wave", "Wave"),
+    ("respondent", "Respondent"),
+    ("data_source", "Source"),
+    ("data_type", "Variable type"),
+    ("measures", "Scales"),
+    ("survey", "Survey"),
+    ("focal_person", "Focal Person")
+])
 
 # Define domain-label map for each filter
 # This defines what values are valid to filter on for each filter group
-valid_filters = {"topic": OrderedDict([("Attitudes and expectations", "Attitudes and expectations"),
-                                      ("Childcare", "Childcare"),
-                                      ("Cognitive and behavioral development", "Cognitive and behavioral development"),
-                                      ("Community", "Community"),
-                                      ("Demographics", "Demographics"),
-                                      ("Education and school", "Education and school"),
-                                      ("Employment", "Employment"),
-                                      ("Family and social support", "Family and social support"),
-                                      ("Finances", "Finances"),
-                                      ("Health and health behavior", "Health and health behavior"),
-                                      ("Home and housing", "Home and housing"),
-                                      ("Legal system", "Legal system"),
-                                      ("Paradata and weights", "Paradata and weights"),
-                                      ("Parental relationships", "Parental relationships"),
-                                      ("Parenting", "Parenting")]),
-                 "wave": OrderedDict([("1", "Baseline"),
-                                     ("2", "Year 1"),
-                                     ("3", "Year 3"),
-                                     ("4", "Year 5"),
-                                     ("5", "Year 9"),
-                                     ("6", "Year 15")]),
-                 "respondent": OrderedDict([("k", "Child"),
-                                           ("f", "Father"),
-                                           ("m", "Mother"),
-                                           ("q", "Couple"),
-                                           ("t", "Teacher"),
-                                           ("p", "Primary caregiver"),
-                                           ("n", "Non-parental primary caregiver"),
-                                           ("d", "Child care center (survey)"),
-                                           ("e", "Child care center (observation)"),
-                                           ("h", "In-home (survey)"),
-                                           ("o", "In-home (observation)"),
-                                           ("r", "Family care (survey)"),
-                                           ("s", "Family care (observation)"),
-                                           ("u", "Post child and family care observation")]),
-                 "data_source": OrderedDict([("questionnaire", "Questionnaire"),
-                                            ("constructed", "Constructed"),
-                                            ("weight", "Survey weight"),
-                                            ("idnum", "ID number")]),
-                 "data_type": OrderedDict([("bin", "Binary"),
-                                          ("uc", "Unordered categorical"),
-                                          ("oc", "Ordered categorical"),
-                                          ("cont", "Continuous"),
-                                          ("string", "String"),
-                                          ("id", "ID number")])}
+valid_filters = {
+    "topic": OrderedDict([
+        ("Attitudes and expectations", "Attitudes and expectations"),
+        ("Childcare", "Childcare"),
+        ("Cognitive and behavioral development", "Cognitive and behavioral development"),
+        ("Community", "Community"),
+        ("Demographics", "Demographics"),
+        ("Education and school", "Education and school"),
+        ("Employment", "Employment"),
+        ("Family and social support", "Family and social support"),
+        ("Finances", "Finances"),
+        ("Health and health behavior", "Health and health behavior"),
+        ("Home and housing", "Home and housing"),
+        ("Legal system", "Legal system"),
+        ("Paradata and weights", "Paradata and weights"),
+        ("Parental relationships", "Parental relationships"),
+        ("Parenting", "Parenting")
+    ]),
+    "wave": OrderedDict([
+        ("1", "Baseline"),
+        ("2", "Year 1"),
+        ("3", "Year 3"),
+        ("4", "Year 5"),
+        ("5", "Year 9"),
+        ("6", "Year 15")
+    ]),
+    "respondent": OrderedDict([
+        ("Father", "Father"),
+        ("Mother", "Mother"),
+        ("Child Care Provider", "Child Care Provider"),
+        ("Interviewer", "Interviewer"),
+        ("PCG", "PCG"),
+        ("Child", "Child"),
+        ("Teacher", "Teacher")
+    ]),
+    "data_source": OrderedDict([
+        ("questionnaire", "Questionnaire"),
+        ("constructed", "Constructed"),
+        ("weight", "Survey weight"),
+        ("idnum", "ID number")]
+    ),
+    "data_type": OrderedDict([
+        ("bin", "Binary"),
+        ("uc", "Unordered categorical"),
+        ("oc", "Ordered categorical"),
+        ("cont", "Continuous"),
+        ("string", "String"),
+        ("id", "ID number")
+    ]),
+    "measures": OrderedDict([
+        (row.measures, row.measures) for row in session.execute("SELECT DISTINCT(measures) FROM variable WHERE measures IS NOT NULL ORDER BY measures")
+    ]),
+    "survey": OrderedDict([
+        # (row.survey, row.survey) for row in session.execute("SELECT DISTINCT(survey) FROM variable ORDER BY survey")
+        (row.id, row.name) for row in session.execute("SELECT * FROM survey ORDER BY name")
+    ]),
+    "focal_person": OrderedDict([
+        ("fp_fchild", "Focal Child"),
+        ("fp_mother", "Mother"),
+        ("fp_father", "Father"),
+        ("fp_PCG", "Primary Caregiver"),
+        ("fp_partner", "Partner"),
+        ("fp_other", "Other"),
+        ("fp_none", "None")
+    ])
+}
+
 
 @bp.route('/variables', methods=['GET', 'POST'])
 def search():
-    # Set cookie data if not found
-    if not request.cookies.get("user_id"):
-        expire_date = datetime.datetime.now() + datetime.timedelta(days=90)
-        g_uuid = str(uuid.uuid4())
-        resp.set_cookie("user_id", g_uuid, expires=expire_date)
-
     # Build data objects
     results = None
     rnames = None
@@ -120,11 +142,23 @@ def search():
 
                 # Filter by name list
                 qobj = qobj.filter(Variable.name.in_(vnames))
+            elif field == "focal_person":
+                fp_filters = []
+                for fp in request.form.getlist(field):
+                    if fp == 'fp_none':
+                        fp_filters.append(and_(
+                            Variable.fp_fchild == 0,
+                            Variable.fp_mother == 0,
+                            Variable.fp_father == 0,
+                            Variable.fp_PCG == 0,
+                            Variable.fp_partner == 0,
+                            Variable.fp_other == 0
+                        ))
+                    else:
+                        fp_filters.append(getattr(Variable, fp) == 1)
+                qobj = qobj.filter(or_(*fp_filters))
             else:
-                # Filter by metadata field in variables table
-                domain = request.form.getlist(field)
-                filt = "Variable.{}.in_(domain)".format(field)
-                qobj = qobj.filter(eval(filt))
+                qobj = qobj.filter(getattr(Variable, field).in_(request.form.getlist(field)))
             constraints[field] = request.form.getlist(field)
 
         # Get all unique matches
@@ -154,50 +188,57 @@ def search():
         # Log that we're starting a new search
         current_app.logger.info("[{}] {} started new search.".format(epochalypse_now(), request.cookies.get("user_id")))
 
-    return render_template('web/search.html', results=results, rnames=rnames, constraints=constraints, topics=topics,
-                           search_query=search_query, filtermeta=valid_filters, filterlabs=filter_labels, zero_found=zero_found)
+    resp = make_response(render_template('web/search.html', results=results, rnames=rnames, constraints=constraints, topics=topics,
+                           search_query=search_query, filtermeta=valid_filters, filterlabs=filter_labels, zero_found=zero_found))
 
-@bp.route('/variables/<varname>')
-def var_page(varname):
     # Set cookie data if not found
     if not request.cookies.get("user_id"):
         expire_date = datetime.datetime.now() + datetime.timedelta(days=90)
         g_uuid = str(uuid.uuid4())
         resp.set_cookie("user_id", g_uuid, expires=expire_date)
 
-    if not varname:
-        # Abort early if Flask tries to load this page with no variable
-        return redirect(url_for('search'))
-    else:
-        # Get variable data
-        var_data = session.query(Variable).filter(Variable.name == varname).first()
+    return resp
 
-        # Grouped variables + topic membership
-        neighbors = session.query(Variable).filter(Variable.group_id == var_data.group_id).all()
-        neighbor_names = [n.name for n in neighbors]
-        neighbor_tdat = session.query(Topic).filter(Topic.name.in_(neighbor_names)).group_by(Topic.topic, Topic.name).all()
-        neighbor_topics = {}
-        for t in neighbor_tdat:
-            if t.name in neighbor_topics.keys():
-                neighbor_topics[t.name] = "{}, {}".format(neighbor_topics[t.name], t.topic)
-            else:
-                neighbor_topics[t.name] = t.topic
 
-        # Responses
-        responses = session.query(Response).filter(Response.name == varname).group_by(Response.label).all()
-        if responses:
-            responses = sorted(responses, key=lambda x: int(x.value), reverse=True)
+@bp.route('/variables/<varname>')
+def var_page(varname):
+    # Get variable data
+    var_data = session.query(Variable).filter(Variable.name == varname).first()
 
-        # Umbrella data
-        topics = session.query(Topic).filter(Topic.name == varname).group_by(Topic.topic).all()
-        umbrellas = session.query(Umbrella).filter(Umbrella.topic.in_([str(t.topic) for t in topics])).all()
+    # Grouped variables + topic membership
+    neighbors = session.query(Variable).filter(Variable.group_id == var_data.group_id).all()
+    neighbor_names = [n.name for n in neighbors]
+    neighbor_tdat = session.query(Topic).filter(Topic.name.in_(neighbor_names)).group_by(Topic.topic, Topic.name).all()
+    neighbor_topics = {}
+    for t in neighbor_tdat:
+        if t.name in neighbor_topics.keys():
+            neighbor_topics[t.name] = "{}, {}".format(neighbor_topics[t.name], t.topic)
+        else:
+            neighbor_topics[t.name] = t.topic
 
-        # Log query
-        current_app.logger.info("[{}] {} viewed variable: {}".format(epochalypse_now(), request.cookies.get("user_id"), varname))
+    # Responses
+    responses = session.query(Response).filter(Response.name == varname).group_by(Response.label).all()
+    if responses:
+        responses = sorted(responses, key=lambda x: int(x.value), reverse=True)
 
-        # Render page
-        return render_template('web/variable.html', var_data=var_data, neighbors=neighbors, neighbor_topics=neighbor_topics,
-                               responses=responses, umbrellas=umbrellas, filtermeta=valid_filters, filterlabs=filter_labels)
+    # Umbrella data
+    topics = session.query(Topic).filter(Topic.name == varname).group_by(Topic.topic).all()
+    umbrellas = session.query(Umbrella).filter(Umbrella.topic.in_([str(t.topic) for t in topics])).all()
+
+    # Log query
+    current_app.logger.info("[{}] {} viewed variable: {}".format(epochalypse_now(), request.cookies.get("user_id"), varname))
+
+    # Render page
+    resp = make_response(render_template('web/variable.html', var_data=var_data, neighbors=neighbors, neighbor_topics=neighbor_topics,
+                           responses=responses, umbrellas=umbrellas, filtermeta=valid_filters, filterlabs=filter_labels))
+
+    # Set cookie data if not found
+    if not request.cookies.get("user_id"):
+        expire_date = datetime.datetime.now() + datetime.timedelta(days=90)
+        g_uuid = str(uuid.uuid4())
+        resp.set_cookie("user_id", g_uuid, expires=expire_date)
+
+    return resp
 
 
 ## Static pages ##
