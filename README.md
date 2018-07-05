@@ -23,7 +23,7 @@ The web interface and api can be used directly using the links above. However, i
 3. `cd metadata_app/`
 4. Ensure gui.config.cfg (private keys file) exists in current directory.
 5. `docker build -t metadata_app .`
-6. `docker run -p 5000:5000 metadata_app` You may need to change the second port number if you're running multiple Flask apps in Docker containers (e.g. if you're running `metadata_api` simultaneously)
+6. `docker run -p 5000:5000 metadata_app` You may need to change the second port number if you're running multiple Flask apps in Docker containers
 
 ## API
 

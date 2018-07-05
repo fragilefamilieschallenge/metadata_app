@@ -1,3 +1,7 @@
+## Development
+
+The first version of the Fragile Families API was created by Maya Phillips (class of 2018) as part of an independent work class in the Department of Computer Science at Princeton University.
+
 ## Open source software
 
 - Python
