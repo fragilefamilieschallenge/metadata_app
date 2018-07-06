@@ -43,21 +43,7 @@ filter_labels = OrderedDict([
 # This defines what values are valid to filter on for each filter group
 valid_filters = {
     "topic": OrderedDict([
-        ("Attitudes and expectations", "Attitudes and expectations"),
-        ("Childcare", "Childcare"),
-        ("Cognitive and behavioral development", "Cognitive and behavioral development"),
-        ("Community", "Community"),
-        ("Demographics", "Demographics"),
-        ("Education and school", "Education and school"),
-        ("Employment", "Employment"),
-        ("Family and social support", "Family and social support"),
-        ("Finances", "Finances"),
-        ("Health and health behavior", "Health and health behavior"),
-        ("Home and housing", "Home and housing"),
-        ("Legal system", "Legal system"),
-        ("Paradata and weights", "Paradata and weights"),
-        ("Parental relationships", "Parental relationships"),
-        ("Parenting", "Parenting")
+        (row.umbrella, row.umbrella) for row in session.execute("SELECT DISTINCT(umbrella) FROM umbrella ORDER BY umbrella")
     ]),
     "wave": OrderedDict([
         ("1", "Baseline"),
