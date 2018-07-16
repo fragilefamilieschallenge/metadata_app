@@ -30,128 +30,36 @@ The web interface and api can be used directly using the links above. However, i
 The Base URI for the API interface is:
 [http://api.metadata.fragilefamilies.princeton.edu](http://api.metadata.fragilefamilies.princeton.edu)
 
-At this URI, we provide 3 API endpoints:
-
-### Filter
-This endpoint is to be used to search variable names based on a search criteria.
-
-#### Return a list of variables where fieldName matches (fully or partially) the provided value.
-General Format: `/filter?<fieldName>=<value>`
-
-`/filter?name=f1b6a`
-```
-{
-    "matches": [
-        "f1b6a"
-    ]
-}
-```
-
-`/filter?name=f1b6`
-```
-{
-    "matches": [
-        "f1b6a",
-        "f1b6b",
-        "f1b6c",
-        "f1b6d",
-        "f1b6e",
-        "f1b6f"
-    ]
-}
-```
-
-`/filter?topic=education` 
-```
-{
-  "matches": [
-    "cf1edu", 
-    "f1i1", 
-    "f1i2", 
-    "f1i2a1", 
-    "f1i2a2", 
-    "f1i3", 
-    "f1i3a1", 
-    "f1i3a2", 
-    "cm1edu", 
-    "m1i1", 
-    "m1i3", 
-    "m1i6", 
-    "f2k1a", 
-    "f2k2", 
-    "f2k3a", 
-    ...
-    ...
-    ...
-```
-
-### Search
-This endpoint can also be used to search variable names based on a search criteria.
-
-#### Return a list of variables where \<value\> is found in \<fieldName\>.
-General Format: `/search?fieldName=<fieldName>&query=<value>`
-
-`/search?fieldName=label&query=CPS`
-```
-{
-  "matches": [
-    "p4j2", 
-    "p4j3_mo", 
-    "p4j3_yr", 
-    "p4j6", 
-    "p4j7_1", 
-    "p4j7_2", 
-    "p4j7_3", 
-    "p4j8", 
-    "p5q10_1", 
-    "p5q10_2", 
-    "p5q10_3", 
-    "p5q11", 
-    "p5q5", 
-    "p5q7", 
-    "p5q8_1", 
-    "p5q8_101", 
-    "p5q8_2", 
-    "p5q8_3", 
-    "p5q8_4", 
-    "p6j59", 
-    "p6j60a", 
-    "p6j60b", 
-    "p6j61", 
-    "p6j62_1", 
-    "p6j62_101", 
-    "p6j62_102", 
-    "p6j62_2", 
-    "p6j62_3", 
-    "p6j62_4", 
-    "p6j63", 
-    "p6j64_1", 
-    "p6j64_2", 
-    "p6j64_3", 
-    "p6j64_4"
-  ]
-}
-```
+At this URI, we provide 2 API endpoints:
 
 ### Select
-Once you know the name of the variable you're interested in, this endpoint is to be used to retrieve metadata for a variable, given its name.
+If you know the name of the variable you're interested in, this endpoint is to be used to retrieve metadata for a variable, given its name.
 
 #### Returns metadata for variable with name \<varName\>.
-General Format: `/select?varName=<varName>`
+General Format: `/variable/<varName>`
 
-`/select?varName=m1a3`
+`/variable/m1a3`
 ```
 {
     "data_source": "questionnaire",
     "data_type": "bin",
+    "fp_PCG": 0,
+    "fp_father": 0,
+    "fp_fchild": 1,
+    "fp_mother": 1,
+    "fp_other": 0,
+    "fp_partner": 0,
     "group_id": "221",
     "group_subid": null,
-    "id": 449,
+    "id": 85890,
     "label": "Have you picked up a (name/names) for the (baby/babies) yet?",
     "leaf": "3",
+    "measures": null,
     "name": "m1a3",
     "old_name": "m1a3",
-    "respondent": "m",
+    "probe": null,
+    "qText": null,
+    "respondent": "Mother",
     "responses": {
         "1": "Yes",
         "2": "No",
@@ -167,6 +75,7 @@ General Format: `/select?varName=<varName>`
     },
     "scope": "20",
     "section": "a",
+    "survey": "m",
     "topics": [
         {
             "topic": "parenting abilities",
@@ -178,35 +87,99 @@ General Format: `/select?varName=<varName>`
 }
 ```
 
-#### Optionally, if you also know the name of the field you're interested in, it can return only the field specified by \<fieldName\>.
-General Format: `/select?varName=<varName>&fieldName=<fieldName>`
+#### Optionally, if you also know the name of the field(s) you're interested in, it can return data corresponding to these field(s).
 
-`/select?varName=m1a3&fieldName=label`
+General Format: 
+`/variable/<varName>?<fieldName>`
+or
+`/variable/<varName>?<fieldName1>&<fieldName2>&<fieldName3>..`
+
+`/variable/m1a3?label`
 ```
 {
-  "label": "Have you picked up a (name/names) for the (baby/babies) yet?"
+    "label": "Have you picked up a (name/names) for the (baby/babies) yet?"
 }
+```
+
+`/variable/m1a3?label&data_source`
+```
+{
+    "data_source": "questionnaire",
+    "label": "Have you picked up a (name/names) for the (baby/babies) yet?"
+}
+```
+
+### Search
+You can search for variables given one or more search criteria.
+
+General Format:
+`/variable?q={"filters":[{"name":<attributeName>,"op":<operator>,"val":<value>}], ..}`
+
+Search for variables where "name" equals "m1a3"
+`/variable?q={"filters":[{"name":"name","op":"eq","val":"m1a3"}]}`
+```
+[
+    "m1a3"
+]
+```
+
+Search for variables where "wave" equals 3
+`/variable?q={"filters":[{"name":"wave","op":"eq","val":3}]}`
+```
+[
+    "f3f2e7",
+    "m3f2e1",
+    "m3k25a1",
+    "e3i15",
+    ...
+```
+
+Search for variables where "data_source" equals "constructed"
+`/variable?q={"filters":[{"name":"data_source","op":"eq","val":"constructed"}]}`
+```
+[
+    "ch3emp_csrot3_9",
+    "ch3att_x",
+    "ch3emp_csrot4_4",
+    "ch4emp_leave_6",
+    ...
+```
+
+For fuzzy or inexact queries, we use 'like' as the operator (instead of 'eq'), in conjunction with the *wildcard* **%** to match any character(s).
+
+Search for variables where "name" starts with "m".
+`/variable?q={"filters":[{"name":"name","op":"like","val":"m%"}]}`
+```
+[
+    "m2j13c2",
+    "m3f2e1",
+    "m3k25a1",
+    "m5k2b",
+    "m1b4g",
+    ...
+```
+
+Search for variables where "qText" (question text) has the world "financial" somewhere in it.
+`/variable?q={"filters":[{"name":"qText","op":"like","val":"%financial%"}]}`
+```
+[
+    "m2j13c2",
+    "m3f2e1",
+    "m3k25a1",
+    "m5k2b",
+    "m1b4g",
+    ...
 ```
 
 ## Errors
 
-### Getting the metadata for a variable name that doesn't exist:
+### Getting the metadata for a variable that doesn't exist:
 
-`/select?varName=m1a2` (no variable by name `m1a2` exists)
+`/variable/m1a2` (no variable by name `m1a2` exists)
 
 returns an HTTP 400 (Bad Request) Response with the message body:
 ```
 {
     "message": "Invalid variable name."
-}
-```
-### Searching in a field that doesn't exist
-
-`/search?fieldName=toppic&query=car` (note that `toppic` is misspelled to illustrate the point)
-
-returns an HTTP 400 (Bad Request) Response with the message body:
-```
-{
-    "message": "Invalid field name."
 }
 ```
