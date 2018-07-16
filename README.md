@@ -89,10 +89,7 @@ General Format: `/variable/<varName>`
 
 #### Optionally, if you also know the name of the field(s) you're interested in, it can return data corresponding to these field(s).
 
-General Format: 
-`/variable/<varName>?<fieldName>`
-or
-`/variable/<varName>?<fieldName1>&<fieldName2>&<fieldName3>..`
+General Format: `/variable/<varName>?<fieldName>` or `/variable/<varName>?<fieldName1>&<fieldName2>&<fieldName3>..`
 
 `/variable/m1a3?label`
 ```
@@ -112,10 +109,10 @@ or
 ### Search
 You can search for variables given one or more search criteria.
 
-General Format:
-`/variable?q={"filters":[{"name":<attributeName>,"op":<operator>,"val":<value>}], ..}`
+General Format: `/variable?q={"filters":[{"name":<attributeName>,"op":<operator>,"val":<value>}], ..}`
 
-Search for variables where "name" equals "m1a3"
+Search for variables where "name" equals "m1a3".
+
 `/variable?q={"filters":[{"name":"name","op":"eq","val":"m1a3"}]}`
 ```
 [
@@ -123,7 +120,8 @@ Search for variables where "name" equals "m1a3"
 ]
 ```
 
-Search for variables where "wave" equals 3
+Search for variables where "wave" equals 3.
+
 `/variable?q={"filters":[{"name":"wave","op":"eq","val":3}]}`
 ```
 [
@@ -134,7 +132,8 @@ Search for variables where "wave" equals 3
     ...
 ```
 
-Search for variables where "data_source" equals "constructed"
+Search for variables where "data_source" equals "constructed".
+
 `/variable?q={"filters":[{"name":"data_source","op":"eq","val":"constructed"}]}`
 ```
 [
@@ -148,6 +147,7 @@ Search for variables where "data_source" equals "constructed"
 For fuzzy or inexact queries, we use 'like' as the operator (instead of 'eq'), in conjunction with the *wildcard* **%** to match any character(s).
 
 Search for variables where "name" starts with "m".
+
 `/variable?q={"filters":[{"name":"name","op":"like","val":"m%"}]}`
 ```
 [
@@ -160,6 +160,7 @@ Search for variables where "name" starts with "m".
 ```
 
 Search for variables where "qText" (question text) has the world "financial" somewhere in it.
+
 `/variable?q={"filters":[{"name":"qText","op":"like","val":"%financial%"}]}`
 ```
 [
