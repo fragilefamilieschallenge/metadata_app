@@ -24,6 +24,7 @@ def create_app(debug=False):
 
     app.register_blueprint(ffmeta.blueprints.web.bp, url_prefix='/')
     app.register_blueprint(ffmeta.blueprints.api.bp, url_prefix='/', subdomain='api')
+    app.register_blueprint(ffmeta.blueprints.api2.bp, url_prefix='/api')
     app.register_blueprint(ffmeta.blueprints.api2.bp, url_prefix='/', subdomain='api')
 
     app.register_error_handler(AppException, handle_error)

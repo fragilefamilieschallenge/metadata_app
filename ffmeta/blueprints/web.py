@@ -186,6 +186,12 @@ def search():
     return resp
 
 
+@bp.route('/variables2', methods=['GET', 'POST'])
+def search2():
+    resp = make_response(render_template('web/search2.html'))
+    return resp
+
+
 @bp.route('/variables/<varname>')
 def var_page(varname):
     # Get variable data

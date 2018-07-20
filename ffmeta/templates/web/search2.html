@@ -1,0 +1,212 @@
+{% extends "web/ffmetadata.html" %}
+
+{% block title %}Advanced Search{% endblock %}
+
+{% block head %}
+<script>
+$(document).ready(function() {
+
+    var table = $('#datatable').DataTable({
+        "ajax": {
+            "url": "{{ url_for('apiv2.search_variable') }}",
+            "dataSrc": ""
+        },
+        "columns": [
+            {"data": "name"},
+            {"data": "label"},
+            {"data": "topics",
+                "render": function(data, type, row) {
+                    switch (data.length) {
+                        case 2:
+                            return data[0].umbrella + ', ' + data[1].umbrella;
+                            break;
+                        case 1:
+                            return data[0].umbrella;
+                            break;
+                        case 0:
+                            return "";
+                    }
+                }
+            },
+            {"data": "topics",
+                "render": function(data, type, row) {
+                    switch (data.length) {
+                        case 2:
+                            return data[0].topic + ', ' + data[1].topic;
+                            break;
+                        case 1:
+                            return data[0].topic;
+                            break;
+                        case 0:
+                            return "";
+                    }
+                }
+            },
+            {"data": "survey2"},
+            {"data": "wave2"},
+            {"data": "type"},
+            {"data": "data_source"},
+            {"data": "focal_person"},
+            {"data": "respondent"}
+        ]
+    });
+
+    $('#builder').queryBuilder({
+        filters: [
+            {
+                id: 'name',
+                label: 'Name',
+                type: 'string',
+                operators: ['equal', 'not_equal', 'begins_with', 'ends_with', 'contains', 'not_contains']
+            },
+            {
+                id: 'old_name',
+                label: 'Old Name',
+                type: 'string',
+                operators: ['equal', 'not_equal', 'begins_with', 'ends_with', 'contains', 'not_contains']
+            },
+            {
+                id: 'varlab',
+                label: 'label',
+                type: 'string',
+                operators: ['contains', 'not_contains']
+            },
+            {
+                id: 'type',
+                label: 'Data Type',
+                type: 'string',
+                input: 'select',
+                values: {'ID number': 'ID number', 'Binary': 'Binary',  'Continuous': 'Continuous', 'Ordered categorical': 'Ordered categorical', 'Unordered categorical': 'Unordered categorical'},
+                operators: ['equal', 'not_equal', 'in', 'not_in']
+            },
+            {
+                id: 'topic',
+                label: 'Topic',
+                type: 'string',
+                input: 'select',
+                values: {'Attitudes and expectations': 'Attitudes and expectations', 'Childcare': 'Childcare', 'Cognitive and behavioral development': 'Cognitive and behavioral development', 'Demographics': 'Demographics', 'Education and school': 'Education and school', 'Employment': 'Employment', 'Family and social ties':'Family and social ties', 'Finances':'Finances', 'Health and health behavior':'Health and health behavior', 'Housing and neighborhood':'Housing and neighborhood', 'Legal system': 'Legal system', 'Paradata and weights': 'Paradata and weights', 'Parenting':'Parenting', 'Romantic relationships': 'Romantic relationships'},
+                operators: ['equal', 'not_equal', 'in', 'not_in']
+            },
+            {
+                id: 'subtopic',
+                label: 'Sub-Topic',
+                type: 'string',
+                operators: ['equal', 'not_equal', 'contains', 'not_contains']
+            },
+            {
+                id: 'scope',
+                label: 'Scope',
+                type: 'integer',
+                operators: ['equal', 'not_equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'in', 'not_in']
+            },
+            {
+                id: 'warning',
+                label: 'Warning',
+                type: 'integer',
+                operators: ['equal', 'not_equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'in', 'not_in']
+            },
+            {
+                id: 'focal_person',
+                label: 'Focal Person',
+                type: 'string',
+                input: 'select',
+                values: {'Focal Child': 'Focal Child', 'Mother': 'Mother', 'Father': 'Father', 'Primary Caregiver': 'Primary Caregiver', 'Partner': 'Partner', 'Other': 'Other'},
+                operators: ['contains', 'not_contains', 'is_null', 'is_not_null']
+            },
+            {
+                id: 'survey2',
+                label: 'Survey',
+                type: 'string',
+                input: 'select',
+                values: {'Child': 'Child', 'Child care center (survey)': 'Child care center (survey)', 'Couple': 'Couple' ,'Family care (survey)': 'Family care (survey)', 'Father': 'Father', 'ID Number': 'ID Number', 'In-home (observation)': 'In-home (observation)', 'In-home (survey)': 'In-home (survey)', 'Mother': 'Mother', 'Non-parental primary caregiver': 'Non-parental primary caregiver', 'Post child and family care observation': 'Post child and family care observation', 'Primary caregiver': 'Primary caregiver', 'Teacher': 'Teacher'},
+                operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null']
+            },
+            {
+                id: 'data_source',
+                label: 'Data Source',
+                type: 'string',
+                input: 'select',
+                values: {'idnum': 'idnum', 'constructed': 'constructed', 'weight': 'weight', 'questionnaire': 'questionnaire'},
+                operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null']
+            },
+            {
+                id: 'respondent',
+                label: 'Respondent',
+                type: 'string',
+                input: 'select',
+                values: {'Child': 'Child', 'Child Care Provider': 'Child Care Provider', 'Father': 'Father', 'Interviewer': 'Interviewer', 'Mother': 'Mother', 'PCG': 'PCG', 'Teacher': 'Teacher'},
+                operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null']
+            },
+            {
+                id: 'qText',
+                label: 'Question Text',
+                type: 'string',
+                operators: ['contains', 'not_contains']
+            },
+            {
+                id: 'probe',
+                label: 'Probe',
+                type: 'string',
+                operators: ['contains', 'not_contains']
+            },
+        ]
+    });
+    $('#btn-reset').on('click', function() {
+        $('#builder').queryBuilder('reset');
+    });
+
+    $('#btn-search').on('click', function() {
+        var result = $('#builder').queryBuilder('getRules');
+
+        if (!$.isEmptyObject(result)) {
+            var filters = qb2dtFilter($("#builder"));
+            var q = {"filters": filters};
+            var url = "{{ url_for('apiv2.search_variable') }}?details=1&q="+JSON.stringify(q);
+            $("code#code").html("<a href=\""+encodeURIComponent(url)+"\">"+url+"</a>");
+            table.ajax.url(url).load();
+        }
+    });
+});
+</script>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Advanced Search</h2>
+                <p></p>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12"><div id="builder"></div></div>
+              <div class="col-md-12">
+                <div class="btn-group">
+                  <button id="btn-reset" class="btn btn-warning reset" data-target="basic">Reset</button>
+                  <button id="btn-search" class="btn btn-primary parse-json" data-target="basic">Search</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="padding: 20px 0px;">
+            <div class="col-md-12">
+                <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="datatable">
+                    <thead>
+                        <tr><th>Variable</th><th>Label</th><th>Topic(s)</th><th>Sub-Topic(s)</th><th>Survey</th><th>Wave</th><th>Type</th><th>Source</th><th>Focal Person</th><th>Respondent</th></tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h2>API Call</h2>
+                <p></p>
+                <hr>
+                <code id="code"></code>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

@@ -13,12 +13,14 @@ class Variable(Base):
     label = Column(Text)
     old_name = Column(Text)
     data_type = Column(Text)
+    type = Column(Text)
     warning = Column(Integer)
     group_id = Column(Text)
     group_subid = Column(Text)
     data_source = Column(Text)
     respondent = Column(Text)
     wave = Column(Text)
+    wave2 = Column(Text)
     scope = Column(Text)
     section = Column(Text)
     leaf = Column(Text)
@@ -26,6 +28,7 @@ class Variable(Base):
     probe = Column(Text)
     qText = Column(Text)
     survey = Column(Text)
+    survey2 = Column(Text)
 
     fp_fchild = Column(Integer)
     fp_mother = Column(Integer)
@@ -33,6 +36,8 @@ class Variable(Base):
     fp_PCG = Column(Integer)
     fp_partner = Column(Integer)
     fp_other = Column(Integer)
+
+    focal_person = Column(Text)
 
     responses = relationship('Response', backref='variable')
     topics = relationship('Topic', backref='variable')

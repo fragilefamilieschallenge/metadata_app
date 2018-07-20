@@ -3,6 +3,12 @@ from ffmeta import create_app
 from ffmeta.models import Variable, Response
 from ffmeta.models.db import session
 
+# Dictionary mappings from what we expect in the 'raw' file to verbose string representations of attributes
+# (that we store directly in the variable table in the denormalized form)
+wave_dict = dict(iter(session.execute('SELECT id, name FROM wave')))
+survey_dict = dict(iter(session.execute('SELECT id, name FROM survey')))
+type_dict = dict(iter(session.execute('SELECT id, name FROM data_type')))
+
 
 def populate_tables():
     '''Load metadata from the `raw` table to other tables.'''
@@ -52,6 +58,16 @@ def populate_tables():
         fp_partner = row['fp_partner']
         fp_other = row['fp_other']
 
+        focal_person_dict = {
+            'fp_child': 'Focal Child',
+            'fp_mother': 'Mother',
+            'fp_father': 'Father',
+            'fp_PCG': 'Primary Caregiver',
+            'fp_partner': 'Partner',
+            'fp_other': 'Other'
+        }
+        focal_person = ', '.join(v for k, v in focal_person_dict.items() if eval(k))
+
         variable = Variable(
             name=name,
             label=label,
@@ -75,7 +91,12 @@ def populate_tables():
             fp_father=fp_father,
             fp_PCG=fp_PCG,
             fp_partner=fp_partner,
-            fp_other=fp_other
+            fp_other=fp_other,
+
+            focal_person=focal_person,
+            survey2=survey_dict(survey),
+            wave2=wave_dict(wave),
+            type=type_dict(data_type)
 
         )
 
@@ -117,4 +138,5 @@ if __name__ == '__main__':
 
     application = create_app(debug=True)
     with application.app_context():
-        populate_tables()
+        # populate_tables()
+        print(wave_dict)

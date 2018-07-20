@@ -14,7 +14,27 @@ bp = Blueprint('apiv2', __name__)
 variable_attrs = [c_attr.key for c_attr in inspect(Variable).mapper.column_attrs]
 
 
-def select(variable_name, attrs=None):
+def variable_details(obj, attrs=None, as_json=False):
+    d = dict((attr, getattr(obj, attr, '')) for attr in variable_attrs)
+
+    # TODO: The following structure is used to maintain compatibility with old behavior
+    # Probably it makes sense to reverse the keys/values
+    d['responses'] = dict((r.value, r.label) for r in obj.responses)
+
+    # TODO: The following structure is used to maintain compatibility with old behavior
+    # A better structure to this would be to simply return an <umbrella_name>: [<topic_names>] dictionary here
+    d['topics'] = [{'umbrella': str(t.umbrella), 'topic': str(t)} for t in obj.topics]
+
+    keys = attrs or d.keys()
+    d = dict((k, d[k]) for k in keys if k in d.keys())
+
+    if as_json:
+        return jsonify(d)
+    else:
+        return d
+
+
+def select(variable_name, attrs=None, as_json=False):
     """
     Return a dictionary of variable attributes, given the variable's name
     :param variable_name: The name of the variable we're interested in
@@ -26,18 +46,7 @@ def select(variable_name, attrs=None):
     """
     obj = session.query(Variable).filter(Variable.name == variable_name).first()
     if obj:
-        d = dict((attr, getattr(obj, attr, '')) for attr in variable_attrs)
-
-        # TODO: The following structure is used to maintain compatibility with old behavior
-        # Probably it makes sense to reverse the keys/values
-        d['responses'] = dict((r.value, r.label) for r in obj.responses)
-
-        # TODO: The following structure is used to maintain compatibility with old behavior
-        # A better structure to this would be to simply return an <umbrella_name>: [<topic_names>] dictionary here
-        d['topics'] = [{'umbrella': str(t.umbrella), 'topic': str(t)} for t in obj.topics]
-
-        keys = attrs or d.keys()
-        return dict((k, d[k]) for k in keys if k in d.keys())
+        return variable_details(obj, attrs=attrs, as_json=as_json)
     else:
         return api_error(400, "Invalid variable name.")
 
@@ -125,7 +134,7 @@ def _filters(filters, aggFn=and_):
     return res
 
 
-def search(filters):
+def search(filters, details=False, as_json=True):
     """
     Search variables given search criteria
     :param filters:
@@ -147,16 +156,22 @@ def search(filters):
         outerjoin(Umbrella, Topic.topic == Umbrella.topic)
     query = query.filter(filters)
 
-    results = [o.name for o in query]
-    results = list(set(results))
+    # TODO: Do we need to remove duplicates??
+    if details:
+        results = [variable_details(o) for o in query]
+    else:
+        results = [o.name for o in query]
 
-    return results
+    if as_json:
+        return jsonify(results)
+    else:
+        return results
 
 
 @bp.route("/variable/<variable_name>")
 def select_variable(variable_name):
     """Web endpoint for variable selection given it's name, and an optional list of attribute we're interested in."""
-    return jsonify(select(variable_name, list(request.args.keys())))
+    return select(variable_name, list(request.args.keys()), as_json=True)
 
 
 @bp.route("/variable")
@@ -196,6 +211,6 @@ def search_variable():
     if 'q' in request.args:
         q = json.loads(request.args['q'])
         filters = q.get('filters', [])
-        results = search(filters)
+        return search(filters, details='details' in request.args, as_json=True)
 
     return jsonify(results)
