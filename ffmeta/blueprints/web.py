@@ -10,7 +10,6 @@ from collections import OrderedDict, Counter
 
 from sqlalchemy import or_, and_
 from flask import Flask, Blueprint, render_template, url_for, request, send_from_directory, send_file, make_response, current_app, redirect
-from flask_sqlalchemy import SQLAlchemy
 from flask_basicauth import BasicAuth
 
 from ffmeta.models import Response, Variable, Umbrella, Topic

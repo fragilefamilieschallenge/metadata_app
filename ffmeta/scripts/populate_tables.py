@@ -5,9 +5,14 @@ from ffmeta.models.db import session
 
 # Dictionary mappings from what we expect in the 'raw' file to verbose string representations of attributes
 # (that we store directly in the variable table in the denormalized form)
-wave_dict = dict(iter(session.execute('SELECT id, name FROM wave')))
-survey_dict = dict(iter(session.execute('SELECT id, name FROM survey')))
-type_dict = dict(iter(session.execute('SELECT id, name FROM data_type')))
+wave_dict = {1: 'Baseline', 2: 'Year 1', 3: 'Year 3', 4: 'Year 5', 5: 'Year 9', 6: 'Year 15', None: None}
+survey_dict = {'d': 'Child care center (survey)', 'e': 'Child care center (observation)', 'f': 'Father',
+               'h': 'In-home (survey)', 'i': 'ID Number', 'k': 'Child', 'm': 'Mother',
+               'n': 'Non-parental primary caregiver', 'o': 'In-home (observation)', 'p': 'Primary caregiver',
+               'q': 'Couple', 'r': 'Family care (survey)', 's': 'Family care (observation)', 't': 'Teacher',
+               'u': 'Post child and family care observation', 'z': 'Couple'}
+type_dict = {'bin': 'Binary', 'cont': 'Continuous', 'ID Number': 'ID Number', 'oc': 'Ordered categorical',
+             'string': 'String', 'uc': 'Unordered categorical'}
 
 
 def populate_tables():
@@ -59,14 +64,15 @@ def populate_tables():
         fp_other = row['fp_other']
 
         focal_person_dict = {
-            'fp_child': 'Focal Child',
+            'fp_fchild': 'Focal Child',
             'fp_mother': 'Mother',
             'fp_father': 'Father',
             'fp_PCG': 'Primary Caregiver',
             'fp_partner': 'Partner',
             'fp_other': 'Other'
         }
-        focal_person = ', '.join(v for k, v in focal_person_dict.items() if eval(k))
+        l = locals()
+        focal_person = ', '.join(v for k, v in focal_person_dict.items() if l[k])
 
         variable = Variable(
             name=name,
@@ -94,9 +100,9 @@ def populate_tables():
             fp_other=fp_other,
 
             focal_person=focal_person,
-            survey2=survey_dict(survey),
-            wave2=wave_dict(wave),
-            type=type_dict(data_type)
+            survey2=survey_dict[survey],
+            wave2=wave_dict[wave],
+            type=type_dict[data_type]
 
         )
 
@@ -138,5 +144,4 @@ if __name__ == '__main__':
 
     application = create_app(debug=True)
     with application.app_context():
-        # populate_tables()
-        print(wave_dict)
+        populate_tables()
