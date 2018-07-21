@@ -6,7 +6,7 @@ addons:
   - metadata.fragilefamilies.princeton.edu
 
 before_install:
-  - mysql -e 'SOURCE data/ffmeta20180629.sql;'
+  - mysql -e 'SOURCE ffmeta/data/ffmeta20180629.sql;'
 install:
   - pip install -r requirements.txt
 script: py.test tests
