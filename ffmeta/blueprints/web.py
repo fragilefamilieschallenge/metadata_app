@@ -10,7 +10,6 @@ from collections import OrderedDict, Counter
 
 from sqlalchemy import or_, and_
 from flask import Flask, Blueprint, render_template, url_for, request, send_from_directory, send_file, make_response, current_app, redirect
-from flask_sqlalchemy import SQLAlchemy
 from flask_basicauth import BasicAuth
 
 from ffmeta.models import Response, Variable, Umbrella, Topic
@@ -110,7 +109,7 @@ def search():
         # Filter by search query
         search_query = request.form["variable-search"]
         if len(search_query) > 0:
-            qobj = qobj.filter(Variable.label.like('%%{}%%'.format(search_query)) | Variable.name.like('%%{}%%'.format(search_query)))
+            qobj = qobj.filter(Variable.label.like('%%{}%%'.format(search_query)) | Variable.name.like('%%{}%%'.format(search_query)) | Variable.old_name.like('%%{}%%'.format(search_query)))
             # TODO: Should this search other fields?
 
         # Filter by fields
