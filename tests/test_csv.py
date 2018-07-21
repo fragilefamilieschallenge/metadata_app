@@ -3,15 +3,11 @@ import pandas as pd
 from unittest import TestCase
 
 import ffmeta
-
-# Path to the csv file folder we're writing tests for. Only the 'latest' file in this folder is tested.
-# The 'latest' file is defined as the alphabetically last file found in this folder.
-# This directly corresponds to the latest file as long as we stick to the predefined convention of naming
-# files as FFMetadataYYYYMMDD.csv
+from ffmeta.settings import METADATA_FILE
 
 # This indirect way of getting to the folder is needed so that we can initiate the tests both from within this folder
 # as well as from outside it (e.g. for Travis Integration)
-CSV_FOLDER_PATH = os.path.join(os.path.dirname(ffmeta.__file__), 'data')
+CSV_FILE_PATH = os.path.join(os.path.dirname(ffmeta.__file__), METADATA_FILE)
 
 
 class CsvTestCase(TestCase):
@@ -21,10 +17,7 @@ class CsvTestCase(TestCase):
         # Since creating the DataFrame is a semi-expensive operation,
         # we do that as a class method and avoid doing it as part of setUp
         cls.df = pd.read_csv(
-            os.path.join(
-                CSV_FOLDER_PATH,
-                sorted(os.listdir(CSV_FOLDER_PATH), reverse=True)[0]
-            ),
+            CSV_FILE_PATH,
             encoding="cp1252"
         )
 

@@ -58,51 +58,58 @@ class APITestCase(TestCase):
         """
         Test searching a variable given it's name
         """
-        results = search({'name': 'name', 'op': 'eq', 'val': 'ce3datey'})
-        self.assertEqual(len(results), 1)
-        self.assertIn('ce3datey', results)
+        with app.app_context():
+            results = search({'name': 'name', 'op': 'eq', 'val': 'ce3datey'}, as_json=False)
+            self.assertEqual(len(results), 1)
+            self.assertIn('ce3datey', results)
 
     def testSearchEq(self):
         """
         Test searching a variable given a value for one of it's attributes (wave)
         """
-        results = search({'name': 'wave', 'op': 'eq', 'val': 3})
-        expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable WHERE wave=3'))[0]
+        with app.app_context():
+            results = search({'name': 'wave', 'op': 'eq', 'val': 3}, as_json=False)
+            expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable WHERE wave=3'))[0]
         self.assertEqual(len(results), expected_n_results)
 
     def testSearchGt(self):
         """
         Test searching a variable given a comparison for one of it's attributes (wave)
         """
-        results = search({'name': 'wave', 'op': 'gt', 'val': 3})
-        expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable WHERE wave>3'))[0]
-        self.assertEqual(len(results), expected_n_results)
+        with app.app_context():
+            results = search({'name': 'wave', 'op': 'gt', 'val': 3}, as_json=False)
+            expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable WHERE wave>3'))[0]
+            self.assertEqual(len(results), expected_n_results)
 
     def testSearchMultiple(self):
         """
         Test searching a variable given a multiple search criteria (implicitly combined by AND)
         """
-        results = search(
-            [
-                {'name': 'wave', 'op': 'gt', 'val': 3},
-                {'name': 'name', 'op': 'like', 'val': '%z%'}
-            ]
-        )
-        expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable WHERE wave>3 AND name LIKE "%z%"'))[0]
-        self.assertEqual(len(results), expected_n_results)
+        with app.app_context():
+            results = search(
+                [
+                    {'name': 'wave', 'op': 'gt', 'val': 3},
+                    {'name': 'name', 'op': 'like', 'val': '%z%'}
+                ],
+                as_json=False
+            )
+            expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable WHERE wave>3 AND name LIKE "%z%"'))[0]
+            self.assertEqual(len(results), expected_n_results)
 
     def testSearchNested(self):
         """
         Test searching a variable given nested search criteria
         """
-        results = search(
-            [
-                {'or': [
-                    {'name': 'wave', 'op': 'lte', 'val': 3},
-                    {'name': 'name', 'op': 'like', 'val': '%z%'}
-                ]},
-                {'name': 'data_source', 'op': 'eq', 'val': 'constructed'}
-            ]
-        )
-        expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable WHERE (wave<=3 OR name LIKE "%z%") AND data_source="constructed"'))[0]
-        self.assertEqual(len(results), expected_n_results)
+        with app.app_context():
+            results = search(
+                [
+                    {'or': [
+                        {'name': 'wave', 'op': 'lte', 'val': 3},
+                        {'name': 'name', 'op': 'like', 'val': '%z%'}
+                    ]},
+                    {'name': 'data_source', 'op': 'eq', 'val': 'constructed'}
+                ],
+                as_json=False
+            )
+            expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable WHERE (wave<=3 OR name LIKE "%z%") AND data_source="constructed"'))[0]
+            self.assertEqual(len(results), expected_n_results)
