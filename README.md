@@ -181,7 +181,7 @@ For `is_null` and `is_not_null` operators, you need not supply a `val`, since it
 
 It is possible to search on multiple criteria, simply by providing more than one `filter`.
 
-    Search for variables where "wave" is "Year 1" and "name" starts with "f"
+    Search for variables where "wave" is "Year 1" AND "name" starts with "f"
     /variable?q={"filters":[{"name":"wave,"op":"eq","val":"Year 1"}, {"name":"name,"op":"like","val":"f%"}]}
 
 ##### OR Filters
@@ -190,10 +190,17 @@ By default, `filters` is a list of individual filters, combined using the **AND*
 
 To specify an **OR** operation on multiple filters, `filters` can be specified as a dictionary instead, with the key "or", and the values as a list of individual `filter` objects. For example:
 
-    Search for variables where "wave" is "Year 5" or "respondent" is "Father"
+    Search for variables where "wave" is "Year 5" OR "respondent" is "Father"
     /variable?q={"filters":{"or": [{"name":"wave,"op":"eq","val":"Year 5"}, {"name":"respondent,"op":"eq","val":"Father"}] }}
 
-More complicated search criteria involving multiple and nested AND/OR filters can be constructed in the same way. In these cases, you may find that using the interactive <a href="http://metadata.fragilefamilies.princeton.edu/search">Advanced Search Tool</a> helpful, which generates and displays the API call corresponding to the search.
+Unsurprisingly, it also works in a similar way for **AND** searches:
+
+    Search for variables where "wave" is "Year 9" AND "respondent" is missing
+    /variable?q={"filters":{"and": [{"name":"wave,"op":"eq","val":"Year 9"}, {"name":"respondent,"op":"is_null"}] }}
+
+However, for **AND** searches, you may find it easier to stick to the simpler syntax above.
+
+More complicated search criteria involving multiple and nested AND/OR filters can be constructed in the same way (i.e. by replacing a `filter` at any point with a dictionary of filters keyed by `and` or `or`). However, in these cases, you may find that using the Interactive <a href="http://metadata.fragilefamilies.princeton.edu/search">Advanced Search Tool</a> helpful, which generates and displays the API call corresponding to your search.
 
 ##### Notes
 
