@@ -109,72 +109,102 @@ General Format: `/variable/<varName>?<fieldName>` or `/variable/<varName>?<field
 ### Search
 You can search for variables given one or more search criteria.
 
-General Format: `/variable?q={"filters":[{"name":<attributeName>,"op":<operator>,"val":<value>}], ..}`
+#### General Format
+`/variable?q={"filters":[<filter>, <filter>, ..]}`
 
-Search for variables where "name" equals "m1a3".
+where `<filter>` is an individual filter, described below.
 
-`/variable?q={"filters":[{"name":"name","op":"eq","val":"m1a3"}]}`
-```
-[
-    "m1a3"
-]
-```
+#### `filter` Specification
 
-Search for variables where "wave" equals 3.
+A `filter` is a dictionary of the form `{"name":<attributeName>,"op":<operator>,"val":<value>}`
+ 
+`<attributeName>` is the name of the attribute that forms the basis for the search.
 
-`/variable?q={"filters":[{"name":"wave","op":"eq","val":3}]}`
-```
-[
-    "f3f2e7",
-    "m3f2e1",
-    "m3k25a1",
-    "e3i15",
-    ...
-```
+`<operator>` is the comparison *operator* for the search. The most commonly used operators are `eq` (for exact comparison) and `like` (for fuzzy comparison).
 
-Search for variables where "data_source" equals "constructed".
+`<value>` is the value against which you want the comparison to work.
 
-`/variable?q={"filters":[{"name":"data_source","op":"eq","val":"constructed"}]}`
-```
-[
-    "ch3emp_csrot3_9",
-    "ch3att_x",
-    "ch3emp_csrot4_4",
-    "ch4emp_leave_6",
-    ...
-```
+##### Supported Operators
 
-For fuzzy or inexact queries, we use 'like' as the operator (instead of 'eq'), in conjunction with the *wildcard* **%** to match any character(s).
+**eq**: equals
+    
+    Search for variables where "name" is exactly "m1a3"
+    {"name":"name","op":"eq","val":"m1a3"}
 
-Search for variables where "name" starts with "m".
+**like**: search for a pattern
 
-`/variable?q={"filters":[{"name":"name","op":"like","val":"m%"}]}`
-```
-[
-    "m2j13c2",
-    "m3f2e1",
-    "m3k25a1",
-    "m5k2b",
-    "m1b4g",
-    ...
-```
+With the `like` operator, you can use the `%` character to match any character.
 
-Search for variables where "qText" (question text) has the world "financial" somewhere in it.
+    Search for variables where "name" starts with "f1"
+    {"name":"name","op":"like","val":"f1%"}
 
-`/variable?q={"filters":[{"name":"qText","op":"like","val":"%financial%"}]}`
-```
-[
-    "m2j13c2",
-    "m3f2e1",
-    "m3k25a1",
-    "m5k2b",
-    "m1b4g",
-    ...
-```
+    Search for variables where "qText" has the word "financial" somewhere in it
+    {"name":"qText","op":"like","val":"%financial%"}
 
+**lt**: less-than, **le**: less-than-or-equal-to, **gt**: greater-than, **gte**: greater-than-or-equal-to
+    
+    Search for variables where "warning" <= 1
+    {"name":"warning","op":"leq","val":"m1a3"}
+
+**neq**: not equals
+    
+    Search for variables where "data_source" is not "questionnaire"
+    {"name":"data_source","op":"neq","val":"questionnaire"}
+
+**in**: is in (is one of ..)
+    
+    Search for variables where "respondent" is in ["Father", "Mother"] (i.e. it is either "Father" or "Mother")
+    {"name":"respondent","op":"in","val":["Father","Mother"]}
+
+**not_in**: is not in (is not any of ..)
+    
+    Search for variables where "wave" is neither "Year 1" nor "Year 3"
+    {"name":"wave","op":"no_in","val":["Year 1","Year 3"]}
+
+**is_null**: is null (is missing)
+
+**is_not_null**: is not null (is not missing)
+
+For most fields, a special "null" value denotes a missing value.
+
+    Search for variables where "wave" is missing
+    {"name":"wave","op":"is_null"}
+
+For certain fields (e.g. "focal_person"), the "null" value denotes **no** focal person.
+
+    Search for variables where there is a "focal_person"
+    {"name":"focal_person","op":"is_not_null"}
+
+For `is_null` and `is_not_null` operators, you need not supply a `val`, since it has no meaning. (A `val` is ignored if found).
+
+#### Multiple Filters
+
+It is possible to search on multiple criteria, simply by providing more than one `filter`.
+
+    Search for variables where "wave" is "Year 1" and "name" starts with "f"
+    /variable?q={"filters":[{"name":"wave,"op":"eq","val":"Year 1"}, {"name":"name,"op":"like","val":"f%"}]}
+
+##### OR Filters
+
+By default, `filters` is a list of individual filters, combined using the **AND** operation (i.e. all filter conditions must be met), as in the example above.
+
+To specify an **OR** operation on multiple filters, `filters` can be specified as a dictionary instead, with the key "or", and the values as a list of individual `filter` objects. For example:
+
+    Search for variables where "wave" is "Year 5" or "respondent" is "Father"
+    /variable?q={"filters":{"or": [{"name":"wave,"op":"eq","val":"Year 5"}, {"name":"respondent,"op":"eq","val":"Father"}] }}
+
+More complicated search criteria involving multiple and nested AND/OR filters can be constructed in the same way. In these cases, you may find that using the interactive <a href="http://metadata.fragilefamilies.princeton.edu/search">Advanced Search Tool</a> helpful, which generates and displays the API call corresponding to the search.
+
+##### Notes
+
+  - Note that `val` field in a `filter` needs to be the literal value that you're searching for. It cannot be the name of another attribute (i.e. you cannot search for variables where `name` is equal to `old_name`, for example.)
+  - With most modern browsers, you can simply type or copy-paste URLs with characters like `%`, `[`, `]`, `{` in them. However, note that when using the API programmatically, you would need to properly <a href="https://en.wikipedia.org/wiki/Percent-encoding">URL Encode</a> your query string to the API endpoint. Most HTTP libraries will do this automatically for you, but this is something to be aware of.
+  
 ## Errors
 
-### Getting the metadata for a variable that doesn't exist:
+API calls can generate errors if not used correctly. In all such cases, the returned HTTP Response code is 400, indicating a Bad Request.
+
+#### Getting the metadata for a variable that doesn't exist:
 
 `/variable/m1a2` (no variable by name `m1a2` exists)
 
