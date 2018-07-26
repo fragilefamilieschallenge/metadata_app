@@ -111,7 +111,7 @@ def populate_tables():
             name=name,
             label=label,
             old_name=old_name,
-            data_type=data_type,
+            data_type=type_dict[data_type],
             warning=warning,
             group_id=group_id,
             group_subid=group_subid,
@@ -133,7 +133,6 @@ def populate_tables():
             focal_person=focal_person,
             survey=survey_dict[survey],
             wave=wave_dict[wave],
-            type=type_dict[data_type],
 
             topic1=topic1,
             subtopic1=subtopic1,
