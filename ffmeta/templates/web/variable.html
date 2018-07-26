@@ -53,12 +53,16 @@
                 </div>
                 <div id="collapse_topic" class="panel-collapse collapse in" role="tabpanel">
                     <div class="panel-body">
-                        <!-- TODO: Make these click through to a search on this topic? -->
-                        {% for u in umbrellas %}
+                        {% if var_data.topic1 != None %}
                             <p>
-                                <span class="umbrella">{{u.umbrella}}</span>───┤ <em>{{ u.topic }}</em><br/>
+                                <span class="umbrella">{{var_data.topic1}}</span>───┤ <em>{{ var_data.subtopic1 }}</em><br/>
                            </p>
-                        {% endfor %}
+                        {% endif %}
+                        {% if var_data.topic2 != None %}
+                            <p>
+                                <span class="umbrella">{{var_data.topic2}}</span>───┤ <em>{{ var_data.subtopic2 }}</em><br/>
+                           </p>
+                        {% endif %}
                         {% if var_data.measures != None %}
                         <b>Measure/Scale: </b>{{var_data.measures}}
                         {% endif %}
@@ -167,7 +171,7 @@
                 <div id="collapse_related" class="panel-collapse collapse in" role="tabpanel">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h4 class="panel-title">Similar variables <span class="badge">{{neighbors|length - 1}}</span></h4>
+                            <h4 class="panel-title">Similar variables <span class="badge">{{neighbors|length}}</span></h4>
                         </div>
                         <div class="table-responsive" style="padding: 1%">
                             <table id="results" class="table table-hover">
@@ -183,18 +187,16 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for var in neighbors %}
-                                        {% if var.name != var_data.name %}
-                                        <tr>
-                                            <td><a type="button" class="btn btn-default" href="{{ url_for('web.var_page', varname = var.name) }}">{{var.name}}</button></td>
-                                            <td>{{var.label}}</td>
-                                            <td><small>{{neighbor_topics[var.name]}}</small></td>
-                                            <td><small>{{filtermeta.survey[var.survey]}}</small></td>
-                                            <td><small>{{filtermeta.wave[var.wave]}}</small></td>
-                                            <td><small>{{filtermeta.data_type[var.data_type]}}</small></td>
-                                            <td><small>{{filtermeta.data_source[var.data_source]}}</small></td>
-                                        </tr>
-                                        {% endif %}
+                                    {% for neighbor in neighbors %}
+                                    <tr>
+                                        <td><a type="button" class="btn btn-default" href="{{ url_for('web.var_page', varname = neighbor.name) }}">{{neighbor.name}}</button></td>
+                                        <td>{{neighbor.label}}</td>
+                                        <td><small>{{neighbor.topics}}</small></td>
+                                        <td><small>{{filtermeta.survey[neighbor.survey]}}</small></td>
+                                        <td><small>{{filtermeta.wave[neighbor.wave]}}</small></td>
+                                        <td><small>{{filtermeta.data_type[neighbor.data_type]}}</small></td>
+                                        <td><small>{{filtermeta.data_source[neighbor.data_source]}}</small></td>
+                                    </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>

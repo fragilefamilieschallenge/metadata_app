@@ -1,7 +1,7 @@
 import datetime
 from flask import jsonify
 
-from ffmeta.models import Umbrella, Response, Variable, Topic
+from ffmeta.models import Response, Variable
 from ffmeta.models.db import session
 
 # Datetime helper
@@ -30,12 +30,9 @@ def dedupe_varlist(varlist):
 # Secretly, both filter and search use this functionality!
 def search_db(field, value):
     if field == "umbrella":
-        # Get all variables in all topics with matching umbrellas
-        topics_found = session.query(Umbrella).filter((Umbrella.umbrella.like('%%{}%%'.format(value))) | (Umbrella.topic.like('%%{}%%'.format(value)))).all()
-        tlist = [t.topic for t in topics_found]
-        matches = session.query(Topic).filter(Topic.topic.in_(tlist)).group_by(Topic.topic, Topic.name).all()
+        matches = session.query(Variable).filter(Variable.topics.like('%%{}%%'.format(value))).all()
     elif field == "topic":
-        matches = session.query(Topic).filter(Topic.topic.like('%%{}%%'.format(value))).all()
+        matches = session.query(Variable).filter(Variable.subtopics.like('%%{}%%'.format(value))).all()
     elif field == "responses":
         matches = session.query(Response).filter(Response.label.like('%%{}%%'.format(value))).all()
     else:

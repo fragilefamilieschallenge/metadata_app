@@ -106,15 +106,15 @@ $(document).ready(function() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for rvar in results %}
+                                {% for result in results %}
                                 <tr>
-                                    <td><a type="button" class="btn btn-primary" href="{{ url_for('web.var_page', varname = rvar.name) }}">{{rvar.name}}</button></td>
-                                    <td>{{rvar.label}}</td>
-                                    <td><small>{{topics[rvar.name]}}</small></td>
-                                    <td><small>{{filtermeta.survey[rvar.survey]}}</small></td>
-                                    <td><small>{{filtermeta.wave[rvar.wave]}}</small></td>
-                                    <td><small>{{filtermeta.data_type[rvar.data_type]}}</small></td>
-                                    <td><small>{{filtermeta.data_source[rvar.data_source]}}</small></td>
+                                    <td><a type="button" class="btn btn-primary" href="{{ url_for('web.var_page', varname = result.name) }}">{{result.name}}</button></td>
+                                    <td>{{result.label}}</td>
+                                    <td><small>{{result.topics}}</small></td>
+                                    <td><small>{{filtermeta.survey[result.survey]}}</small></td>
+                                    <td><small>{{filtermeta.wave[result.wave]}}</small></td>
+                                    <td><small>{{filtermeta.data_type[result.data_type]}}</small></td>
+                                    <td><small>{{filtermeta.data_source[result.data_source]}}</small></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

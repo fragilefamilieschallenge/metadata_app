@@ -81,6 +81,42 @@ class APITestCase(TestCase):
             expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable WHERE wave>3'))[0]
             self.assertEqual(len(results), expected_n_results)
 
+    def testSearchIn(self):
+        """
+        Test searching a variable given a comparison for one of it's attributes (wave)
+        """
+        with app.app_context():
+            results = search({'name': 'wave', 'op': 'in', 'val': (4, 5)}, as_json=False)
+            expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable WHERE wave IN (4, 5)'))[0]
+            self.assertEqual(len(results), expected_n_results)
+
+    def testSearchNotIn(self):
+        """
+        Test searching a variable given a comparison for one of it's attributes (wave)
+        """
+        with app.app_context():
+            results = search({'name': 'wave', 'op': 'not_in', 'val': (4, 5)}, as_json=False)
+            expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable WHERE wave NOT IN (4, 5)'))[0]
+            self.assertEqual(len(results), expected_n_results)
+
+    def testSearchIsNull(self):
+        """
+        Test searching a variable given a comparison for one of it's attributes (qText)
+        """
+        with app.app_context():
+            results = search({'name': 'qText', 'op': 'is_null'}, as_json=False)
+            expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable WHERE qText IS NULL'))[0]
+            self.assertEqual(len(results), expected_n_results)
+
+    def testSearchIsNotNull(self):
+        """
+        Test searching a variable given a comparison for one of it's attributes (qText)
+        """
+        with app.app_context():
+            results = search({'name': 'qText', 'op': 'is_not_null'}, as_json=False)
+            expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable WHERE qText IS NOT NULL'))[0]
+            self.assertEqual(len(results), expected_n_results)
+
     def testSearchMultiple(self):
         """
         Test searching a variable given a multiple search criteria (implicitly combined by AND)

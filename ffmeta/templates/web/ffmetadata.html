@@ -5,8 +5,8 @@
         <title>FFCWS Metadata | {% block title %}{% endblock %}</title>
 
         <!-- Styling -->
-        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}?1">
-        <link rel="stylesheet" href="{{ url_for('static', filename='open-iconic.min.css') }}?1">
+        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/bootstrap.min.css') }}?1">
+        <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome/css/all.min.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='ff_metadata.css') }}?5">
         <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato|Comfortaa">
@@ -15,13 +15,13 @@
 
         <!-- Scripts -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='bootstrap/bootstrap.min.js') }}"></script>
         <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/plug-ins/1.10.16/sorting/natural.js"></script>
         <script src="{{ url_for('static', filename='clipboard.min.js') }}"></script>
         <script src="{{ url_for('static', filename='select2.min.js') }}"></script>
         <script src="{{ url_for('static', filename='query-builder.standalone.js') }}"></script>
-        <script src="{{ url_for('static', filename='qb2dt.js') }}"></script>
+        <script src="{{ url_for('static', filename='qb2api.js') }}"></script>
 
         <!-- Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115020886-1"></script>
@@ -38,10 +38,10 @@
 
     <body>
 
-        <div class="container">
+        <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <a href="http://fragilefamilies.princeton.edu"><img src="{{ url_for('static', filename='ffcws_banner.jpg') }}" class="img-responsive center-block" width="80%"></a>
+                    <a href="http://fragilefamilies.princeton.edu"><img src="{{ url_for('static', filename='ffcws_banner_small.jpg') }}" class="img-responsive center-block" width="80%"></a>
                 </div>
                 <div class="col-md-12">
                     <nav class="navbar navbar-default">
@@ -50,10 +50,11 @@
                             <a href="{{ url_for('web.index') }}" class="center-block"><span class="navbar-brand"><span class="oi" data-glyph="pulse"></span>  FFCWS Metadata</span></a>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
-                            <li role="presentation"><a href="{{ url_for('web.search') }}"><span class="oi" data-glyph="puzzle-piece"></span>  Browse variables</a></li>
-                            <li role="presentation"><a href="{{ url_for('web.metadata') }}"><span class="oi" data-glyph="data-transfer-download"></span>  Download metadata</a></li>
-                            <li role="presentation"><a href="{{ url_for('web.feedback') }}"><span class="oi" data-glyph="chat"></span>  Feedback</a></li>
-                            <li role="presentation"><a href="{{ url_for('web.about') }}"><span class="oi" data-glyph="globe"></span>  About the Metadata</a></li>
+                            <li role="presentation"><a href="{{ url_for('web.search') }}"><span class="fas fa-search"></span> Browse variables</a></li>
+                            <li role="presentation"><a href="{{ url_for('web.search2') }}"><span class="fas fa-cogs"></span> Advanced Search</a></li>
+                            <li role="presentation"><a href="{{ url_for('web.metadata') }}"><span class="fas fa-cloud-download-alt"></span> Download full metadata</a></li>
+                            <li role="presentation"><a href="{{ url_for('web.feedback') }}"><span class="fas fa-comments"></span> Feedback</a></li>
+                            <li role="presentation"><a href="{{ url_for('web.about') }}"><span class="fas fa-info"></span> About the Metadata</a></li>
                         </ul>
                       </div>
                     </nav>

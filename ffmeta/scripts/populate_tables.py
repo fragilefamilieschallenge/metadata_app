@@ -1,7 +1,13 @@
+import os.path
 import re
+import csv
+from sqlalchemy import Table
+
+import ffmeta
+from ffmeta.settings import METADATA_FILE
 from ffmeta import create_app
 from ffmeta.models import Variable, Response
-from ffmeta.models.db import session
+from ffmeta.models.db import session, Base
 
 # Dictionary mappings from what we expect in the 'raw' file to verbose string representations of attributes
 # (that we store directly in the variable table in the denormalized form)
@@ -15,6 +21,28 @@ type_dict = {'bin': 'Binary', 'cont': 'Continuous', 'ID Number': 'ID Number', 'o
              'string': 'String', 'uc': 'Unordered categorical'}
 
 
+def populate_raw(csv_path):
+    '''Load metadata from a csv file into the "raw" table'''
+
+    if input(
+        'This operation will delete all data fom the "raw" table and re-import it. ARE YOU SURE you want to proceed (yes/no)? '
+    ) != 'yes':
+        return
+
+    session.execute("DELETE FROM `raw`")
+    raw_table = Table("raw", Base.metadata, autoload=True)
+    with open(csv_path) as f:
+        reader = csv.DictReader(f)
+        for i, _d in enumerate(reader, start=1):
+            # Remove keys with empty values
+            d = dict((k, _d[k]) for k in _d if _d[k] != '')
+            session.execute(raw_table.insert(), [d])
+            if i % 500 == 0:
+                print('Added {} rows'.format(i))
+                session.commit()
+        session.commit()
+
+
 def populate_tables():
     '''Load metadata from the `raw` table to other tables.'''
 
@@ -23,11 +51,11 @@ def populate_tables():
     ) != 'yes':
         return
 
-    session.execute('DELETE FROM `group`')
-    session.execute('DELETE FROM `umbrella`')
-    session.execute('DELETE FROM `response`')
-    session.execute('DELETE FROM `topic`')
-    session.execute('DELETE FROM `variable`')
+    # session.execute('DELETE FROM `group`')
+    # session.execute('DELETE FROM `umbrella`')
+    session.execute('DELETE FROM `response2`')
+    # session.execute('DELETE FROM `topic`')
+    session.execute('DELETE FROM `variable2`')
     session.commit()
 
     for i, row in enumerate(session.execute('SELECT * FROM `raw`'), start=1):
@@ -74,6 +102,11 @@ def populate_tables():
         l = locals()
         focal_person = ', '.join(v for k, v in focal_person_dict.items() if l[k])
 
+        topic1 = row['umbrella1']
+        subtopic1 = row['topic1']
+        topic2 = row['umbrella2']
+        subtopic2 = row['topic2']
+
         variable = Variable(
             name=name,
             label=label,
@@ -84,14 +117,12 @@ def populate_tables():
             group_subid=group_subid,
             data_source=data_source,
             respondent=respondent,
-            wave=wave,
             scope=scope,
             section=section,
             leaf=leaf,
             measures=measures,
             probe=probe,
             qText=qText,
-            survey=survey,
             fp_fchild=fp_fchild,
             fp_mother=fp_mother,
             fp_father=fp_father,
@@ -100,10 +131,16 @@ def populate_tables():
             fp_other=fp_other,
 
             focal_person=focal_person,
-            survey2=survey_dict[survey],
-            wave2=wave_dict[wave],
-            type=type_dict[data_type]
+            survey=survey_dict[survey],
+            wave=wave_dict[wave],
+            type=type_dict[data_type],
 
+            topic1=topic1,
+            subtopic1=subtopic1,
+            topic2=topic2,
+            subtopic2=subtopic2,
+            topics=', '.join(x for x in set([topic1, topic2]) if x is not None),
+            subtopics=', '.join(x for x in set([subtopic1, subtopic2]) if x is not None),
         )
 
         session.add(variable)
@@ -128,20 +165,22 @@ def populate_tables():
                 resp = Response(name=row["new_name"], label=lab, value=row["value" + respidx])
                 session.add(resp)
 
-        if not i%200:
+        if not i % 200:
             print(str(i) + " rows added.")
             session.commit()
 
     session.commit()
-    session.execute("INSERT INTO topic (name, topic) SELECT new_name, topic1 FROM raw WHERE topic1 IS NOT NULL")
-    session.execute("INSERT INTO topic (name, topic) SELECT new_name, topic2 FROM raw WHERE topic2 IS NOT NULL")
-    session.execute("INSERT INTO umbrella (topic, umbrella) (SELECT DISTINCT topic1, umbrella1 FROM raw WHERE umbrella1 IS NOT NULL) UNION (SELECT DISTINCT topic2, umbrella2 FROM raw WHERE umbrella2 IS NOT NULL)")
+    # session.execute("INSERT INTO topic (name, topic) SELECT new_name, topic1 FROM raw WHERE topic1 IS NOT NULL")
+    # session.execute("INSERT INTO topic (name, topic) SELECT new_name, topic2 FROM raw WHERE topic2 IS NOT NULL")
+    # session.execute("INSERT INTO umbrella (topic, umbrella) (SELECT DISTINCT topic1, umbrella1 FROM raw WHERE umbrella1 IS NOT NULL) UNION (SELECT DISTINCT topic2, umbrella2 FROM raw WHERE umbrella2 IS NOT NULL)")
 
-    session.commit()
+    # session.commit()
 
 
 if __name__ == '__main__':
 
     application = create_app(debug=True)
     with application.app_context():
+        CSV_FILE_PATH = os.path.join(os.path.dirname(ffmeta.__file__), METADATA_FILE)
+        populate_raw(CSV_FILE_PATH)
         populate_tables()

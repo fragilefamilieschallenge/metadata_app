@@ -5,7 +5,7 @@ from sqlalchemy import inspect, and_, or_
 from flask import Blueprint, request, Response, json, jsonify
 
 from ffmeta.models.db import session
-from ffmeta.models import Response, Variable, Umbrella, Topic
+from ffmeta.models import Response, Variable
 from ffmeta.utils import api_error
 
 bp = Blueprint('apiv2', __name__)
@@ -19,11 +19,11 @@ def variable_details(obj, attrs=None, as_json=False):
 
     # TODO: The following structure is used to maintain compatibility with old behavior
     # Probably it makes sense to reverse the keys/values
-    d['responses'] = dict((r.value, r.label) for r in obj.responses)
+    # d['responses'] = dict((r.value, r.label) for r in obj.responses)
 
     # TODO: The following structure is used to maintain compatibility with old behavior
     # A better structure to this would be to simply return an <umbrella_name>: [<topic_names>] dictionary here
-    d['topics'] = [{'umbrella': str(t.umbrella), 'topic': str(t)} for t in obj.topics]
+    # d['topics'] = [{'umbrella': str(t.umbrella), 'topic': str(t)} for t in obj.topics]
 
     keys = attrs or d.keys()
     d = dict((k, d[k]) for k in keys if k in d.keys())
@@ -69,17 +69,14 @@ def _pred(filter):
 
     :return: A SqlAlchemy BinaryExpression object corresponding to given search criteria.
     """
-    name, op, val = filter['name'], filter['op'], filter['val']
+    # Note: We may not have a 'val' key (for is_null/is_not_null)
+    name, op, val = filter['name'], filter['op'], filter.get('val')
     op = op.lower().strip()
 
     if name in variable_attrs:
         column = getattr(Variable, name)
     elif name == 'response':
         column = Response.label
-    elif name == 'topic':
-        column = Topic.topic
-    elif name == 'umbrella':
-        column = Umbrella.umbrella
     else:
         return api_error(400, "Invalid name for search.")
 
@@ -97,6 +94,14 @@ def _pred(filter):
         pred = operator.lt(column, val)
     elif op in ('lte', 'le', '<='):
         pred = operator.le(column, val)
+    elif op in ('in',):
+        pred = column.in_(val)
+    elif op in ('not_in',):
+        pred = ~column.in_(val)
+    elif op in ('is_null',):
+        pred = operator.eq(column, None)
+    elif op in ('is_not_null',):
+        pred = operator.ne(column, None)
     else:
         return api_error(400, "Unrecognized operator")
 
@@ -150,15 +155,11 @@ def search(filters, details=False, as_json=True):
     """
     filters = _filters(filters)
 
-    query = session.query(Variable)\
-        .outerjoin(Response, Variable.name == Response.name).\
-        outerjoin(Topic, Variable.name == Topic.name).\
-        outerjoin(Umbrella, Topic.topic == Umbrella.topic)
-    query = query.filter(filters)
+    query = session.query(Variable).filter(filters)
 
     # TODO: Do we need to remove duplicates??
     if details:
-        results = [variable_details(o) for o in query]
+        results = [variable_details(o, attrs=variable_attrs) for o in query]
     else:
         results = [o.name for o in query]
 

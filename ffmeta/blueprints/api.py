@@ -5,8 +5,9 @@ import uuid
 from flask import Blueprint, request, Response, jsonify, make_response, send_file, redirect, url_for, current_app
 
 from ffmeta.models.db import session
-from ffmeta.models import Response, Variable, Umbrella, Topic
+from ffmeta.models import Response, Variable
 from ffmeta.utils import api_error, epochalypse_now, dedupe_varlist, search_db
+from ffmeta.blueprints.api2 import variable_details
 
 bp = Blueprint('api', __name__)
 
@@ -25,12 +26,14 @@ def selectMetadata():
     var = session.query(Variable).filter(Variable.name == varname).first()
     if not var:
         return api_error(400, "Invalid variable name.")
-    var_data = var.serialize
+    var_data = variable_details(var)
 
-    # Append topics
-    topics = session.query(Topic).filter(Topic.name == varname).group_by(Topic.topic).all()
-    umbrellas = session.query(Umbrella).filter(Umbrella.topic.in_([str(t.topic) for t in topics])).all()
-    var_data["topics"] = [{"umbrella": str(u.umbrella), "topic": str(u.topic)} for u in umbrellas]
+    topics = []
+    if var.subtopic1 is not None:
+        topics.append({"umbrella": var.topic1, "topic": var.subtopic1})
+    if var.subtopic2 is not None:
+        topics.append({"umbrella": var.topic2, "topic": var.subtopic2})
+    var_data["topics"] = topics
 
     # Append responses
     responses = session.query(Response).filter(Response.name == varname).group_by(Response.label).all()
@@ -40,9 +43,6 @@ def selectMetadata():
     if fieldname and fieldname not in var_data.keys():
         return api_error(400, "Invalid field name.")
 
-    # Log query
-    current_app.logger.info("{}\t{}\tselectMetadata\tname: {}\tfield: {}".format(epochalypse_now(), request.cookies.get("user_id"), varname, str(fieldname)))
-
     # Return only a single field if specified
     if not fieldname:
         rv = jsonify(var_data)
@@ -51,12 +51,6 @@ def selectMetadata():
         rv = jsonify(result)
 
     resp = make_response(rv)
-
-    # Set cookie data if not found
-    if not request.cookies.get("user_id"):
-        expire_date = datetime.datetime.now() + datetime.timedelta(days=90)
-        g_uuid = str(uuid.uuid4())
-        resp.set_cookie("user_id", g_uuid, expires=expire_date)
 
     return resp
 
@@ -87,13 +81,6 @@ def filterMetadata():
         rv = jsonify({"matches": varlist})
 
     resp = make_response(rv)
-
-    # Set cookie data if not found
-    if not request.cookies.get("user_id"):
-        expire_date = datetime.datetime.now() + datetime.timedelta(days=90)
-        g_uuid = str(uuid.uuid4())
-        resp.set_cookie("user_id", g_uuid, expires=expire_date)
-
     return resp
 
 
@@ -122,12 +109,6 @@ def searchMetadata():
         rv = jsonify({"matches": matches})
 
     resp = make_response(rv)
-
-    # Set cookie data if not found
-    if not request.cookies.get("user_id"):
-        expire_date = datetime.datetime.now() + datetime.timedelta(days=90)
-        g_uuid = str(uuid.uuid4())
-        resp.set_cookie("user_id", g_uuid, expires=expire_date)
 
     return resp
 
