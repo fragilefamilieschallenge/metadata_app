@@ -200,7 +200,7 @@ Unsurprisingly, it also works in a similar way for **AND** searches:
 
 However, for **AND** searches, you may find it easier to stick to the simpler syntax above.
 
-More complicated search criteria involving multiple and nested AND/OR filters can be constructed in the same way (i.e. by replacing a `filter` at any point with a dictionary of filters keyed by `and` or `or`). However, in these cases, you may find that using the Interactive <a href="http://metadata.fragilefamilies.princeton.edu/search">Advanced Search Tool</a> helpful, which generates and displays the API call corresponding to your search.
+More complicated search criteria involving multiple and nested AND/OR filters can be constructed in the same way (i.e. by replacing a `filter` at any point with a dictionary of filters keyed by `and` or `or`). However, in these cases, you may find using the Interactive <a href="http://metadata.fragilefamilies.princeton.edu/search">Advanced Search Tool</a> helpful, which generates and displays the API call corresponding to your search.
 
 ##### Notes
 
