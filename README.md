@@ -144,7 +144,7 @@ With the `like` operator, you can use the `%` character to match any character.
 **lt**: less-than, **le**: less-than-or-equal-to, **gt**: greater-than, **gte**: greater-than-or-equal-to
     
     Search for variables where "warning" <= 1
-    {"name":"warning","op":"leq","val":"m1a3"}
+    {"name":"warning","op":"leq","val":1}
 
 **neq**: not equals
     
@@ -170,8 +170,6 @@ For most fields, a special "null" value denotes a missing value.
     Search for variables where "wave" is missing
     {"name":"wave","op":"is_null"}
 
-For certain fields (e.g. "focal_person"), the "null" value denotes **no** focal person.
-
     Search for variables where there is a "focal_person"
     {"name":"focal_person","op":"is_not_null"}
 
@@ -179,7 +177,7 @@ For `is_null` and `is_not_null` operators, you need not supply a `val`, since it
 
 #### Multiple Filters
 
-It is possible to search on multiple criteria, simply by providing more than one `filter`.
+It is possible to search on multiple criteria (combined using AND), simply by providing more than one `filter`.
 
     Search for variables where "wave" is "Year 1" AND "name" starts with "f"
     /variable?q={"filters":[{"name":"wave,"op":"eq","val":"Year 1"}, {"name":"name,"op":"like","val":"f%"}]}
