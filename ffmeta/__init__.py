@@ -8,8 +8,6 @@ from ffmeta.blueprints import cache
 
 def create_app(debug=False):
 
-    import ffmeta
-
     def handle_error(error):
         response = jsonify(error.to_dict())
         response.status_code = error.status_code
@@ -21,7 +19,7 @@ def create_app(debug=False):
         app,
         config={
             'CACHE_TYPE': 'filesystem',
-            'CACHE_DIR': os.path.join(os.path.dirname(ffmeta.__file__), app.config['CACHE_DIR'])
+            'CACHE_DIR': os.path.join(os.path.dirname(__file__), app.config['CACHE_DIR'])
         }
     )
 
