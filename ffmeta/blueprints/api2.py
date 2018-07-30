@@ -7,6 +7,8 @@ from flask import Blueprint, request, Response, json, jsonify
 from ffmeta.models.db import session
 from ffmeta.models import Response, Variable
 from ffmeta.utils import api_error
+from ffmeta.blueprints import cache
+
 
 bp = Blueprint('apiv2', __name__)
 
@@ -157,7 +159,6 @@ def search(filters, details=False, as_json=True):
 
     query = session.query(Variable).filter(filters)
 
-    # TODO: Do we need to remove duplicates??
     if details:
         results = [variable_details(o, attrs=variable_attrs) for o in query]
     else:
@@ -176,6 +177,7 @@ def select_variable(variable_name):
 
 
 @bp.route("/variable")
+@cache.cached(query_string=True)
 def search_variable():
     """
     Web endpoint for variable searching given one or more search criteria (list of clauses or nested clauses).

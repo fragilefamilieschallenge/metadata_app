@@ -3,14 +3,21 @@
 {% block title %}Advanced Variable Search{% endblock %}
 
 {% block head %}
+<link href="{{ url_for('static', filename='query-builder.default.css') }}" rel="stylesheet" />
+<script src="{{ url_for('static', filename='query-builder.standalone.js') }}"></script>
+<script src="{{ url_for('static', filename='qb2api.js') }}"></script>
+<link href="{{ url_for('static', filename='bootstrap-select.min.css') }}" rel="stylesheet" />
+<script src="{{ url_for('static', filename='bootstrap-select.min.js') }}"></script>
+
 <script>
 $(document).ready(function() {
-
     var table = $('#datatable').DataTable({
         "dom": '<"top"flp>irt<"bottom"flp><"clear">',
+        "processing": true,
         "ajax": {
             "url": "{{ url_for('apiv2.search_variable') }}?details=1&q={\"filters\":[]}",
-            "dataSrc": ""
+            "dataSrc": "",
+            "cache": true
         },
         "columns": [
             {"data": "name",
@@ -56,19 +63,39 @@ $(document).ready(function() {
                 type: 'string',
                 input: 'select',
                 values: {'ID number': 'ID number', 'Binary': 'Binary',  'Continuous': 'Continuous', 'Ordered categorical': 'Ordered categorical', 'Unordered categorical': 'Unordered categorical'},
-                operators: ['equal', 'not_equal', 'in', 'not_in']
+                operators: ['equal', 'not_equal', 'in', 'not_in'],
+                multiple: true,
+                plugin: 'selectpicker'
             },
             {
-                id: 'topic',
-                label: 'Topic',
+                id: 'topic1',
+                label: 'Topic 1',
                 type: 'string',
                 input: 'select',
                 values: {'Attitudes and expectations': 'Attitudes and expectations', 'Childcare': 'Childcare', 'Cognitive and behavioral development': 'Cognitive and behavioral development', 'Demographics': 'Demographics', 'Education and school': 'Education and school', 'Employment': 'Employment', 'Family and social ties':'Family and social ties', 'Finances':'Finances', 'Health and health behavior':'Health and health behavior', 'Housing and neighborhood':'Housing and neighborhood', 'Legal system': 'Legal system', 'Paradata and weights': 'Paradata and weights', 'Parenting':'Parenting', 'Romantic relationships': 'Romantic relationships'},
-                operators: ['equal', 'not_equal', 'in', 'not_in']
+                operators: ['equal', 'not_equal', 'in', 'not_in'],
+                multiple: true,
+                plugin: 'selectpicker'
             },
             {
-                id: 'subtopic',
-                label: 'Sub-Topic',
+                id: 'topic2',
+                label: 'Topic 2',
+                type: 'string',
+                input: 'select',
+                values: {'Attitudes and expectations': 'Attitudes and expectations', 'Childcare': 'Childcare', 'Cognitive and behavioral development': 'Cognitive and behavioral development', 'Demographics': 'Demographics', 'Education and school': 'Education and school', 'Employment': 'Employment', 'Family and social ties':'Family and social ties', 'Finances':'Finances', 'Health and health behavior':'Health and health behavior', 'Housing and neighborhood':'Housing and neighborhood', 'Legal system': 'Legal system', 'Paradata and weights': 'Paradata and weights', 'Parenting':'Parenting', 'Romantic relationships': 'Romantic relationships'},
+                operators: ['equal', 'not_equal', 'in', 'not_in'],
+                multiple: true,
+                plugin: 'selectpicker'
+            },
+            {
+                id: 'subtopic1',
+                label: 'Sub-Topic 1',
+                type: 'string',
+                operators: ['equal', 'not_equal', 'contains']
+            },
+            {
+                id: 'subtopic2',
+                label: 'Sub-Topic 2',
                 type: 'string',
                 operators: ['equal', 'not_equal', 'contains']
             },
@@ -76,13 +103,21 @@ $(document).ready(function() {
                 id: 'scope',
                 label: 'Scope',
                 type: 'integer',
-                operators: ['equal', 'not_equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'in', 'not_in']
+                operators: ['equal', 'not_equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'in', 'not_in'],
+                input: 'select',
+                values: {2: 2, 15: 15, 16: 16, 18: 18, 20: 20},
+                multiple: true,
+                plugin: 'selectpicker'
             },
             {
                 id: 'warning',
                 label: 'Warning',
                 type: 'integer',
-                operators: ['equal', 'not_equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'in', 'not_in']
+                operators: ['equal', 'not_equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'in', 'not_in'],
+                input: 'select',
+                values: {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6},
+                multiple: true,
+                plugin: 'selectpicker'
             },
             {
                 id: 'focal_person',
@@ -98,7 +133,9 @@ $(document).ready(function() {
                 type: 'string',
                 input: 'select',
                 values: {'Child': 'Child', 'Child care center (survey)': 'Child care center (survey)', 'Couple': 'Couple' ,'Family care (survey)': 'Family care (survey)', 'Father': 'Father', 'ID Number': 'ID Number', 'In-home (observation)': 'In-home (observation)', 'In-home (survey)': 'In-home (survey)', 'Mother': 'Mother', 'Non-parental primary caregiver': 'Non-parental primary caregiver', 'Post child and family care observation': 'Post child and family care observation', 'Primary caregiver': 'Primary caregiver', 'Teacher': 'Teacher'},
-                operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null']
+                operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null'],
+                multiple: true,
+                plugin: 'selectpicker'
             },
             {
                 id: 'data_source',
@@ -106,7 +143,9 @@ $(document).ready(function() {
                 type: 'string',
                 input: 'select',
                 values: {'idnum': 'idnum', 'constructed': 'constructed', 'weight': 'weight', 'questionnaire': 'questionnaire'},
-                operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null']
+                operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null'],
+                multiple: true,
+                plugin: 'selectpicker'
             },
             {
                 id: 'respondent',
@@ -114,7 +153,9 @@ $(document).ready(function() {
                 type: 'string',
                 input: 'select',
                 values: {'Child': 'Child', 'Child Care Provider': 'Child Care Provider', 'Father': 'Father', 'Interviewer': 'Interviewer', 'Mother': 'Mother', 'PCG': 'PCG', 'Teacher': 'Teacher'},
-                operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null']
+                operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null'],
+                multiple: true,
+                plugin: 'selectpicker'
             },
             {
                 id: 'qText',

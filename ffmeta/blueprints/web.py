@@ -6,7 +6,6 @@ from flask import Blueprint, render_template, request, send_from_directory, send
 
 from ffmeta.models import Response, Variable
 from ffmeta.models.db import session
-from ffmeta.utils import epochalypse_now
 
 
 bp = Blueprint('web', __name__)
