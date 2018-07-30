@@ -177,7 +177,7 @@ def select_variable(variable_name):
 
 
 @bp.route("/variable")
-@cache.cached(query_string=True)
+@cache.cached(query_string=True, timeout=86400)
 def search_variable():
     """
     Web endpoint for variable searching given one or more search criteria (list of clauses or nested clauses).

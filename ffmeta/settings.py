@@ -4,9 +4,6 @@ SERVER_NAME = 'metadata.fragilefamilies.princeton.edu'
 # Metadata flatfile location
 METADATA_FILE = "data/FFMetadata20180629.csv"
 
-# Cache folder for the Flask-Caching system. Relative to the top-level folder.
-CACHE_DIR = 'cache'
-
 # Database credentials. The following are just placeholders - replace with real credentials.
 DB_USER = "travis"
 DB_PASS = ""

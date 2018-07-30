@@ -1,4 +1,3 @@
-import os.path
 from flask import Flask, jsonify
 
 from ffmeta import settings
@@ -15,13 +14,7 @@ def create_app(debug=False):
 
     app = Flask('ffmeta')
     app.config.from_pyfile('settings.py')
-    cache.init_app(
-        app,
-        config={
-            'CACHE_TYPE': 'filesystem',
-            'CACHE_DIR': os.path.join(os.path.dirname(__file__), app.config['CACHE_DIR'])
-        }
-    )
+    cache.init_app(app, config={'CACHE_TYPE': 'simple'})
 
     if debug:
         from werkzeug.debug import DebuggedApplication
