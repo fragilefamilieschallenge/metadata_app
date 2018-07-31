@@ -58,14 +58,64 @@ $(document).ready(function() {
                 operators: ['contains']
             },
             {
-                id: 'data_type',
-                label: 'Data Type',
+                id: 'qText',
+                label: 'Question Text',
+                type: 'string',
+                operators: ['contains']
+            },
+            {
+                id: 'probe',
+                label: 'Probe',
+                type: 'string',
+                operators: ['contains']
+            },
+            {
+                id: 'data_source',
+                label: 'Data Source',
                 type: 'string',
                 input: 'select',
-                values: {'ID number': 'ID number', 'Binary': 'Binary',  'Continuous': 'Continuous', 'Ordered categorical': 'Ordered categorical', 'Unordered categorical': 'Unordered categorical'},
+                values: {'idnum': 'idnum', 'constructed': 'constructed', 'weight': 'weight', 'questionnaire': 'questionnaire'},
                 operators: ['equal', 'not_equal', 'in', 'not_in'],
                 multiple: true,
                 plugin: 'selectpicker'
+            },
+            {
+                id: 'survey',
+                label: 'Survey',
+                type: 'string',
+                input: 'select',
+                values: {'Child': 'Child', 'Child care center (survey)': 'Child care center (survey)', 'Couple': 'Couple' ,'Family care (survey)': 'Family care (survey)', 'Father': 'Father', 'ID Number': 'ID Number', 'In-home (observation)': 'In-home (observation)', 'In-home (survey)': 'In-home (survey)', 'Mother': 'Mother', 'Non-parental primary caregiver': 'Non-parental primary caregiver', 'Post child and family care observation': 'Post child and family care observation', 'Primary caregiver': 'Primary caregiver', 'Teacher': 'Teacher'},
+                operators: ['equal', 'not_equal', 'in', 'not_in'],
+                multiple: true,
+                plugin: 'selectpicker'
+            },
+            {
+                id: 'wave',
+                label: 'Wave',
+                type: 'string',
+                input: 'select',
+                values: {'Baseline': 'Baseline', 'Year 1': 'Year 1', 'Year 3': 'Year 3', 'Year 5': 'Year 5', 'Year 9': 'Year 9', 'Year 15': 'Year 15'},
+                operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null'],
+                multiple: true,
+                plugin: 'selectpicker'
+            },
+            {
+                id: 'respondent',
+                label: 'Respondent',
+                type: 'string',
+                input: 'select',
+                values: {'Child': 'Child', 'Child Care Provider': 'Child Care Provider', 'Father': 'Father', 'Interviewer': 'Interviewer', 'Mother': 'Mother', 'PCG': 'PCG', 'Teacher': 'Teacher'},
+                operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null'],
+                multiple: true,
+                plugin: 'selectpicker'
+            },
+            {
+                id: 'focal_person',
+                label: 'Focal Person',
+                type: 'string',
+                input: 'select',
+                values: {'Focal Child': 'Focal Child', 'Mother': 'Mother', 'Father': 'Father', 'Primary Caregiver': 'Primary Caregiver', 'Partner': 'Partner', 'Other': 'Other'},
+                operators: ['contains', 'is_null', 'is_not_null']
             },
             {
                 id: 'topic1',
@@ -110,6 +160,16 @@ $(document).ready(function() {
                 plugin: 'selectpicker'
             },
             {
+                id: 'data_type',
+                label: 'Data Type',
+                type: 'string',
+                input: 'select',
+                values: {'ID number': 'ID number', 'Binary': 'Binary',  'Continuous': 'Continuous', 'Ordered categorical': 'Ordered categorical', 'Unordered categorical': 'Unordered categorical'},
+                operators: ['equal', 'not_equal', 'in', 'not_in'],
+                multiple: true,
+                plugin: 'selectpicker'
+            },
+            {
                 id: 'warning',
                 label: 'Warning',
                 type: 'integer',
@@ -118,67 +178,7 @@ $(document).ready(function() {
                 values: {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6},
                 multiple: true,
                 plugin: 'selectpicker'
-            },
-            {
-                id: 'focal_person',
-                label: 'Focal Person',
-                type: 'string',
-                input: 'select',
-                values: {'Focal Child': 'Focal Child', 'Mother': 'Mother', 'Father': 'Father', 'Primary Caregiver': 'Primary Caregiver', 'Partner': 'Partner', 'Other': 'Other'},
-                operators: ['contains', 'is_null', 'is_not_null']
-            },
-            {
-                id: 'survey',
-                label: 'Survey',
-                type: 'string',
-                input: 'select',
-                values: {'Child': 'Child', 'Child care center (survey)': 'Child care center (survey)', 'Couple': 'Couple' ,'Family care (survey)': 'Family care (survey)', 'Father': 'Father', 'ID Number': 'ID Number', 'In-home (observation)': 'In-home (observation)', 'In-home (survey)': 'In-home (survey)', 'Mother': 'Mother', 'Non-parental primary caregiver': 'Non-parental primary caregiver', 'Post child and family care observation': 'Post child and family care observation', 'Primary caregiver': 'Primary caregiver', 'Teacher': 'Teacher'},
-                operators: ['equal', 'not_equal', 'in', 'not_in'],
-                multiple: true,
-                plugin: 'selectpicker'
-            },
-            {
-                id: 'data_source',
-                label: 'Data Source',
-                type: 'string',
-                input: 'select',
-                values: {'idnum': 'idnum', 'constructed': 'constructed', 'weight': 'weight', 'questionnaire': 'questionnaire'},
-                operators: ['equal', 'not_equal', 'in', 'not_in'],
-                multiple: true,
-                plugin: 'selectpicker'
-            },
-            {
-                id: 'respondent',
-                label: 'Respondent',
-                type: 'string',
-                input: 'select',
-                values: {'Child': 'Child', 'Child Care Provider': 'Child Care Provider', 'Father': 'Father', 'Interviewer': 'Interviewer', 'Mother': 'Mother', 'PCG': 'PCG', 'Teacher': 'Teacher'},
-                operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null'],
-                multiple: true,
-                plugin: 'selectpicker'
-            },
-            {
-                id: 'wave',
-                label: 'Wave',
-                type: 'string',
-                input: 'select',
-                values: {'Baseline': 'Baseline', 'Year 1': 'Year 1', 'Year 3': 'Year 3', 'Year 5': 'Year 5', 'Year 9': 'Year 9', 'Year 15': 'Year 15'},
-                operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null'],
-                multiple: true,
-                plugin: 'selectpicker'
-            },
-            {
-                id: 'qText',
-                label: 'Question Text',
-                type: 'string',
-                operators: ['contains']
-            },
-            {
-                id: 'probe',
-                label: 'Probe',
-                type: 'string',
-                operators: ['contains']
-            },
+            }
         ]
     });
     $('#btn-reset').on('click', function() {
