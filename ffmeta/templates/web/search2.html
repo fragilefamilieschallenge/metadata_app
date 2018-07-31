@@ -12,7 +12,7 @@
 <script>
 $(document).ready(function() {
     var table = $('#datatable').DataTable({
-        "dom": '<"top"flp>irt<"bottom"flp><"clear">',
+        "dom": '<"top"fl>irt<"bottom"flp><"clear">',
         "processing": true,
         "ajax": {
             "url": "{{ url_for('apiv2.search_variable') }}?details=1&q={\"filters\":[]}",
