@@ -158,6 +158,16 @@ $(document).ready(function() {
                 plugin: 'selectpicker'
             },
             {
+                id: 'wave',
+                label: 'Wave',
+                type: 'string',
+                input: 'select',
+                values: {'Baseline': 'Baseline', 'Year 1': 'Year 1', 'Year 3': 'Year 3', 'Year 5': 'Year 5', 'Year 9': 'Year 9', 'Year 15': 'Year 15'},
+                operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null'],
+                multiple: true,
+                plugin: 'selectpicker'
+            },
+            {
                 id: 'qText',
                 label: 'Question Text',
                 type: 'string',
