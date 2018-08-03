@@ -12,7 +12,11 @@
 <script>
 $(document).ready(function() {
     var table = $('#datatable').DataTable({
-        "dom": '<"top"fl>irt<"bottom"flp><"clear">',
+        "dom": '<"top"fl>irt<"bottom"p><"clear">',
+        "language": {
+            "search": "<i class=\"fa fa-search\"></i>",
+            "searchPlaceholder": "Search results"
+        },
         "processing": true,
         "pageLength": 25,
         "ajax": {
