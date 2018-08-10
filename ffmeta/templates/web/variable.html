@@ -96,36 +96,6 @@
                 </div>
             </div>
 
-            <!-- Responses -->
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a role="button" data-toggle="collapse" href="#collapse_response">
-                            Response codes
-                        </a>
-                        <!-- TODO: Split by missing codes, substantive codes -->
-                    </h4>
-                </div>
-                <div id="collapse_response" class="panel-collapse collapse in" role="tabpanel">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Value</th>
-                                <th>Label</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {% for r in responses %}
-                            <tr>
-                                <td>{{r.value}}</td>
-                                <td>{{r.label}}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
             <!-- Data quality -->
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -161,6 +131,36 @@
                             <em>Warning: {{ var_data.warning|int }}</em>
                         {% endif %}
                     </div>
+                </div>
+            </div>
+
+            <!-- Responses -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" href="#collapse_response">
+                            Response codes
+                        </a>
+                        <!-- TODO: Split by missing codes, substantive codes -->
+                    </h4>
+                </div>
+                <div id="collapse_response" class="panel-collapse collapse in" role="tabpanel">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Value</th>
+                                <th>Label</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for r in responses %}
+                            <tr>
+                                <td>{{r.value}}</td>
+                                <td>{{r.label}}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
