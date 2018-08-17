@@ -196,7 +196,7 @@ $(document).ready(function() {
 
         if (!$.isEmptyObject(result)) {
             var filters = qb2apiFilter($("#builder"));
-            var q = JSON.stringify({"filters": filters});
+            var q = encodeURIComponent(JSON.stringify({"filters": filters}));
             var _url = "{{ url_for('apiv2.search_variable') }}?details=1&q="+q;
             var url = 'http://api.metadata.fragilefamilies.princeton.edu/variable?q='+q;
             $("code#code").text(url);
