@@ -5,26 +5,7 @@
     <div class="row">
         <div class="col-md-6">
             <p class="lead">Metadata API</p>
-            <p>We provide three API endpoints:
-                <ul>
-                    <li><p>
-                        <code>select(varName, fieldName)</code><br/>
-                        &emsp;Returns metadata for variable <code>varName</code>.<br/>
-                        &emsp;(Optionally, returns only the field specified by <code>fieldName</code>.)<br/>
-                        &emsp;e.g. <code><a href="{{ url_for('api.selectMetadata') + '?varName=cm1relf' }}">GET /select?varName=cm1relf</a></code>
-
-                    </p></li>
-                    <li><p>
-                        <code>filter(*fieldNames)</code><br/>
-                        &emsp;Return a list of variables where <code>fieldName</code> matches the provided value.<br/>
-                        &emsp;e.g. <code><a href="{{ url_for('api.filterMetadata') + '?responses=sometimes' }}">GET /filter?responses=sometimes</a></code>
-                    </p></li>
-                    <li><p>
-                        <code>search(query, fieldName)</code><br/>
-                        &emsp;Return a list of variables where <code>query</code> is found in <code>fieldName</code>.<br/>
-                        &emsp;e.g. <code><a href="{{ url_for('api.searchMetadata') + '?query=age&fieldName=label' }}">GET /search?query=age&fieldName=label</a></code>
-                    </p></li>
-                </ul>
+            <p>Please visit the <a href="https://github.com/fragilefamilieschallenge/metadata_app">Fragile Families Metadata Project</a> on GitHub on how to use the API.</p>
         </div>
     </div>
 </div>

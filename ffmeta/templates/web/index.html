@@ -11,24 +11,9 @@
             <p>If you have any comments or ideas for how to improve the metadata or this app, click <em>Feedback</em>.</p>
             <p>To learn more about the Fragile Families and Child Wellbeing Study, click <em>About FFCWS</em>.</p>
             <p class="lead">Metadata Fields</p>
-            <table class="table table-striped">
-				<thead><th>Metadata Field</th><th>Description</th></thead>
-				<tr><td>Name</td><td>The name of the variable in the data</td></tr>
-				<tr><td>Old Name</td><td>The name of the variable in the data before the re-release</td></tr>
-				<tr><td>Label</td><td>A short description of the variable</td></tr>
-				<tr><td>Question Text</td><td>The exact wording of the question from the questionnaire</td></tr>
-				<tr><td>Probe</td><td>The exact wording of the lead-in question from the questionnaire, where applicable</td></tr>
-				<tr><td>Data Source</td><td>A categorical variable, defining where the data stored in the variable was generated from</td></tr>
-				<tr><td>Survey</td><td>The subject of the survey that the variable was from</td></tr>
-				<tr><td>Wave</td><td>The round of data collection that this variable was in</td></tr>
-				<tr><td>Respondent</td><td>The person that provided the information for this variable</td></tr>
-				<tr><td>Focal Person</td><td>The subjects of the variable</td></tr>
-				<tr><td>Topic (1,2)</td><td>The broader sociological concept(s) that are measured by this variable</td></tr>
-				<tr><td>Sub-Topic (1,2)</td><td>The specific sociological concept(s) that are measured by this variable</td></tr>
-				<tr><td>Scope</td><td>The size of the sample that this question was asked in</td></tr>
-				<tr><td>Data Type</td><td>The way that the data is stored in the variable, e.g binary, categorical, continuous</td></tr>
-				<tr><td>Warning</td><td>A code to alert the user that this variable may have an unexpected way to store response code</td></tr>
-			</table>
+
+			{% include "web/metadata_field_table.html" %}
+
         </div>
     </div>
 </div>

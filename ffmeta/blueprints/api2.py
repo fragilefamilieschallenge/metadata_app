@@ -2,11 +2,11 @@ import operator
 from sqlalchemy import inspect, and_, or_
 
 
-from flask import Blueprint, request, Response, json, jsonify
+from flask import Blueprint, current_app, json, jsonify, redirect, request, Response, send_file, url_for
 
 from ffmeta.models.db import session
 from ffmeta.models import Response, Variable
-from ffmeta.utils import api_error
+from ffmeta.utils import api_error, epochalypse_now
 from ffmeta.blueprints import cache
 
 
@@ -217,3 +217,16 @@ def search_variable():
         return search(filters, details='details' in request.args, as_json=True)
 
     return jsonify(results)
+
+
+@bp.route("/")
+def index():
+    return redirect(url_for('web.api'))
+
+
+# Full metadata file download
+@bp.route('/get_metadata')
+def metadata():
+    # Log query
+    current_app.logger.info("{}\t{}\tfull-file-download".format(epochalypse_now(), request.cookies.get("user_id")))
+    return send_file(current_app.config["METADATA_FILE"], as_attachment=True)
