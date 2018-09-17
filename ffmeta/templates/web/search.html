@@ -30,28 +30,19 @@ $(document).ready(function() {
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h2>Search variables</h2>
+                <h2>Browse variables</h2>
                 <p></p>
                 <hr>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-12">
                 <form action="{{ url_for('web.search')}}" method="POST">
-                    <div class="form-group">
-                        <div class="input-group">
-                            <input type="search-term" class="form-control" name="variable-search" placeholder="Search for..." {% if search_query %} value="{{ search_query }}" {% endif %}>
-                            <span class="input-group-btn">
-                                <button type="submit" class="btn btn-default">Search &#187;</button>
-                            </span>
-                        </div>
-                    </div>
-
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 <a role="button" data-toggle="collapse" href="#collapse_filter">
-                                    Filter
+                                    Filters
                                 </a>
                             </h4>
                         </div>
@@ -78,14 +69,20 @@ $(document).ready(function() {
                             </div>
                         </div>
                     </div>
-
+                    <div>
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-default">Submit &#187;</button>
+                        </span>
+                    </div>
                 </form>
 
 
             </div>
-            <div class="col-md-9">
 
-                {% if results %}
+        </div>
+        {% if results %}
+        <div class="row">
+            <div class="col-md-12">
 
                 <!-- Display search results -->
                 <div class="panel panel-default">
@@ -154,10 +151,9 @@ $(document).ready(function() {
                     </div>
                 </div>
 
-                {% endif %}
-
             </div>
         </div>
+        {% endif %}
     </div>
 {% endblock %}
 

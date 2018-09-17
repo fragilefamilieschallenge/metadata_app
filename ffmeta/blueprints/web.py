@@ -71,11 +71,6 @@ def search():
     if request.method == "POST":
         query = session.query(Variable)
 
-        # Filter by search query
-        search_query = request.form["variable-search"]
-        if len(search_query) > 0:
-            query = query.filter(Variable.label.like('%%{}%%'.format(search_query)) | Variable.name.like('%%{}%%'.format(search_query)) | Variable.old_name.like('%%{}%%'.format(search_query)))
-
         # Filter by fields
         constraints = dict()
         for field in set(valid_filters.keys()).intersection(request.form.keys()):
@@ -105,8 +100,9 @@ def search():
         variable_names = [result.name for result in results]
         zero_found = len(variable_names) == 0
 
-    resp = make_response(render_template('web/search.html', results=results, rnames=variable_names, constraints=constraints,
-                           search_query=search_query, filtermeta=valid_filters, filterlabs=filter_labels, zero_found=zero_found))
+    resp = make_response(render_template('web/search.html', results=results, rnames=variable_names,
+                                         constraints=constraints, filtermeta=valid_filters, filterlabs=filter_labels,
+                                         zero_found=zero_found))
 
     return resp
 
