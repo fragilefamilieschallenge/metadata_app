@@ -13,16 +13,20 @@ bp = Blueprint('web', __name__)
 
 # Define valid search filters
 # This object determines what filter groups show up in the search view
-filter_labels = OrderedDict([
-    ("topic", "Topic"),
-    ("wave", "Wave"),
-    ("respondent", "Respondent"),
-    ("data_source", "Source"),
-    ("data_type", "Variable type"),
-    ("measures", "Scales"),
-    ("survey", "Survey"),
-    ("focal_person", "Focal Person")
-])
+filter_labels = [
+    OrderedDict([
+        ("topic", "Topic"),
+        ("wave", "Wave"),
+        ("respondent", "Respondent"),
+        ("focal_person", "Focal Person")
+    ]),
+    OrderedDict([
+        ("measures", "Scales"),
+        ("survey", "Survey"),
+        ("data_source", "Source"),
+        ("data_type", "Variable type")
+    ])
+]
 
 # Define domain-label map for each filter
 # This defines what values are valid to filter on for each filter group

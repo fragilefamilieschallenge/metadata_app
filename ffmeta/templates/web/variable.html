@@ -81,14 +81,16 @@
                 </div>
                 <div id="collapse_filter" class="panel-collapse collapse in" role="tabpanel">
                     <div class="panel-body">
-                        {% for filt, desc in filterlabs.items() %}
-                            {% if filt not in ("topic", "measures", "survey") %}
-                                {% for val, lab in filtermeta[filt].items() %}
-                                    {% if var_data[filt] == val %}
-                                        <span class="label label-default label-metadata" data-toggle="tooltip" data-placement="left" title="{{desc}}">{{lab}}</span><br/><br/>
-                                    {% endif %}
-                                {% endfor %}
-                            {% endif %}
+                        {% for f in filterlabs %}
+                            {% for filt, desc in f.items() %}
+                                {% if filt not in ("topic", "measures", "survey") %}
+                                    {% for val, lab in filtermeta[filt].items() %}
+                                        {% if var_data[filt] == val %}
+                                            <span class="label label-default label-metadata" data-toggle="tooltip" data-placement="left" title="{{desc}}">{{lab}}</span><br/><br/>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
                         {% endfor %}
                         <b>About: </b>
                         {{ var_data.focal_people_string() }}
