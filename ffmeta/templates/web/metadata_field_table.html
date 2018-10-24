@@ -1,18 +1,27 @@
 <table class="table table-striped">
-    <thead><th>Metadata Field</th><th>Description</th></thead>
-    <tr><td>Name</td><td>The name of the variable in the data</td></tr>
-    <tr><td>Old Name</td><td>The name of the variable in the data before the re-release</td></tr>
-    <tr><td>Label</td><td>A short description of the variable</td></tr>
-    <tr><td>Question Text</td><td>The exact wording of the question from the questionnaire</td></tr>
-    <tr><td>Probe</td><td>The exact wording of the lead-in question from the questionnaire, where applicable</td></tr>
-    <tr><td>Data Source</td><td>A categorical variable, defining where the data stored in the variable was generated from</td></tr>
-    <tr><td>Survey</td><td>The subject of the survey that the variable was from</td></tr>
-    <tr><td>Wave</td><td>The round of data collection that this variable was in</td></tr>
-    <tr><td>Respondent</td><td>The person that provided the information for this variable</td></tr>
-    <tr><td>Focal Person</td><td>The subjects of the variable</td></tr>
-    <tr><td>Topic (1,2)</td><td>The broader sociological concept(s) that are measured by this variable</td></tr>
-    <tr><td>Sub-Topic (1,2)</td><td>The specific sociological concept(s) that are measured by this variable</td></tr>
-    <tr><td>Scope</td><td>The size of the sample that this question was asked in</td></tr>
-    <tr><td>Data Type</td><td>The way that the data is stored in the variable, e.g binary, categorical, continuous</td></tr>
-    <tr><td>Warning</td><td>A code to alert the user that this variable may have an unexpected way to store response code</td></tr>
+    <thead><th>Metadata Field</th><th>Column in CSV</th><th>Description</th></thead>
+    <tr><td>Name</td><td>new_name</td><td>The name of the variable in the current public data</td></tr>
+    <tr><td>Old Name</td><td>old_name</td><td>The name of the variable in the data before the re-release</td></tr>
+    <tr><td>Label</td><td>varlab</td><td>A short description of the variable</td></tr>
+    <tr><td>Question Text</td><td>qText></td><td>The exact wording of the question from the questionnaire</td></tr>
+    <tr><td>Probe</td><td>probe</td><td>The exact wording of the lead-in question from the questionnaire, where applicable</td></tr>
+    <tr><td>Data Source</td><td>source</td><td>A categorical variable, defining where the data stored in the variable was generated from</td></tr>
+    <tr><td>Survey</td><td>survey</td><td>The subject of the survey that the variable was from</td></tr>
+    <tr><td>Wave</td><td>wave</td><td>The round of data collection that this variable was in (1-6)</td></tr>
+    <tr><td>Respondent</td><td>respondent</td><td>The person that provided the information for this variable</td></tr>
+    <tr><td>Focal Person</td><td>fp_*</td><td>The subjects of the variable</td></tr>
+    <tr><td>Topics</td><td>topics</td><td>The broader concept(s) that are measured by this variable (contains up to two potential topics -- e.g. demographics, employment)</td></tr>
+    <tr><td>Sub-Topics</td><td>subTopics</td><td>The specific concept(s) that are measured by this variable (contains up to two potential sub-topics, e.g. race/ethnicity, work stress)</td></tr>
+    <tr><td>Asked in (N) Cities</td><td>n_cities_asked</td><td>The number of cities in which this question was asked</td></tr>
+    <tr><td>Data Type</td><td>type</td><td>The way that the data is stored in the variable, e.g binary, categorical, continuous</td></tr>
+    <tr><td>Warning</td><td>warning</td><td>A code to alert the user that this variable may have an unexpected way to store response codes</td></tr>
+    <tr><td>FFC variable</td><td>in_FFC_file</td><td>A flag for whether this variable was included in the data file for the Fragile Families Challenge (yes/no)</td></tr>
+    <tr><td rowspan="3">Similar variables</td><td>group</td><td>Denotes a group of similar variables across waves and/or surveys</td></tr>
+    <tr><td>q_group_n</td><td>Number of variables in the given variable group</td></tr>
+    <tr><td>q_group_list</td><td>List of all variable names in the given variable group</td></tr>
+    <tr><td>Scale</td><td>scale</td><td>Indicates if the question originates from one of a list of pre-established scales</td></tr>
+    <tr><td rowspan="2">Response codes</td><td>value[1-72]</td><td>Lists all possible response options for categorical and binary variables (numeric)</td></tr>
+    <tr><td>label[1-72]</td><td>Lists descriptions of all potential response options for categorical and binary variables (string) </td></tr>
+    <tr><td rowspan="2">  *  </td><td>section</td><td>Parsed from the variable name, indicates the section of the survey in which the question was asked</td></tr>
+    <tr><td>leaf</td><td>Parsed from the variable name, indicates the question number if from a survey or pneumonic for the substance of non-survey variables</td></tr>
 </table>

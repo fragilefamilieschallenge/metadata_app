@@ -4,17 +4,42 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <div class="page-header"><h2>FFCWS Metadata Explorer</h2></div>
-            <p class="lead">Variable metadata and documentation</p>
-            <p>To search variables and view associated metadata, click <em>Browse variables</em>.</p>
-            <p>To download metadata for all variables as a CSV file, click <em>Download metadata</em>.</p>
+            <div class="page-header"><h2>Welcome to the FFCWS Metadata Explorer!</h2></div>
+            <p class="lead">What you will find on this website:</p>
+            <ol>
+                <li><b>Browse Variables</b> -- This resource is great for getting started with exploring the FFCWS
+                variables. Select "Browse Variables" in the menu above to sort FFCWS variables by topic, wave,
+                respondent, focal person, scales, survey, source, and/or variable type</li>
+                <li><b>Advanced Search</b> -- Select "Advanced Search" in the menu above to perform more detailed queries
+                and/or text searches in the FFCWS metadata</li>
+                <li><b>Download full metadata</b> -- Click the link in the menu above to download the full metadata as a
+                CSV file.</li>
+            </ol>
+            <p class="lead">Metadata Dictionary</p>
+
+			        {% include "web/metadata_field_table.html" %}
+
+            <p>* Not included on Explorer website</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+        <p class="lead">Other API resources to help you use the metadata:</p>
+            <ol>
+                <li><a href="https://github.com/fragilefamilieschallenge/metadata_app/blob/master/README.md" target="_blank">FFCWS Metadata API</a>
+                -- Click here for instructions on how to directly access the Web API without using the website interface</li>
+                <li><a href="https://fragilefamilieschallenge.github.io/ffmetadata/index.html" target="_blank">R Package</a>-- This
+                package allows R users to retrieve metadata within R via the FFCWS Metadata API. Users can select, filter,
+                    and search metadata for relevant variables. <a href="https://fragilefamilieschallenge.github.io/ffmetadata/articles/APIUsage.html">
+                    More information</a> is available on github </li>
+                    <li><a href="https://github.com/fragilefamilieschallenge/ffmetadata-py" target="_blank">Python Package</a> --
+                    This Python package provides convenient wrrappers to interface with the FFCWS Metadata API in Python.
+                    By downloading and importing the single ff.py module, users can query the metadata variables.</li>
+            </ol>
+            <p>To learn more about the Fragile Families and Child Wellbeing Study, click the logo at the top of the page.</p>
             <p>If you have any comments or ideas for how to improve the metadata or this app, click <em>Feedback</em>.</p>
-            <p>To learn more about the Fragile Families and Child Wellbeing Study, click <em>About FFCWS</em>.</p>
-            <p class="lead">Metadata Fields</p>
-
-			{% include "web/metadata_field_table.html" %}
-
         </div>
     </div>
 </div>
+
 {% endblock %}
