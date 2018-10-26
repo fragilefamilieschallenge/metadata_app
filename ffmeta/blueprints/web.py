@@ -21,7 +21,7 @@ filter_labels = [
         ("focal_person", "Focal Person")
     ]),
     OrderedDict([
-        ("measures", "Scales"),
+        ("scale", "Scale"),
         ("survey", "Survey"),
         ("data_source", "Source"),
         ("data_type", "Variable type")
@@ -32,25 +32,25 @@ filter_labels = [
 # This defines what values are valid to filter on for each filter group
 valid_filters = {
     "topic": OrderedDict([
-        (row.topic1, row.topic1) for row in session.execute("SELECT DISTINCT(topic1) FROM variable2 WHERE topic1 IS NOT NULL UNION SELECT DISTINCT(topic2) FROM variable2 WHERE topic2 IS NOT NULL ORDER BY 1")
+        (row.topic, row.topic) for row in session.execute("SELECT topic FROM topics ORDER BY 1")
     ]),
     "wave": OrderedDict([
-        (row.wave, row.wave) for row in session.execute("SELECT DISTINCT(wave) FROM variable2 WHERE wave IS NOT NULL ORDER BY 1")
+        (row.wave, row.wave) for row in session.execute("SELECT DISTINCT(wave) FROM variable3 WHERE wave IS NOT NULL ORDER BY 1")
     ]),
     "respondent": OrderedDict([
-        (row.respondent, row.respondent) for row in session.execute("SELECT DISTINCT(respondent) FROM variable2 WHERE respondent IS NOT NULL ORDER BY 1")
+        (row.respondent, row.respondent) for row in session.execute("SELECT DISTINCT(respondent) FROM variable3 WHERE respondent IS NOT NULL ORDER BY 1")
     ]),
     "data_source": OrderedDict([
-        (row.data_source, row.data_source) for row in session.execute("SELECT DISTINCT(data_source) FROM variable2 ORDER BY 1")
+        (row.data_source, row.data_source) for row in session.execute("SELECT DISTINCT(data_source) FROM variable3 WHERE data_source IS NOT NULL ORDER BY 1")
     ]),
     "data_type": OrderedDict([
-        (row.data_type, row.data_type) for row in session.execute("SELECT DISTINCT(data_type) FROM variable2 ORDER BY 1")
+        (row.data_type, row.data_type) for row in session.execute("SELECT DISTINCT(data_type) FROM variable3 WHERE data_type IS NOT NULL ORDER BY 1")
     ]),
-    "measures": OrderedDict([
-        (row.measures, row.measures) for row in session.execute("SELECT DISTINCT(measures) FROM variable2 WHERE measures IS NOT NULL ORDER BY 1")
+    "scale": OrderedDict([
+        (row.scale, row.scale) for row in session.execute("SELECT DISTINCT(scale) FROM variable3 WHERE scale IS NOT NULL ORDER BY 1")
     ]),
     "survey": OrderedDict([
-        (row.survey, row.survey) for row in session.execute("SELECT DISTINCT(survey) FROM variable2 ORDER BY 1")
+        (row.survey, row.survey) for row in session.execute("SELECT DISTINCT(survey) FROM variable3 WHERE survey IS NOT NULL ORDER BY 1")
     ]),
     "focal_person": OrderedDict([
         ("fp_fchild", "Focal Child"),
@@ -69,7 +69,6 @@ def search():
     results = None
     variable_names = None
     constraints = None
-    search_query = None
     zero_found = False
 
     if request.method == "POST":
@@ -79,8 +78,8 @@ def search():
         constraints = dict()
         for field in set(valid_filters.keys()).intersection(request.form.keys()):
             if field == "topic":
-                topic_list = request.form.getlist("topic")
-                query = query.filter(Variable.topic1.in_(topic_list) | Variable.topic2.in_(topic_list))
+                topic_filters = or_(*[Variable.topics.like("%"+topic+"%") for topic in request.form.getlist("topic")])
+                query = query.filter(topic_filters)
             elif field == "focal_person":
                 fp_filters = []
                 for fp in request.form.getlist(field):
