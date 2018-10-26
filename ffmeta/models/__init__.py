@@ -5,7 +5,7 @@ from ffmeta.models.db import Base
 
 
 class Variable(Base):
-    __tablename__ = "variable2"
+    __tablename__ = "variable3"
 
     # Define table fields
     id = Column(Integer, primary_key=True)
@@ -15,14 +15,13 @@ class Variable(Base):
     data_type = Column(Text)
     warning = Column(Integer)
     group_id = Column(Text)
-    group_subid = Column(Text)
     data_source = Column(Text)
     respondent = Column(Text)
     wave = Column(Text)
-    scope = Column(Text)
+    n_cities_asked = Column(Text)
     section = Column(Text)
     leaf = Column(Text)
-    measures = Column(Text)
+    scale = Column(Text)
     probe = Column(Text)
     qText = Column(Text)
     survey = Column(Text)
@@ -38,12 +37,10 @@ class Variable(Base):
 
     responses = relationship('Response', backref='variable')
 
-    topic1 = Column(String)
-    subtopic1 = Column(String)
-    topic2 = Column(String)
-    subtopic2 = Column(String)
-    topics = Column(String)  # Concatenation of topic1/topic2, calculated field stored for convenience
-    subtopics = Column(String)  # Concatenation of subtopic1/subtopic2, calculated field stored for convenience
+    topics = Column(String)
+    subtopics = Column(String)
+
+    in_FFC_file = Column(String)
 
     def __init__(self, **kwargs):
         for arg in kwargs:
@@ -75,7 +72,7 @@ class Response(Base):
     __tablename__ = "response2"
 
     id = Column(Integer, primary_key=True)
-    name = Column(Text, ForeignKey("variable2.name"))
+    name = Column(Text, ForeignKey("variable3.name"))
     label = Column(Text)
     value = Column(Integer)
 

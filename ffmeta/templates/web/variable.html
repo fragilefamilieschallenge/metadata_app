@@ -53,18 +53,13 @@
                 </div>
                 <div id="collapse_topic" class="panel-collapse collapse in" role="tabpanel">
                     <div class="panel-body">
-                        {% if var_data.topic1 != None %}
+                        {% if var_data.topics != None %}
                             <p>
-                                <span class="umbrella">{{var_data.topic1}}</span>───┤ <em>{{ var_data.subtopic1 }}</em><br/>
+                                <span class="umbrella">{{var_data.topics}}</span>───┤ <em>{{ var_data.subtopics }}</em><br/>
                            </p>
                         {% endif %}
-                        {% if var_data.topic2 != None %}
-                            <p>
-                                <span class="umbrella">{{var_data.topic2}}</span>───┤ <em>{{ var_data.subtopic2 }}</em><br/>
-                           </p>
-                        {% endif %}
-                        {% if var_data.measures != None %}
-                        <b>Measure/Scale: </b>{{var_data.measures}}
+                        {% if var_data.scale != None %}
+                        <b>Measure/Scale: </b>{{var_data.scale}}
                         {% endif %}
                     </div>
                 </div>
@@ -83,7 +78,7 @@
                     <div class="panel-body">
                         {% for f in filterlabs %}
                             {% for filt, desc in f.items() %}
-                                {% if filt not in ("topic", "measures", "survey") %}
+                                {% if filt not in ("topic", "scale", "survey") %}
                                     {% for val, lab in filtermeta[filt].items() %}
                                         {% if var_data[filt] == val %}
                                             <span class="label label-default label-metadata" data-toggle="tooltip" data-placement="left" title="{{desc}}">{{lab}}</span><br/><br/>
