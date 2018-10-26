@@ -129,7 +129,7 @@ class APITestCase(TestCase):
                 ],
                 as_json=False
             )
-            expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable2 WHERE wave>3 AND name LIKE "%z%"'))[0]
+            expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable3 WHERE wave>3 AND name LIKE "%z%"'))[0]
             self.assertEqual(len(results), expected_n_results)
 
     def testSearchNested(self):
