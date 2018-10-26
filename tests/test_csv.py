@@ -32,15 +32,16 @@ class CsvTestCase(TestCase):
         All rows should have a 'type' which matches our predefined list.
         :return:
         """
-        types = ["bin", "cont", "oc", "uc", "string", "ID Number"]
+        types = ["Binary", "Continuous", "Ordered Categorical", "Unordered Categorical", "String", "ID Number"]
         self.assertEqual(len(self.df[self.df.type.notnull()][~self.df.type.isin(types)]), 0)
 
     def testWave(self):
         """
-        All rows should have a 'wave' between 0 and 6.
+        All rows should have a 'wave' which matches our predefined list.
         :return:
         """
-        self.assertEqual(len(self.df[self.df.wave.notnull()][~self.df.wave.between(1, 6)]), 0)
+        waves = [".", "Baseline", "Year 1", "Year 3", "Year 5", "Year 9", "Year 15"]
+        self.assertEqual(len(self.df[self.df.wave.notnull()][~self.df.wave.isin(waves)]), 0)
 
     def _testScope(self):
         # TODO: Enable when appropriate
