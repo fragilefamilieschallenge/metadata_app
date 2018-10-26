@@ -167,5 +167,5 @@ if __name__ == '__main__':
     application = create_app(debug=True)
     with application.app_context():
         CSV_FILE_PATH = os.path.join(os.path.dirname(ffmeta.__file__), METADATA_FILE)
-        # populate_raw(CSV_FILE_PATH)
+        populate_raw(CSV_FILE_PATH)
         populate_tables()
