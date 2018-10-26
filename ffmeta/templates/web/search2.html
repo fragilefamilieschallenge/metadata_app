@@ -124,40 +124,24 @@ $(document).ready(function() {
                 operators: ['contains', 'is_null', 'is_not_null']
             },
             {
-                id: 'topic1',
-                label: 'Topic 1',
+                id: 'topics',
+                label: 'Topics',
                 type: 'string',
                 input: 'select',
                 values: {'Attitudes and expectations': 'Attitudes and expectations', 'Childcare': 'Childcare', 'Cognitive and behavioral development': 'Cognitive and behavioral development', 'Demographics': 'Demographics', 'Education and school': 'Education and school', 'Employment': 'Employment', 'Family and social ties':'Family and social ties', 'Finances':'Finances', 'Health and health behavior':'Health and health behavior', 'Housing and neighborhood':'Housing and neighborhood', 'Legal system': 'Legal system', 'Paradata and weights': 'Paradata and weights', 'Parenting':'Parenting', 'Romantic relationships': 'Romantic relationships'},
-                operators: ['equal', 'not_equal', 'in', 'not_in'],
+                operators: ['contains'],
                 multiple: true,
                 plugin: 'selectpicker'
             },
             {
-                id: 'topic2',
-                label: 'Topic 2',
+                id: 'subtopics',
+                label: 'Sub-Topics',
                 type: 'string',
-                input: 'select',
-                values: {'Attitudes and expectations': 'Attitudes and expectations', 'Childcare': 'Childcare', 'Cognitive and behavioral development': 'Cognitive and behavioral development', 'Demographics': 'Demographics', 'Education and school': 'Education and school', 'Employment': 'Employment', 'Family and social ties':'Family and social ties', 'Finances':'Finances', 'Health and health behavior':'Health and health behavior', 'Housing and neighborhood':'Housing and neighborhood', 'Legal system': 'Legal system', 'Paradata and weights': 'Paradata and weights', 'Parenting':'Parenting', 'Romantic relationships': 'Romantic relationships'},
-                operators: ['equal', 'not_equal', 'in', 'not_in'],
-                multiple: true,
-                plugin: 'selectpicker'
+                operators: ['contains']
             },
             {
-                id: 'subtopic1',
-                label: 'Sub-Topic 1',
-                type: 'string',
-                operators: ['equal', 'not_equal', 'contains']
-            },
-            {
-                id: 'subtopic2',
-                label: 'Sub-Topic 2',
-                type: 'string',
-                operators: ['equal', 'not_equal', 'contains']
-            },
-            {
-                id: 'scope',
-                label: 'Scope',
+                id: 'n_cities_asked',
+                label: 'n_cities_asked',
                 type: 'integer',
                 operators: ['equal', 'not_equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'in', 'not_in'],
                 input: 'select',

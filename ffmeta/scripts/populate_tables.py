@@ -1,5 +1,4 @@
 import os.path
-import re
 import csv
 from sqlalchemy import Table
 
@@ -8,17 +7,6 @@ from ffmeta.settings import METADATA_FILE
 from ffmeta import create_app
 from ffmeta.models import Variable, Response
 from ffmeta.models.db import session, Base
-
-# Dictionary mappings from what we expect in the 'raw' file to verbose string representations of attributes
-# (that we store directly in the variable table in the denormalized form)
-wave_dict = {1: 'Baseline', 2: 'Year 1', 3: 'Year 3', 4: 'Year 5', 5: 'Year 9', 6: 'Year 15', None: None}
-survey_dict = {'d': 'Child care center (survey)', 'e': 'Child care center (observation)', 'f': 'Father',
-               'h': 'In-home (survey)', 'i': 'ID Number', 'k': 'Child', 'm': 'Mother',
-               'n': 'Non-parental primary caregiver', 'o': 'In-home (observation)', 'p': 'Primary caregiver',
-               'q': 'Couple', 'r': 'Family care (survey)', 's': 'Family care (observation)', 't': 'Teacher',
-               'u': 'Post child and family care observation', 'z': 'Couple'}
-type_dict = {'bin': 'Binary', 'cont': 'Continuous', 'ID Number': 'ID Number', 'oc': 'Ordered categorical',
-             'string': 'String', 'uc': 'Unordered categorical'}
 
 
 def populate_raw(csv_path):
@@ -29,8 +17,8 @@ def populate_raw(csv_path):
     ) != 'yes':
         return
 
-    session.execute("DELETE FROM `raw`")
-    raw_table = Table("raw", Base.metadata, autoload=True)
+    session.execute("DELETE FROM `raw2`")
+    raw_table = Table("raw2", Base.metadata, autoload=True)
     with open(csv_path) as f:
         reader = csv.DictReader(f)
         for i, _d in enumerate(reader, start=1):
@@ -51,35 +39,32 @@ def populate_tables():
     ) != 'yes':
         return
 
-    # session.execute('DELETE FROM `group`')
-    # session.execute('DELETE FROM `umbrella`')
     session.execute('DELETE FROM `response2`')
-    # session.execute('DELETE FROM `topic`')
-    session.execute('DELETE FROM `variable2`')
+    session.execute('DELETE FROM `variable3`')
+    session.execute('DELETE FROM `topics`')
+
     session.commit()
 
-    for i, row in enumerate(session.execute('SELECT * FROM `raw`'), start=1):
+    distinct_topics = set()
+
+    for i, row in enumerate(session.execute('SELECT * FROM `raw2`'), start=1):
         name = row['new_name']
-        label = row['varlab'].replace('"', "'")  # replacement logic carried over from old import function
+        if row['varlab'] is not None:
+            label = row['varlab'].replace('"', "'")  # replacement logic carried over from old import function
+        else:
+            label = row['varlab']
         old_name = row['old_name']
         data_type = row['type']
-        warning = int(row['warning'])
-
-        try:
-            group_id = int(row['group'])
-            group_subid = None
-        except ValueError:
-            group_subid = re.search("[A-z]+", row['group']).group(0)
-            group_id = row['group'].replace(group_subid, '')
-
+        warning = row['warning']
+        group_id = row['group']
         data_source = row['source']
         respondent = row['respondent']
         wave = row['wave']
-        scope = row['scope']
+        n_cities_asked = row['n_cities_asked']
         section = row['section']
         leaf = row['leaf']
 
-        measures = row['measures']
+        scale = row['scale']
         probe = row['probe']
         qText = row['qText']
         survey = row['survey']
@@ -102,25 +87,30 @@ def populate_tables():
         l = locals()
         focal_person = ', '.join(v for k, v in focal_person_dict.items() if l[k])
 
-        topic1 = row['umbrella1']
-        subtopic1 = row['topic1']
-        topic2 = row['umbrella2']
-        subtopic2 = row['topic2']
+        topics = row['topics']
+        subtopics = row['subtopics']
+
+        if topics is not None:
+            for t in topics.split(';'):
+                t = t.strip()
+                if t:
+                    distinct_topics.add(t)
+
+        in_FFC_file = row['in_FFC_file']
 
         variable = Variable(
             name=name,
             label=label,
             old_name=old_name,
-            data_type=type_dict[data_type],
+            data_type=data_type,
             warning=warning,
             group_id=group_id,
-            group_subid=group_subid,
             data_source=data_source,
             respondent=respondent,
-            scope=scope,
+            n_cities_asked=n_cities_asked,
             section=section,
             leaf=leaf,
-            measures=measures,
+            scale=scale,
             probe=probe,
             qText=qText,
             fp_fchild=fp_fchild,
@@ -131,15 +121,13 @@ def populate_tables():
             fp_other=fp_other,
 
             focal_person=focal_person,
-            survey=survey_dict[survey],
-            wave=wave_dict[wave],
+            survey=survey,
+            wave=wave,
 
-            topic1=topic1,
-            subtopic1=subtopic1,
-            topic2=topic2,
-            subtopic2=subtopic2,
-            topics=', '.join(x for x in set([topic1, topic2]) if x is not None),
-            subtopics=', '.join(x for x in set([subtopic1, subtopic2]) if x is not None),
+            topics=topics,
+            subtopics=subtopics,
+
+            in_FFC_file=in_FFC_file
         )
 
         session.add(variable)
@@ -168,12 +156,10 @@ def populate_tables():
             print(str(i) + " rows added.")
             session.commit()
 
-    session.commit()
-    # session.execute("INSERT INTO topic (name, topic) SELECT new_name, topic1 FROM raw WHERE topic1 IS NOT NULL")
-    # session.execute("INSERT INTO topic (name, topic) SELECT new_name, topic2 FROM raw WHERE topic2 IS NOT NULL")
-    # session.execute("INSERT INTO umbrella (topic, umbrella) (SELECT DISTINCT topic1, umbrella1 FROM raw WHERE umbrella1 IS NOT NULL) UNION (SELECT DISTINCT topic2, umbrella2 FROM raw WHERE umbrella2 IS NOT NULL)")
+    for topic in distinct_topics:
+        session.execute("INSERT INTO topics (topic) VALUES ('{}')".format(topic))
 
-    # session.commit()
+    session.commit()
 
 
 if __name__ == '__main__':
@@ -181,5 +167,5 @@ if __name__ == '__main__':
     application = create_app(debug=True)
     with application.app_context():
         CSV_FILE_PATH = os.path.join(os.path.dirname(ffmeta.__file__), METADATA_FILE)
-        populate_raw(CSV_FILE_PATH)
+        # populate_raw(CSV_FILE_PATH)
         populate_tables()

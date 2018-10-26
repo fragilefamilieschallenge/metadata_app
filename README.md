@@ -43,7 +43,7 @@ General Format: `/variable/<varName>`
     "id": 85890,
     "label": "Have you picked up a (name/names) for the (baby/babies) yet?",
     "leaf": "3",
-    "measures": null,
+    "scale": null,
     "name": "m1a3",
     "old_name": "m1a3",
     "probe": null,
@@ -62,7 +62,7 @@ General Format: `/variable/<varName>`
         "-2": "Don't know",
         "-1": "Refuse"
     },
-    "scope": "20",
+    "n_cities_asked": "20",
     "section": "a",
     "survey": "m",
     "topics": [
