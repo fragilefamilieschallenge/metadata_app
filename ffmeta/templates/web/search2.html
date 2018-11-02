@@ -43,199 +43,26 @@ $(document).ready(function() {
         ]
     });
 
-    $('#builder').queryBuilder({
-        filters: [
-            {
-                id: 'name',
-                label: 'Name',
-                type: 'string',
-                operators: ['equal', 'not_equal', 'begins_with', 'ends_with', 'contains']
-            },
-            {
-                id: 'old_name',
-                label: 'Old Name',
-                type: 'string',
-                operators: ['equal', 'not_equal', 'begins_with', 'ends_with', 'contains']
-            },
-            {
-                id: 'label',
-                label: 'Label',
-                type: 'string',
-                operators: ['contains']
-            },
-            {
-                id: 'qText',
-                label: 'Question Text',
-                type: 'string',
-                operators: ['contains']
-            },
-            {
-                id: 'probe',
-                label: 'Probe',
-                type: 'string',
-                operators: ['contains']
-            },
-            {
-                id: 'data_source',
-                label: 'Data Source',
-                type: 'string',
-                input: 'select',
-                values: {'idnum': 'idnum', 'constructed': 'constructed', 'weight': 'weight', 'questionnaire': 'questionnaire'},
-                operators: ['equal', 'not_equal', 'in', 'not_in'],
-                multiple: true,
-                plugin: 'selectpicker'
-            },
-            {
-                id: 'survey',
-                label: 'Survey',
-                type: 'string',
-                input: 'select',
-                values: {'Child': 'Child', 'Child care center (survey)': 'Child care center (survey)', 'Couple': 'Couple' ,'Family care (survey)': 'Family care (survey)', 'Father': 'Father', 'ID Number': 'ID Number', 'In-home (observation)': 'In-home (observation)', 'In-home (survey)': 'In-home (survey)', 'Mother': 'Mother', 'Non-parental primary caregiver': 'Non-parental primary caregiver', 'Post child and family care observation': 'Post child and family care observation', 'Primary caregiver': 'Primary caregiver', 'Teacher': 'Teacher'},
-                operators: ['equal', 'not_equal', 'in', 'not_in'],
-                multiple: true,
-                plugin: 'selectpicker'
-            },
-            {
-                id: 'wave',
-                label: 'Wave',
-                type: 'string',
-                input: 'select',
-                values: {'Baseline': 'Baseline', 'Year 1': 'Year 1', 'Year 3': 'Year 3', 'Year 5': 'Year 5', 'Year 9': 'Year 9', 'Year 15': 'Year 15'},
-                operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null'],
-                multiple: true,
-                plugin: 'selectpicker'
-            },
-            {
-                id: 'respondent',
-                label: 'Respondent',
-                type: 'string',
-                input: 'select',
-                values: {'Child': 'Child', 'Child Care Provider': 'Child Care Provider', 'Father': 'Father', 'Interviewer': 'Interviewer', 'Mother': 'Mother', 'PCG': 'PCG', 'Teacher': 'Teacher'},
-                operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null'],
-                multiple: true,
-                plugin: 'selectpicker'
-            },
-            {
-                id: 'focal_person',
-                label: 'Focal Person',
-                type: 'string',
-                input: 'select',
-                values: {'Focal Child': 'Focal Child', 'Mother': 'Mother', 'Father': 'Father', 'Primary Caregiver': 'Primary Caregiver', 'Partner': 'Partner', 'Other': 'Other'},
-                operators: ['contains', 'is_null', 'is_not_null']
-            },
-            {
-                id: 'topics',
-                label: 'Topics',
-                type: 'string',
-                input: 'select',
-                values: {'Attitudes and expectations': 'Attitudes and expectations', 'Childcare': 'Childcare', 'Cognitive and behavioral development': 'Cognitive and behavioral development', 'Demographics': 'Demographics', 'Education and school': 'Education and school', 'Employment': 'Employment', 'Family and social ties':'Family and social ties', 'Finances':'Finances', 'Health and health behavior':'Health and health behavior', 'Housing and neighborhood':'Housing and neighborhood', 'Legal system': 'Legal system', 'Paradata and weights': 'Paradata and weights', 'Parenting':'Parenting', 'Romantic relationships': 'Romantic relationships'},
-                operators: ['contains'],
-                multiple: true,
-                plugin: 'selectpicker'
-            },
-            {
-                id: 'subtopics',
-                label: 'Sub-Topics',
-                type: 'string',
-                operators: ['contains']
-            },
-            {
-                id: 'scale',
-                label: 'Scale',
-                type: 'string',
-                input: 'select',
-                values: {
-                    "CES-D for Depression":"CES-D for Depression",
-                    "Child Emotionality and Shyness":"Child Emotionality and Shyness",
-                    "Aggravation in Parenting":"Aggravation in Parenting",
-                    "Material Hardship":"Material Hardship",
-                    "Mental Health Depression (CIDI-SF)":"Mental Health Depression (CIDI-SF)",
-                    "Mental Health for Generalized Anxiety Disorder (CIDI-SF)":"Mental Health for Generalized Anxiety Disorder (CIDI-SF)",
-                    "Impulsivity Scale":"Impulsivity Scale",
-                    "Alcohol Dependence":"Alcohol Dependence",
-                    "Drug Dependence":"Drug Dependence",
-                    "Family Mental Health History":"Family Mental Health History",
-                    "Wechsler Adult Intelligence Scale - Revised (WAIS-R)":"Wechsler Adult Intelligence Scale - Revised (WAIS-R)",
-                    "Early Childhood Environment Rating Scale (ECERS)":"Early Childhood Environment Rating Scale (ECERS)",
-                    "Child Behavior Problems (CBCL)":"Child Behavior Problems (CBCL)",
-                    "Family Child Care Environment Rating Scale (FDCRS)":"Family Child Care Environment Rating Scale (FDCRS)",
-                    "Home Observation for Measurement of the Environment":"Home Observation for Measurement of the Environment",
-                    "Household Food Security":"Household Food Security",
-                    "Conflict Tactics Scale":"Conflict Tactics Scale",
-                    "Neighborhood Collective Efficacy":"Neighborhood Collective Efficacy",
-                    "Adaptive Social Behavior Inventory (ASBI)":"Adaptive Social Behavior Inventory (ASBI)",
-                    "Peabody Picture Vocabulary Test-IIIA (PPVT/TVIP)":"Peabody Picture Vocabulary Test-IIIA (PPVT/TVIP)",
-                    "Toddler Attachment Q-Sort":"Toddler Attachment Q-Sort",
-                    "Couple Relationship Quality":"Couple Relationship Quality",
-                    "Woodcock Johnson Passage Comprehension and Applied Problems (WJ)":"Woodcock Johnson Passage Comprehension and Applied Problems (WJ)",
-                    "Caregiver-Child Relationship":"Caregiver-Child Relationship",
-                    "Connectedness at School":"Connectedness at School",
-                    "Peer Bullying":"Peer Bullying",
-                    "Delinquent Behavior":"Delinquent Behavior",
-                    "Task Completion and Behavior":"Task Completion and Behavior",
-                    "Self-Description Questionnaire (SDQ)":"Self-Description Questionnaire (SDQ)",
-                    "Pubertal Development Scale":"Pubertal Development Scale",
-                    "Environmental Confusion (CHAOS)":"Environmental Confusion (CHAOS)",
-                    "WISC-IV Forward and Backward Digit Span":"WISC-IV Forward and Backward Digit Span",
-                    "Social Skills Rating System (SSRS)":"Social Skills Rating System (SSRS)",
-                    "Conner's Teacher Rating Scale - RSF":"Conner's Teacher Rating Scale - RSF",
-                    "Motor Control (Walk-A-Line Task)":"Motor Control (Walk-A-Line Task)",
-                    "Sustained Attention Task (Leiter-R)":"Sustained Attention Task (Leiter-R)",
-                    "Parental Monitoring":"Parental Monitoring",
-                    "Trouble at School":"Trouble at School",
-                    "Adolescent Extracurricular and Community Involvement":"Adolescent Extracurricular and Community Involvement",
-                    "Positive Adolescent Functioning (EPOCH)":"Positive Adolescent Functioning (EPOCH)",
-                    "BSI 18 for Anxiety":"BSI 18 for Anxiety",
-                    "Teen Tobacco Use":"Teen Tobacco Use",
-                    "Legal Cynicism":"Legal Cynicism",
-                    "Adolescent Partner Abuse":"Adolescent Partner Abuse"
-                },
-                operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null'],
-                multiple: true,
-                plugin: 'selectpicker'
-            },
-            {
-                id: 'n_cities_asked',
-                label: 'Asked in (N) cities',
-                type: 'integer',
-                operators: ['equal', 'not_equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'in', 'not_in'],
-                input: 'select',
-                values: {2: 2, 15: 15, 16: 16, 18: 18, 20: 20},
-                multiple: true,
-                plugin: 'selectpicker'
-            },
-            {
-                id: 'data_type',
-                label: 'Data Type',
-                type: 'string',
-                input: 'select',
-                values: {'ID number': 'ID number', 'Binary': 'Binary',  'Continuous': 'Continuous', 'Ordered categorical': 'Ordered categorical', 'Unordered categorical': 'Unordered categorical'},
-                operators: ['equal', 'not_equal', 'in', 'not_in'],
-                multiple: true,
-                plugin: 'selectpicker'
-            },
-            {
-                id: 'warning',
-                label: 'Warning',
-                type: 'integer',
-                operators: ['equal', 'not_equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'in', 'not_in'],
-                input: 'select',
-                values: {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6},
-                multiple: true,
-                plugin: 'selectpicker'
-            },
-            {
-                id: 'in_FFC_file',
-                label: 'FFC variable',
-                type: 'string',
-                input: 'select',
-                operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null'],
-                values: {'yes': 'Yes', 'no': 'No'},
-                multiple: true,
-                plugin: 'selectpicker'
-            }
-        ]
+    qb = $('#builder').queryBuilder({
+        // Dummy filters just to get the constructor going
+        filters: [{id: 'name', label: 'name', type: 'string'}],
+        allow_empty: true,
+        rules: {
+            condition: 'AND',
+            rules:[]
+        }
     });
+
+    $.ajax({
+        type: 'GET',
+        url: '{{ url_for("web.advanced_search") }}',
+        dataType: 'json'
+    }).success(function(data) {
+        qb.queryBuilder('setFilters', true, data.filters);
+    }).error(function(data) {
+        alert('error while setting filters');
+    });
+
     $('#btn-reset').on('click', function() {
         $('#builder').queryBuilder('reset');
     });
@@ -245,8 +72,9 @@ $(document).ready(function() {
 
         if (!$.isEmptyObject(result)) {
             var filters = qb2apiFilter($("#builder"));
-            var q = encodeURIComponent(JSON.stringify({"filters": filters}));
-            var _url = "{{ url_for('apiv2.search_variable') }}?details=1&q="+q;
+            var q = JSON.stringify({"filters": filters});
+            var q_encoded = encodeURIComponent(q);
+            var _url = "{{ url_for('apiv2.search_variable') }}?details=1&q="+q_encoded;
             var url = 'http://api.metadata.fragilefamilies.princeton.edu/variable?q='+q;
             $("code#code").text(url);
             $("a#code_a").attr('href', url).attr('target', '_blank');

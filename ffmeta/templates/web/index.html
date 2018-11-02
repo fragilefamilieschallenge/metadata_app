@@ -9,27 +9,29 @@
             <p class="lead">What you can do on this website</p>
             <table class="table">
                 <tr>
-                    <td><span class="fas fa-search"></span> Browse</td>
+                    <td><span class="fas fa-search"></span> <a href="{{ url_for('web.search') }}">Browse</a></td>
                     <td>
-                        <p>This resource is great for getting started with exploring the FFCWS variables.</p>
                         <p>
-                        Select <a class="btn btn-default btn-sm" href="{{ url_for('web.search') }}" role="button"> <span class="fas fa-search"></span> Browse Variables</a> in the menu above
-                        to sort FFCWS variables by topic, wave, respondent,
-                        focal person, scales, survey, source, and/or variable type.
+                            This resource is great for getting started with exploring the FFCWS variables.<br/>
+                            Sort  FFCWS variables by topic, wave, respondent, focal person, scales, survey, source,
+                            and/or variable type.
                         </p>
                     </td>
                 </tr>
                 <tr>
-                    <td><span class="fas fa-cogs"></span> Search</td>
+                    <td><span class="fas fa-cogs"></span> <a href="{{ url_for('web.search2') }}">Search</a></td>
                     <td>
-                      Select <a class="btn btn-default btn-sm" href="{{ url_for('web.search2') }}" role="button"> <span class="fas fa-cogs"></span> Advanced Search</a> in the menu above to perform more detailed queries
-                        and/or text searches in the FFCWS metadata.
+                        <p>
+                            Perform more detailed queries and/or text searches in the FFCWS metadata.
+                        </p>
                     </td>
                 </tr>
                 <tr>
-                    <td><span class="fas fa-cloud-download-alt"></span> Download</td>
+                    <td><span class="fas fa-cloud-download-alt"></span> <a href="{{ url_for('web.metadata') }}">Download</a></td>
                     <td>
-                      Click the <a class="btn btn-default btn-sm" href="{{ url_for('web.metadata') }}" role="button"> <span class="fas fa-cloud-download-alt"></span> Download full metadata</a> link in the menu above to download the full metadata as a CSV file.
+                        <p>
+                            Download the full metadata as a CSV file.
+                        </p>
                     </td>
                 </tr>
             </table>

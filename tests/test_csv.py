@@ -57,7 +57,7 @@ class CsvTestCase(TestCase):
         All rows should have a 'respondent' that comes from one of our instruments
         :return:
         """
-        respondents = ['Father', 'Mother', 'Child Care Provider', 'Interviewer', 'PCG', 'Child', 'Teacher']
+        respondents = ['Father', 'Mother', 'Child Care Provider', 'Interviewer', 'Primary Caregiver', 'Child', 'Teacher', 'Couple']
         self.assertEqual(len(self.df[self.df.respondent.notnull()][~self.df.respondent.isin(respondents)]), 0)
 
     def testSources(self):

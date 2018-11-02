@@ -42,10 +42,13 @@ def populate_tables():
     session.execute('DELETE FROM `response2`')
     session.execute('DELETE FROM `variable3`')
     session.execute('DELETE FROM `topics`')
+    session.execute('DELETE FROM `wave`')
 
     session.commit()
 
     distinct_topics = set()
+    distinct_subtopics = set()
+    distinct_waves = set()
 
     for i, row in enumerate(session.execute('SELECT * FROM `raw2`'), start=1):
         name = row['new_name']
@@ -60,13 +63,14 @@ def populate_tables():
         data_source = row['source']
         respondent = row['respondent']
         wave = row['wave']
+        distinct_waves.add(wave)
         n_cities_asked = row['n_cities_asked']
         section = row['section']
         leaf = row['leaf']
 
         scale = row['scale']
         probe = row['probe']
-        qText = row['qText']
+        qtext = row['qtext']
         survey = row['survey']
 
         fp_fchild = row['fp_fchild']
@@ -88,13 +92,18 @@ def populate_tables():
         focal_person = ', '.join(v for k, v in focal_person_dict.items() if l[k])
 
         topics = row['topics']
-        subtopics = row['subtopics']
-
         if topics is not None:
             for t in topics.split(';'):
                 t = t.strip()
                 if t:
                     distinct_topics.add(t)
+
+        subtopics = row['subtopics']
+        if subtopics is not None:
+            for s in subtopics.split(';'):
+                s = s.strip()
+                if s:
+                    distinct_subtopics.add(s)
 
         in_FFC_file = row['in_FFC_file']
 
@@ -112,7 +121,7 @@ def populate_tables():
             leaf=leaf,
             scale=scale,
             probe=probe,
-            qText=qText,
+            qtext=qtext,
             fp_fchild=fp_fchild,
             fp_mother=fp_mother,
             fp_father=fp_father,
@@ -157,7 +166,19 @@ def populate_tables():
             session.commit()
 
     for topic in distinct_topics:
-        session.execute("INSERT INTO topics (topic) VALUES ('{}')".format(topic))
+        session.execute('INSERT INTO topics (topic) VALUES ("{}")'.format(topic))
+
+    for subtopic in distinct_subtopics:
+        session.execute('INSERT INTO subtopics (subtopic) VALUES ("{}")'.format(subtopic))
+
+    for wave in distinct_waves:
+        if wave is not None:
+            order_id = wave.lstrip('Year ')
+            try:
+                order_id = int(order_id)
+            except ValueError:
+                order_id = 0
+            session.execute("INSERT INTO wave (name, order_id) VALUES ('{}', {})".format(wave, order_id))
 
     session.commit()
 

@@ -47,7 +47,7 @@ General Format: `/variable/<varName>`
     "name": "m1a3",
     "old_name": "m1a3",
     "probe": null,
-    "qText": null,
+    "qtext": null,
     "respondent": "Mother",
     "responses": {
         "1": "Yes",
@@ -127,8 +127,8 @@ With the `like` operator, you can use the `%` character to match any character.
     Search for variables where "name" starts with "f1"
     {"name":"name","op":"like","val":"f1%"}
 
-    Search for variables where "qText" has the word "financial" somewhere in it
-    {"name":"qText","op":"like","val":"%financial%"}
+    Search for variables where "qtext" has the word "financial" somewhere in it
+    {"name":"qtext","op":"like","val":"%financial%"}
 
 **lt**: less-than, **le**: less-than-or-equal-to, **gt**: greater-than, **gte**: greater-than-or-equal-to
     

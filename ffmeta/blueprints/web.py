@@ -2,7 +2,7 @@ import os
 from collections import OrderedDict
 
 from sqlalchemy import or_, and_
-from flask import Blueprint, render_template, request, send_from_directory, send_file, make_response, current_app
+from flask import Blueprint, render_template, request, send_from_directory, send_file, make_response, current_app, jsonify
 
 from ffmeta.models import Response, Variable
 from ffmeta.models.db import session
@@ -34,8 +34,11 @@ valid_filters = {
     "topic": OrderedDict([
         (row.topic, row.topic) for row in session.execute("SELECT topic FROM topics ORDER BY 1")
     ]),
+    "subtopic": OrderedDict([
+        (row.subtopic, row.subtopic) for row in session.execute("SELECT subtopic FROM subtopics ORDER BY 1")
+    ]),
     "wave": OrderedDict([
-        (row.wave, row.wave) for row in session.execute("SELECT DISTINCT(wave) FROM variable3 WHERE wave IS NOT NULL ORDER BY 1")
+        (row.name, row.name) for row in session.execute("SELECT name FROM wave ORDER BY order_id")
     ]),
     "respondent": OrderedDict([
         (row.respondent, row.respondent) for row in session.execute("SELECT DISTINCT(respondent) FROM variable3 WHERE respondent IS NOT NULL ORDER BY 1")
@@ -51,6 +54,9 @@ valid_filters = {
     ]),
     "survey": OrderedDict([
         (row.survey, row.survey) for row in session.execute("SELECT DISTINCT(survey) FROM variable3 WHERE survey IS NOT NULL ORDER BY 1")
+    ]),
+    "n_cities_asked": OrderedDict([
+        (row.n_cities_asked, row.n_cities_asked) for row in session.execute("SELECT DISTINCT(n_cities_asked) FROM variable3 WHERE n_cities_asked IS NOT NULL ORDER BY 1")
     ]),
     "focal_person": OrderedDict([
         ("fp_fchild", "Focal Child"),
@@ -149,8 +155,6 @@ def about():
     return resp
 
 
-# Main page
-# Also, set a unique ID for this user
 @bp.route('/')
 def index():
     resp = make_response(render_template('web/index.html'))
@@ -162,3 +166,153 @@ def api():
     return render_template("web/api.html")
 
 
+# -------------------------------------------
+# Internal api-endpoints used by search pages
+# -------------------------------------------
+@bp.route('/advanced_search')
+def advanced_search():
+    """
+    Get a json dictionary of search filter values suitable for use with the javascript queryBuilder plugin
+    """
+    filters = [
+            dict(
+                id='name',
+                label='Name',
+                type='string',
+                operators=['equal', 'not_equal', 'begins_with', 'ends_with', 'contains']
+            ),
+            dict(
+                id='old_name',
+                label='Old Name',
+                type='string',
+                operators=['equal', 'not_equal', 'begins_with', 'ends_with', 'contains']
+            ),
+            dict(
+                id='label',
+                label='Label',
+                type='string',
+                operators=['contains']
+            ),
+            dict(
+                id='qtext',
+                label='Question Text',
+                type='string',
+                operators=['contains']
+            ),
+            dict(
+                id='probe',
+                label='Probe',
+                type='string',
+                operators=['contains']
+            ),
+            dict(
+                id='data_source',
+                label='Data Source',
+                type='string',
+                input='select',
+                values=valid_filters['data_source'],
+                operators=['equal', 'not_equal', 'in', 'not_in'],
+                multiple=True,
+                plugin='selectpicker'
+            ),
+            dict(
+                id='survey',
+                label='Survey',
+                type='string',
+                input='select',
+                values=valid_filters['survey'],
+                operators=['equal', 'not_equal', 'in', 'not_in'],
+                multiple=True,
+                plugin='selectpicker'
+            ),
+            dict(
+                id='wave',
+                label='Wave',
+                type='string',
+                input='select',
+                values=valid_filters['wave'],
+                operators=['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null'],
+                multiple=True,
+                plugin='selectpicker'
+            ),
+            dict(
+                id='respondent',
+                label='Respondent',
+                type='string',
+                input='select',
+                values=valid_filters['respondent'],
+                operators=['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null'],
+                multiple=True,
+                plugin='selectpicker'
+            ),
+            dict(
+                id='focal_person',
+                label='Focal Person',
+                type='string',
+                input='select',
+                values={'Focal Child': 'Focal Child', 'Mother': 'Mother', 'Father': 'Father', 'Primary Caregiver': 'Primary Caregiver', 'Partner': 'Partner', 'Other': 'Other'},
+                operators=['contains', 'is_null', 'is_not_null']
+            ),
+            dict(
+                id='topics',
+                label='Topics',
+                type='string',
+                input='select',
+                values=valid_filters['topic'],
+                operators=['contains'],
+                multiple=True,
+                plugin='selectpicker'
+            ),
+            dict(
+                id='subtopics',
+                label='Sub-Topics',
+                type='string',
+                input='select',
+                values=valid_filters['subtopic'],
+                operators=['contains'],
+                multiple=True,
+                plugin='selectpicker'
+            ),
+            dict(
+                id='scale',
+                label='Scale',
+                type='string',
+                input='select',
+                values=valid_filters['scale'],
+                operators=['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null'],
+                multiple=True,
+                plugin='selectpicker'
+            ),
+            dict(
+                id='n_cities_asked',
+                label='Asked in (N) cities',
+                type='integer',
+                operators=['equal', 'not_equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'in', 'not_in'],
+                input='select',
+                values=valid_filters['n_cities_asked'],
+                multiple=True,
+                plugin='selectpicker'
+            ),
+            dict(
+                id='data_type',
+                label='Data Type',
+                type='string',
+                input='select',
+                values=valid_filters['data_type'],
+                operators=['equal', 'not_equal', 'in', 'not_in'],
+                multiple=True,
+                plugin='selectpicker'
+            ),
+            dict(
+                id='in_FFC_file',
+                label='FFC variable',
+                type='string',
+                input='select',
+                operators=['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null'],
+                values={'yes': 'Yes', 'no': 'No'},
+                multiple=True,
+                plugin='selectpicker'
+            )
+        ]
+
+    return jsonify({"filters": filters})

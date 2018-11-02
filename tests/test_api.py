@@ -101,20 +101,20 @@ class APITestCase(TestCase):
 
     def testSearchIsNull(self):
         """
-        Test searching a variable given a comparison for one of it's attributes (qText)
+        Test searching a variable given a comparison for one of it's attributes (qtext)
         """
         with app.app_context():
-            results = search({'name': 'qText', 'op': 'is_null'}, as_json=False)
-            expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable3 WHERE qText IS NULL'))[0]
+            results = search({'name': 'qtext', 'op': 'is_null'}, as_json=False)
+            expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable3 WHERE qtext IS NULL'))[0]
             self.assertEqual(len(results), expected_n_results)
 
     def testSearchIsNotNull(self):
         """
-        Test searching a variable given a comparison for one of it's attributes (qText)
+        Test searching a variable given a comparison for one of it's attributes (qtext)
         """
         with app.app_context():
-            results = search({'name': 'qText', 'op': 'is_not_null'}, as_json=False)
-            expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable3 WHERE qText IS NOT NULL'))[0]
+            results = search({'name': 'qtext', 'op': 'is_not_null'}, as_json=False)
+            expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable3 WHERE qtext IS NOT NULL'))[0]
             self.assertEqual(len(results), expected_n_results)
 
     def testSearchMultiple(self):

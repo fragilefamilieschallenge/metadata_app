@@ -2,7 +2,7 @@ DEBUG = False
 SERVER_NAME = 'metadata.fragilefamilies.princeton.edu'
 
 # Metadata flatfile location
-METADATA_FILE = "data/FFMetadata20181101.csv"
+METADATA_FILE = "data/FFMetadata20181102.csv"
 
 # Database credentials. The following are just placeholders - replace with real credentials.
 DB_USER = "travis"

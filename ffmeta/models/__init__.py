@@ -23,7 +23,7 @@ class Variable(Base):
     leaf = Column(Text)
     scale = Column(Text)
     probe = Column(Text)
-    qText = Column(Text)
+    qtext = Column(Text)
     survey = Column(Text)
 
     fp_fchild = Column(Integer)
