@@ -1,7 +1,7 @@
 function qb2apiFilter(qbElement) {
     var query = qbElement.queryBuilder('getRules');
     if ($.isEmptyObject(query.rules)) {
-        return {};
+        return [];
     } else {
         var x = convertCondition(query);
         return [x];
