@@ -106,27 +106,14 @@
                     <div class="panel-body">
                         {% if var_data.old_name != var_data.name %}
                         <em>The old name for this variable was <b>{{var_data.old_name}}</b>.<br/></em>
+                        {% endif %}
+                        {% if var_data.warning == None %}
+                        <em>None</em>
                         {% else %}
-                            {% if var_data.warning|int == 0 %}
-                            <em>None</em>
-                            {% endif %}
+                        <em> {{var_data.warning}} </em>
                         {% endif %}
 
-                        {% if var_data.warning|int == 1%}
-                            <em>Misordered categorical, outcomes do not have constant scale.</em>
-                        {% elif var_data.warning|int == 2%}
-                            <em>Variable has outcome(s) which override a continuous answer set.</em>
-                        {% elif var_data.warning|int == 3%}
-                            <em>Variable pertaining to period of time has misordered outcomes.</em>
-                        {% elif var_data.warning|int == 4%}
-                            <em>A unique outcome is coded as a negative value.</em>
-                        {% elif var_data.warning|int == 5%}
-                            <em>Missing data is coded as something other than the default, i.e as a positive value.</em>
-                        {% elif var_data.warning|int == 6%}
-                            <em>A non-constructed Yes/No variable that has “No” coded to 0 instead of 2.</em>
-                        {% elif var_data.warning|int != 0%}
-                            <em>Warning: {{ var_data.warning|int }}</em>
-                        {% endif %}
+
                     </div>
                 </div>
             </div>

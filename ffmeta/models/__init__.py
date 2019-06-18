@@ -13,7 +13,7 @@ class Variable(Base):
     label = Column(Text)
     old_name = Column(Text)
     data_type = Column(Text)
-    warning = Column(Integer)
+    warning = Column(Text)
     group_id = Column(Text)
     data_source = Column(Text)
     respondent = Column(Text)

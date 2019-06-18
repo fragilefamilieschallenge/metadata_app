@@ -69,10 +69,10 @@ class CsvTestCase(TestCase):
 
     def testWarning(self):
         """
-        All rows should have a warning code from 0-5
+        All rows should have a warning code from the set of strings
         :return:
         """
-        warnings = ['No Issues', "A survey Yes/No variable that has 'No' coded to 0 instead of 2",
+        warnings = ["A survey Yes/No variable that has 'No' coded to 0 instead of 2",
                     "Misordered Categorical (outcomes do not have a contstant scale)",
                     "A unique outcome is coded as a negative value",
                     "Variable has outcomes which override a continuous answer set",
