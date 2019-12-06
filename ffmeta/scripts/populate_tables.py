@@ -52,6 +52,7 @@ def populate_tables(quiet=False):
     distinct_subtopics = set()
     distinct_waves = set()
 
+    print('-----------\nPopulating variables\n-----------')
     for i, row in enumerate(session.execute('SELECT * FROM `raw2`'), start=1):
         name = row['new_name']
         if row['varlab'] is not None:
@@ -191,5 +192,7 @@ if __name__ == '__main__':
 
     quiet = '--quiet' in sys.argv[1:]
     with application.app_context():
-        populate_raw(metadata_file(), quiet=quiet)
+        file = metadata_file()
+        print('Populating data from file {}'.format(file))
+        populate_raw(file, quiet=quiet)
         populate_tables(quiet=quiet)
