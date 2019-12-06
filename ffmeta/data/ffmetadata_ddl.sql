@@ -17,7 +17,7 @@ CREATE DATABASE IF NOT EXISTS `FFMeta` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `FFMeta`;
 
 CREATE TABLE IF NOT EXISTS `raw2` (
-  `new_name` char(30) NOT NULL,
+  `new_name` char(100) NOT NULL,
   `old_name` char(30) DEFAULT NULL,
   `varlab` text,
   `group` char(30) DEFAULT NULL,
@@ -166,7 +166,7 @@ CREATE TABLE IF NOT EXISTS `raw2` (
 
 CREATE TABLE IF NOT EXISTS `response2` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` char(30) DEFAULT NULL,
+  `name` char(100) DEFAULT NULL,
   `label` text,
   `value` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -188,7 +188,7 @@ CREATE TABLE IF NOT EXISTS `topics` (
 
 CREATE TABLE IF NOT EXISTS `variable3` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` char(30) DEFAULT NULL,
+  `name` char(100) DEFAULT NULL,
   `label` text CHARACTER SET utf8,
   `old_name` text,
   `warning` char(200) DEFAULT NULL,
