@@ -141,7 +141,8 @@ def favicon():
 
 @bp.route('/get_metadata')
 def metadata():
-    return send_file(os.path.join(current_app.root_path, current_app.config["METADATA_FILE"]), as_attachment=True)
+    from ffmeta.utils import metadata_file
+    return send_file(metadata_file(), as_attachment=True)
 
 
 @bp.route("/feedback")

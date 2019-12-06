@@ -4,7 +4,7 @@ import csv
 from sqlalchemy import Table
 
 import ffmeta
-from ffmeta.settings import METADATA_FILE
+from ffmeta.utils import metadata_file
 from ffmeta import create_app
 from ffmeta.models import Variable, Response
 from ffmeta.models.db import session, Base
@@ -22,12 +22,13 @@ def populate_raw(csv_path, quiet=False):
     raw_table = Table("raw2", Base.metadata, autoload=True)
     with open(csv_path) as f:
         reader = csv.DictReader(f)
+        print('-----------\nPopulating raw table\n-----------')
         for i, _d in enumerate(reader, start=1):
             # Remove keys with empty values
             d = dict((k, _d[k]) for k in _d if _d[k] != '')
             session.execute(raw_table.insert(), [d])
-            if i % 500 == 0:
-                print('Added {} rows'.format(i))
+            if not i % 500:
+                print('Added {} rows.'.format(i))
                 session.commit()
         session.commit()
 
@@ -162,8 +163,8 @@ def populate_tables(quiet=False):
                 resp = Response(name=row["new_name"], label=lab, value=row["value" + respidx])
                 session.add(resp)
 
-        if not i % 200:
-            print(str(i) + " rows added.")
+        if not i % 500:
+            print("Added {} rows.".format(i))
             session.commit()
 
     for topic in distinct_topics:
@@ -190,6 +191,5 @@ if __name__ == '__main__':
 
     quiet = '--quiet' in sys.argv[1:]
     with application.app_context():
-        CSV_FILE_PATH = os.path.join(os.path.dirname(ffmeta.__file__), METADATA_FILE)
-        populate_raw(CSV_FILE_PATH, quiet=quiet)
+        populate_raw(metadata_file(), quiet=quiet)
         populate_tables(quiet=quiet)

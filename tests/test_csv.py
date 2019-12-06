@@ -1,13 +1,9 @@
-import os.path
 import pandas as pd
 from unittest import TestCase
 
-import ffmeta
-from ffmeta.settings import METADATA_FILE
+from ffmeta.utils import metadata_file
 
-# This indirect way of getting to the folder is needed so that we can initiate the tests both from within this folder
-# as well as from outside it (e.g. for Travis Integration)
-CSV_FILE_PATH = os.path.join(os.path.dirname(ffmeta.__file__), METADATA_FILE)
+CSV_FILE_PATH = metadata_file()
 
 
 class CsvTestCase(TestCase):

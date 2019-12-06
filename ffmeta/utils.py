@@ -1,6 +1,8 @@
 import datetime
-from flask import jsonify
+import os.path
+import glob
 
+import ffmeta
 from ffmeta.models import Response, Variable
 from ffmeta.models.db import session
 
@@ -14,8 +16,6 @@ def epochalypse_now():
 
 # Throw informative API errors as JSON
 def api_error(code=None, description=None):
-    # error = jsonify({"error code": code, "error_description": description})
-    # return error
     raise AppException(status_code=code, message=description)
 
 
@@ -47,6 +47,21 @@ def search_db(field, value):
     # Return variable names found, deduplicated
     distinct = dedupe_varlist([m.name for m in matches])
     return distinct
+
+
+def metadata_file():
+    """
+    Return the path to the first (as per a descending alphabetic sort) .csv file found at the expected location
+        (<ffmeta_package_dir>/data/*.csv)
+    This is assumed to be the latest metadata csv file.
+    :return: The absolute path of the latest metadata csv file.
+    """
+    dirname = os.path.dirname(ffmeta.__file__)
+    valid_files = list(glob.glob(os.path.join(dirname, 'data', '*.csv')))
+    if not valid_files:
+        raise RuntimeError('No valid metadata csv files found.')
+    else:
+        return sorted(valid_files)[-1]
 
 
 # API Exceptions #
