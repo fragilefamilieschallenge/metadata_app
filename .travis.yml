@@ -7,5 +7,5 @@ addons:
 
 install:
   - pip install -r requirements.txt
-  - python ffmeta/scripts/populate_tables.py --quiet
+  - PYTHONPATH=. python ffmeta/scripts/populate_tables.py --quiet
 script: py.test tests
