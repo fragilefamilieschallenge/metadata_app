@@ -5,8 +5,7 @@ addons:
   hosts:
   - metadata.fragilefamilies.princeton.edu
 
-before_install:
-  - mysql -e 'SOURCE ffmeta/data/ffmeta20181102.sql;'
 install:
   - pip install -r requirements.txt
+  - python scripts/populate_tables.py --quiet
 script: py.test tests

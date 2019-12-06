@@ -1,3 +1,4 @@
+import sys
 import os.path
 import csv
 from sqlalchemy import Table
@@ -9,10 +10,10 @@ from ffmeta.models import Variable, Response
 from ffmeta.models.db import session, Base
 
 
-def populate_raw(csv_path):
+def populate_raw(csv_path, quiet=False):
     '''Load metadata from a csv file into the "raw" table'''
 
-    if input(
+    if not quiet and input(
         'This operation will delete all data fom the "raw" table and re-import it. ARE YOU SURE you want to proceed (yes/no)? '
     ) != 'yes':
         return
@@ -31,10 +32,10 @@ def populate_raw(csv_path):
         session.commit()
 
 
-def populate_tables():
+def populate_tables(quiet=False):
     '''Load metadata from the `raw` table to other tables.'''
 
-    if input(
+    if not quiet and input(
         'This operation will import data from the "raw" table and will WIPE OUT data from all other tables. ARE YOU SURE you want to proceed (yes/no)? '
     ) != 'yes':
         return
@@ -186,7 +187,9 @@ def populate_tables():
 if __name__ == '__main__':
 
     application = create_app(debug=True)
+
+    quiet = '--quiet' in sys.argv[1:]
     with application.app_context():
         CSV_FILE_PATH = os.path.join(os.path.dirname(ffmeta.__file__), METADATA_FILE)
-        populate_raw(CSV_FILE_PATH)
-        populate_tables()
+        populate_raw(CSV_FILE_PATH, quiet=quiet)
+        populate_tables(quiet=quiet)
