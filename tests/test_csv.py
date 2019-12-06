@@ -18,7 +18,7 @@ class CsvTestCase(TestCase):
         # we do that as a class method and avoid doing it as part of setUp
         cls.df = pd.read_csv(
             CSV_FILE_PATH,
-            encoding="cp1252"
+            encoding="utf-8"
         )
 
     def setUp(self):
