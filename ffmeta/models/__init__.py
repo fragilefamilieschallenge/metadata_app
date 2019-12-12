@@ -74,7 +74,7 @@ class Response(Base):
     id = Column(Integer, primary_key=True)
     name = Column(Text, ForeignKey("variable3.name"))
     label = Column(Text)
-    value = Column(Integer)
+    value = Column(Text)
 
     def __init__(self, name, label, value):
         self.name = name
