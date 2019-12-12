@@ -60,7 +60,7 @@ class CsvTestCase(TestCase):
         All rows should have a 'source' from our predefined list
         :return:
         """
-        sources = ['constructed', 'idnum', 'questionnaire', 'weight']
+        sources = ['constructed', 'idnum', 'questionnaire', 'weight', 'restricted']
         self.assertEqual(len(self.df[self.df.source.notnull()][~self.df.source.isin(sources)]), 0)
 
     def testWarning(self):
@@ -72,7 +72,18 @@ class CsvTestCase(TestCase):
                     "Misordered Categorical (outcomes do not have a contstant scale)",
                     "A unique outcome is coded as a negative value",
                     "Variable has outcomes which override a continuous answer set",
-                    "Missing data is coded as something other than the default"]
+                    "Missing data is coded as something other than the default",
+                    "Variable uses Stata extended missing values, these may display differently in other programs",
+                    "Variable contains values rounded into buckets, see value label"
+                    ]
         self.assertEqual(len(self.df[self.df.warning.notnull()][~self.df.warning.isin(warnings)]), 0)
+
+    def testVariableNameLength(self):
+        """
+        No variable new_name should exceed 40 characters.
+        :return:
+        """
+        self.assertLessEqual(self.df.new_name.map(lambda x: len(x)).max(), 40)
+
 
 
