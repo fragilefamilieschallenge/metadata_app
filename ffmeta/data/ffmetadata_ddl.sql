@@ -18,7 +18,7 @@ USE `FFMeta`;
 
 CREATE TABLE IF NOT EXISTS `raw2` (
   `new_name` char(40) NOT NULL,
-  `old_name` char(30) DEFAULT NULL,
+  `old_name` char(40) DEFAULT NULL,
   `varlab` text,
   `group` char(30) DEFAULT NULL,
   `topics` char(120) DEFAULT NULL,
@@ -190,7 +190,7 @@ CREATE TABLE IF NOT EXISTS `variable3` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` char(40) DEFAULT NULL,
   `label` text CHARACTER SET utf8,
-  `old_name` text,
+  `old_name` char(40) CHARACTER SET utf8 DEFAULT NULL,
   `warning` char(200) DEFAULT NULL,
   `group_id` text,
   `data_source` char(20) DEFAULT NULL,
