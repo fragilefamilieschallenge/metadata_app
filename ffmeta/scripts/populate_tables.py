@@ -139,7 +139,12 @@ def populate_tables(quiet=False):
             topics=topics,
             subtopics=subtopics,
 
-            in_FFC_file=in_FFC_file
+            in_FFC_file=in_FFC_file,
+            obs=obs,
+            min=min,
+            max=max,
+            avg=avg,
+            std=std
         )
 
         session.add(variable)
@@ -161,7 +166,8 @@ def populate_tables(quiet=False):
                     lab = row[key]  # Default to the full entry if we can't clean up
 
                 # Append new response row
-                resp = Response(name=row["new_name"], label=lab, value=row["value" + respidx])
+                resp = Response(name=row["new_name"], label=lab, value=row["value" + respidx],
+                                freq=row["freq" + respidx], per=row["per"+respidx])
                 session.add(resp)
 
         if not i % 500:

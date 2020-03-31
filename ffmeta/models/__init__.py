@@ -75,11 +75,15 @@ class Response(Base):
     name = Column(Text, ForeignKey("variable3.name"))
     label = Column(Text)
     value = Column(Text)
+    freq = Column(Integer)
+    per = Column(Integer)
 
     def __init__(self, name, label, value):
         self.name = name
         self.label = label
         self.value = value
+        self.freq = freq
+        self.per = per
 
     def __repr__(self):
         return "<Response %r>" % self.label
