@@ -27,4 +27,4 @@ def execute_script(conn, script_path, quiet=False):
 if __name__ == '__main__':
 
     conn = pymysql.connect(host=DB_HOST, port=DB_PORT, user=DB_USER, password=DB_PASS, db=DB_NAME)
-    execute_script(conn, os.path.join(os.path.dirname(ffmeta.__file__), 'data', 'ff.sql'))
+    execute_script(conn, os.path.join(os.path.dirname(ffmeta.__file__), 'data', 'ffmetadata_ddl.sql'))
