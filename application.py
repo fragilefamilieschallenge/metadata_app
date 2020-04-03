@@ -3,7 +3,6 @@ from logging.handlers import RotatingFileHandler
 
 from ffmeta import create_app
 from ffmeta.settings import DEBUG
-from ffmeta.utils import epochalypse_now
 
 application = create_app(debug=DEBUG)
 
@@ -14,5 +13,4 @@ if __name__ == '__main__':
     handler.setLevel(logging.INFO)
     application.logger.addHandler(handler)
     application.logger.setLevel(logging.INFO)
-    application.logger.info("[{}] App launched.".format(epochalypse_now()))
     application.run(threaded=True)

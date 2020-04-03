@@ -11,13 +11,38 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+-- Dumping structure for table FFMeta.data_type
+DROP TABLE IF EXISTS `data_type`;
+CREATE TABLE IF NOT EXISTS `data_type` (
+  `id` char(30) NOT NULL,
+  `name` char(30) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping database structure for FFMeta
-CREATE DATABASE IF NOT EXISTS `FFMeta` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `FFMeta`;
+-- Data exporting was unselected.
+-- Dumping structure for table FFMeta.group
+DROP TABLE IF EXISTS `group`;
+CREATE TABLE IF NOT EXISTS `group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` text,
+  `count` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- Data exporting was unselected.
+-- Dumping structure for table FFMeta.measure
+DROP TABLE IF EXISTS `measure`;
+CREATE TABLE IF NOT EXISTS `measure` (
+  `id` tinyint(1) NOT NULL,
+  `name` char(100) CHARACTER SET latin1 DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+-- Dumping structure for table FFMeta.raw2
+DROP TABLE IF EXISTS `raw2`;
 CREATE TABLE IF NOT EXISTS `raw2` (
-  `new_name` char(40) NOT NULL,
+  `new_name` char(40) DEFAULT NULL,
   `old_name` char(40) DEFAULT NULL,
   `varlab` text,
   `group` char(30) DEFAULT NULL,
@@ -164,6 +189,9 @@ CREATE TABLE IF NOT EXISTS `raw2` (
   `in_FFC_file` char(20) CHARACTER SET latin1 DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- Data exporting was unselected.
+-- Dumping structure for table FFMeta.response2
+DROP TABLE IF EXISTS `response2`;
 CREATE TABLE IF NOT EXISTS `response2` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` char(40) DEFAULT NULL,
@@ -172,20 +200,104 @@ CREATE TABLE IF NOT EXISTS `response2` (
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   CONSTRAINT `response2_ibfk_1` FOREIGN KEY (`name`) REFERENCES `variable3` (`name`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3081564 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3843497 DEFAULT CHARSET=latin1;
 
+-- Data exporting was unselected.
+-- Dumping structure for table FFMeta.subtopics
+DROP TABLE IF EXISTS `subtopics`;
 CREATE TABLE IF NOT EXISTS `subtopics` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `subtopic` char(50) CHARACTER SET latin1 DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=563 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=783 DEFAULT CHARSET=utf8;
 
+-- Data exporting was unselected.
+-- Dumping structure for table FFMeta.survey
+DROP TABLE IF EXISTS `survey`;
+CREATE TABLE IF NOT EXISTS `survey` (
+  `id` char(1) CHARACTER SET latin1 NOT NULL,
+  `name` char(100) CHARACTER SET latin1 DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+-- Dumping structure for table FFMeta.topic
+DROP TABLE IF EXISTS `topic`;
+CREATE TABLE IF NOT EXISTS `topic` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` char(30) DEFAULT NULL,
+  `topic` char(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`),
+  KEY `topic` (`topic`),
+  CONSTRAINT `topic_ibfk_1` FOREIGN KEY (`name`) REFERENCES `variable` (`name`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=131070 DEFAULT CHARSET=latin1;
+
+-- Data exporting was unselected.
+-- Dumping structure for table FFMeta.topics
+DROP TABLE IF EXISTS `topics`;
 CREATE TABLE IF NOT EXISTS `topics` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `topic` char(50) CHARACTER SET latin1 DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=204 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=246 DEFAULT CHARSET=utf8;
 
+-- Data exporting was unselected.
+-- Dumping structure for table FFMeta.umbrella
+DROP TABLE IF EXISTS `umbrella`;
+CREATE TABLE IF NOT EXISTS `umbrella` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `topic` char(100) NOT NULL,
+  `umbrella` char(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `topic` (`topic`),
+  CONSTRAINT `umbrella_ibfk_1` FOREIGN KEY (`topic`) REFERENCES `topic` (`topic`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=347 DEFAULT CHARSET=latin1;
+
+-- Data exporting was unselected.
+-- Dumping structure for table FFMeta.variable
+DROP TABLE IF EXISTS `variable`;
+CREATE TABLE IF NOT EXISTS `variable` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` char(30) DEFAULT NULL,
+  `label` text CHARACTER SET utf8,
+  `old_name` text,
+  `data_type` text,
+  `warning` int(11) DEFAULT NULL,
+  `group_id` text,
+  `group_subid` text,
+  `data_source` text,
+  `respondent` char(40) DEFAULT NULL,
+  `wave` text,
+  `scope` text,
+  `section` text,
+  `leaf` text,
+  `measures` char(100) DEFAULT NULL,
+  `probe` text,
+  `qText` text,
+  `fp_fchild` tinyint(1) DEFAULT NULL,
+  `fp_mother` tinyint(1) DEFAULT NULL,
+  `fp_father` tinyint(1) DEFAULT NULL,
+  `fp_PCG` tinyint(1) DEFAULT NULL,
+  `fp_partner` tinyint(1) DEFAULT NULL,
+  `fp_other` tinyint(1) DEFAULT NULL,
+  `survey` char(1) DEFAULT NULL,
+  `focal_person` char(50) DEFAULT NULL,
+  `survey2` char(100) DEFAULT NULL,
+  `type` char(30) DEFAULT NULL,
+  `wave2` char(10) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`),
+  KEY `measures` (`measures`),
+  KEY `respondent` (`respondent`),
+  KEY `survey` (`survey`),
+  KEY `focal_person` (`focal_person`),
+  KEY `survey2` (`survey2`)
+) ENGINE=InnoDB AUTO_INCREMENT=102286 DEFAULT CHARSET=latin1;
+
+-- Data exporting was unselected.
+-- Dumping structure for table FFMeta.variable3
+DROP TABLE IF EXISTS `variable3`;
 CREATE TABLE IF NOT EXISTS `variable3` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` char(40) DEFAULT NULL,
@@ -225,15 +337,40 @@ CREATE TABLE IF NOT EXISTS `variable3` (
   KEY `focal_person` (`focal_person`),
   KEY `topics` (`topics`),
   KEY `subtopics` (`subtopics`)
-) ENGINE=InnoDB AUTO_INCREMENT=258827 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=348995 DEFAULT CHARSET=latin1;
 
+-- Data exporting was unselected.
+-- Dumping structure for table FFMeta.variable_bk
+DROP TABLE IF EXISTS `variable_bk`;
+CREATE TABLE IF NOT EXISTS `variable_bk` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` text,
+  `label` text,
+  `old_name` text,
+  `data_type` text,
+  `warning` int(11) DEFAULT NULL,
+  `group_id` text,
+  `group_subid` text,
+  `data_source` text,
+  `respondent` text,
+  `wave` text,
+  `scope` text,
+  `section` text,
+  `leaf` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Data exporting was unselected.
+-- Dumping structure for table FFMeta.wave
+DROP TABLE IF EXISTS `wave`;
 CREATE TABLE IF NOT EXISTS `wave` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` char(30) DEFAULT NULL,
   `order_id` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=latin1;
 
+-- Data exporting was unselected.
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

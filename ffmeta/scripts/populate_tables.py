@@ -1,11 +1,12 @@
 import sys
-import os.path
 import csv
 from sqlalchemy import Table
 
-import ffmeta
-from ffmeta.utils import metadata_file
 from ffmeta import create_app
+application = create_app(debug=True)
+
+# Defer imports till app has been created and configured
+from ffmeta.utils import metadata_file
 from ffmeta.models import Variable, Response
 from ffmeta.models.db import session, Base
 
@@ -187,8 +188,6 @@ def populate_tables(quiet=False):
 
 
 if __name__ == '__main__':
-
-    application = create_app(debug=True)
 
     quiet = '--quiet' in sys.argv[1:]
     with application.app_context():

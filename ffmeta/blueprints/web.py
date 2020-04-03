@@ -4,6 +4,7 @@ from collections import OrderedDict
 from sqlalchemy import or_, and_
 from flask import Blueprint, render_template, request, send_from_directory, send_file, make_response, current_app, jsonify
 
+from ffmeta import app
 from ffmeta.models import Response, Variable
 from ffmeta.models.db import session
 
@@ -28,46 +29,52 @@ filter_labels = [
     ])
 ]
 
-# Define domain-label map for each filter
-# This defines what values are valid to filter on for each filter group
-valid_filters = {
-    "topic": OrderedDict([
-        (row.topic, row.topic) for row in session.execute("SELECT topic FROM topics ORDER BY 1")
-    ]),
-    "subtopic": OrderedDict([
-        (row.subtopic, row.subtopic) for row in session.execute("SELECT subtopic FROM subtopics ORDER BY 1")
-    ]),
-    "wave": OrderedDict([
-        (row.name, row.name) for row in session.execute("SELECT name FROM wave ORDER BY order_id")
-    ]),
-    "respondent": OrderedDict([
-        (row.respondent, row.respondent) for row in session.execute("SELECT DISTINCT(respondent) FROM variable3 WHERE respondent IS NOT NULL ORDER BY 1")
-    ]),
-    "data_source": OrderedDict([
-        (row.data_source, row.data_source) for row in session.execute("SELECT DISTINCT(data_source) FROM variable3 WHERE data_source IS NOT NULL ORDER BY 1")
-    ]),
-    "data_type": OrderedDict([
-        (row.data_type, row.data_type) for row in session.execute("SELECT DISTINCT(data_type) FROM variable3 WHERE data_type IS NOT NULL ORDER BY 1")
-    ]),
-    "scale": OrderedDict([
-        (row.scale, row.scale) for row in session.execute("SELECT DISTINCT(scale) FROM variable3 WHERE scale IS NOT NULL ORDER BY 1")
-    ]),
-    "survey": OrderedDict([
-        (row.survey, row.survey) for row in session.execute("SELECT DISTINCT(survey) FROM variable3 WHERE survey IS NOT NULL ORDER BY 1")
-    ]),
-    "n_cities_asked": OrderedDict([
-        (row.n_cities_asked, row.n_cities_asked) for row in session.execute("SELECT DISTINCT(n_cities_asked) FROM variable3 WHERE n_cities_asked IS NOT NULL ORDER BY 1")
-    ]),
-    "focal_person": OrderedDict([
-        ("fp_fchild", "Focal Child"),
-        ("fp_mother", "Mother"),
-        ("fp_father", "Father"),
-        ("fp_PCG", "Primary Caregiver"),
-        ("fp_partner", "Partner"),
-        ("fp_other", "Other"),
-        ("fp_none", "None")
-    ])
-}
+valid_filters = {}
+
+
+@app.before_first_request
+def populate_valid_filters():
+    global valid_filters
+    # Define domain-label map for each filter
+    # This defines what values are valid to filter on for each filter group
+    valid_filters = {
+        "topic": OrderedDict([
+            (row.topic, row.topic) for row in session.execute("SELECT topic FROM topics ORDER BY 1")
+        ]),
+        "subtopic": OrderedDict([
+            (row.subtopic, row.subtopic) for row in session.execute("SELECT subtopic FROM subtopics ORDER BY 1")
+        ]),
+        "wave": OrderedDict([
+            (row.name, row.name) for row in session.execute("SELECT name FROM wave ORDER BY order_id")
+        ]),
+        "respondent": OrderedDict([
+            (row.respondent, row.respondent) for row in session.execute("SELECT DISTINCT(respondent) FROM variable3 WHERE respondent IS NOT NULL ORDER BY 1")
+        ]),
+        "data_source": OrderedDict([
+            (row.data_source, row.data_source) for row in session.execute("SELECT DISTINCT(data_source) FROM variable3 WHERE data_source IS NOT NULL ORDER BY 1")
+        ]),
+        "data_type": OrderedDict([
+            (row.data_type, row.data_type) for row in session.execute("SELECT DISTINCT(data_type) FROM variable3 WHERE data_type IS NOT NULL ORDER BY 1")
+        ]),
+        "scale": OrderedDict([
+            (row.scale, row.scale) for row in session.execute("SELECT DISTINCT(scale) FROM variable3 WHERE scale IS NOT NULL ORDER BY 1")
+        ]),
+        "survey": OrderedDict([
+            (row.survey, row.survey) for row in session.execute("SELECT DISTINCT(survey) FROM variable3 WHERE survey IS NOT NULL ORDER BY 1")
+        ]),
+        "n_cities_asked": OrderedDict([
+            (row.n_cities_asked, row.n_cities_asked) for row in session.execute("SELECT DISTINCT(n_cities_asked) FROM variable3 WHERE n_cities_asked IS NOT NULL ORDER BY 1")
+        ]),
+        "focal_person": OrderedDict([
+            ("fp_fchild", "Focal Child"),
+            ("fp_mother", "Mother"),
+            ("fp_father", "Father"),
+            ("fp_PCG", "Primary Caregiver"),
+            ("fp_partner", "Partner"),
+            ("fp_other", "Other"),
+            ("fp_none", "None")
+        ])
+    }
 
 
 @bp.route('/variables', methods=['GET', 'POST'])
