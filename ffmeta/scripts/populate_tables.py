@@ -1,9 +1,7 @@
 import sys
-import os.path
 import csv
 from sqlalchemy import Table
 
-import ffmeta
 from ffmeta.utils import metadata_file
 from ffmeta import create_app
 from ffmeta.models import Variable, Response
