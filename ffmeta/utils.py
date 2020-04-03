@@ -10,10 +10,6 @@ from ffmeta.models.db import session
 epoch_base = datetime.datetime.utcfromtimestamp(0)
 
 
-def epochalypse_now():
-    return int((datetime.datetime.now() - epoch_base).total_seconds())
-
-
 # Throw informative API errors as JSON
 def api_error(code=None, description=None):
     raise AppException(status_code=code, message=description)
