@@ -134,6 +134,8 @@
                             <tr>
                                 <th>Value</th>
                                 <th>Label</th>
+                                <th align="right">Frequency</th>
+                                <th align="right">Percent</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -141,6 +143,8 @@
                             <tr>
                                 <td>{{r.value}}</td>
                                 <td>{{r.label}}</td>
+                                <td align="center">{{r.freq}}</td>
+                                <td align="center">{{r.per}}</td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -188,7 +192,42 @@
                     </div>
                 </div>
             </div>
-
+            <!-- Variable metadata -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" href="#collapse_filter">
+                            Summary Statistics for {{var_data.name}}
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse_response" class="panel-collapse collapse in" role="tabpanel">
+                    {% if var_data.data_type =="Continuous" or var_data.data_type == "Ordered Categorical" %}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Sample Size</th>
+                                <th>Min</th>
+                                <th>Max</th>
+                                <th>Mean</th>
+                                <th>Standard Deviation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{var_data.obs}}</td>
+                                <td>{{var_data.min}}</td>
+                                <td>{{var_data.max}}</td>
+                                <td>{{var_data.avg}}</td>
+                                <td>{{var_data.std}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <h5 class="panel-body">{{var_data.name}} is not ordered, summary statistics not applicable</h5>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 </div>
