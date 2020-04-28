@@ -135,8 +135,9 @@ def var_page(varname=None):
     neighbors = session.query(Variable).filter(Variable.group_id == this_variable.group_id).filter(Variable.name != this_variable.name).all()
     responses = session.query(Response).filter(Response.name == varname).group_by(Response.label).all()
     if responses:
-        responses = sorted(responses, key=lambda x: x.freq, reverse=True)
-
+        responses = sorted(filter(lambda x: not x.value.startswith('-'), responses), key=lambda x: x.freq,
+                           reverse=True) + sorted(filter(lambda x: x.value.startswith('-'), responses),
+                                                  key=lambda x: x.freq, reverse=True)
 
     return make_response(render_template('web/variable.html', var_data=this_variable, neighbors=neighbors, responses=responses, filtermeta=valid_filters, filterlabs=filter_labels))
 
