@@ -74,6 +74,7 @@ class Variable(Base):
 
 
 class Response(Base):
+    """Define the object used to store possible responses to each variable"""
     __tablename__ = "response2"
 
     id = Column(Integer, primary_key=True)
@@ -84,6 +85,7 @@ class Response(Base):
     per = Column(Float)
 
     def __init__(self, name, label, value, freq, per):
+        """30 columns per row for of each of these features"""
         self.name = name
         self.label = label
         self.value = value

@@ -135,6 +135,8 @@ def var_page(varname=None):
     neighbors = session.query(Variable).filter(Variable.group_id == this_variable.group_id).filter(Variable.name != this_variable.name).all()
     responses = session.query(Response).filter(Response.name == varname).group_by(Response.label).all()
     if responses:
+        """Ordering the responses object to display non-negative responses (non-missing) first, ordered by frequency
+         followed by negative valued responses ordered by frequency"""
         responses = sorted(filter(lambda x: not x.value.startswith('-'), responses), key=lambda x: x.freq,
                            reverse=True) + sorted(filter(lambda x: x.value.startswith('-'), responses),
                                                   key=lambda x: x.freq, reverse=True)

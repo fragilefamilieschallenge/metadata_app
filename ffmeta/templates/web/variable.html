@@ -192,7 +192,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Variable metadata -->
+            <!-- Variable summary statistics -->
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
@@ -202,6 +202,7 @@
                     </h4>
                 </div>
                 <div id="collapse_response" class="panel-collapse collapse in" role="tabpanel">
+                    <!-- Only display these if the variable is ordered, data is missing otherwise -->
                     {% if var_data.data_type =="Continuous" or var_data.data_type == "Ordered Categorical" %}
                     <table class="table">
                         <thead>
