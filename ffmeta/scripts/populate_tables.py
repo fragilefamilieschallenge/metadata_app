@@ -111,8 +111,8 @@ def populate_tables(quiet=False):
 
         in_FFC_file = row['in_FFC_file']
         obs = row['obs']
-        min = row['min']
-        max = row['max']
+        min_ = row['min']
+        max_ = row['max']
         avg = row['avg']
         std = row['std']
 
@@ -148,8 +148,8 @@ def populate_tables(quiet=False):
             in_FFC_file=in_FFC_file,
 
             obs=obs,
-            min=min,
-            max=max,
+            min=min_,
+            max=max_,
             avg=avg,
             std=std
         )
