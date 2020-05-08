@@ -177,7 +177,7 @@
                                 <tbody>
                                     {% for neighbor in neighbors %}
                                     <tr>
-                                        <td><a type="button" class="btn btn-default" href="{{ url_for('web.var_page', varname = neighbor.name) }}">{{neighbor.name}}</button></td>
+                                        <td><a type="button" class="btn btn-default" href="{{ url_for('web.var_page', varname = neighbor.name) }}">{{neighbor.name}}</a></td>
                                         <td>{{neighbor.label}}</td>
                                         <td><small>{{neighbor.topics}}</small></td>
                                         <td><small>{{filtermeta.survey[neighbor.survey]}}</small></td>
