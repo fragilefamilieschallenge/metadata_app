@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Text, String, ForeignKey
+from sqlalchemy import Column, Integer, Text, String, ForeignKey, Float
 from sqlalchemy.orm import relationship
 
 from ffmeta.models.db import Base
@@ -41,6 +41,11 @@ class Variable(Base):
     subtopics = Column(String)
 
     in_FFC_file = Column(String)
+    obs = Column(Integer)
+    min = Column(Integer)
+    max = Column(Integer)
+    avg = Column(Float)
+    std = Column(Float)
 
     def __init__(self, **kwargs):
         for arg in kwargs:
@@ -69,17 +74,23 @@ class Variable(Base):
 
 
 class Response(Base):
+    """Define the object used to store possible responses to each variable"""
     __tablename__ = "response2"
 
     id = Column(Integer, primary_key=True)
     name = Column(Text, ForeignKey("variable3.name"))
     label = Column(Text)
     value = Column(Text)
+    freq = Column(Integer)
+    per = Column(Float)
 
-    def __init__(self, name, label, value):
+    def __init__(self, name, label, value, freq, per):
+        """30 columns per row for of each of these features"""
         self.name = name
         self.label = label
         self.value = value
+        self.freq = freq
+        self.per = per
 
     def __repr__(self):
         return "<Response %r>" % self.label
