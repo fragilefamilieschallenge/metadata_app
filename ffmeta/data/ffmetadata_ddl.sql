@@ -29,6 +29,9 @@ CREATE TABLE IF NOT EXISTS `group` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- Dumping database structure for FFMeta
+CREATE DATABASE IF NOT EXISTS `FFMeta` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `FFMeta`;
 -- Data exporting was unselected.
 -- Dumping structure for table FFMeta.measure
 DROP TABLE IF EXISTS `measure`;
