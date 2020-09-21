@@ -11,6 +11,10 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+-- Dumping database structure for FFMeta
+CREATE DATABASE IF NOT EXISTS `FFMeta` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `FFMeta`;
+
 -- Dumping structure for table FFMeta.data_type
 DROP TABLE IF EXISTS `data_type`;
 CREATE TABLE IF NOT EXISTS `data_type` (
