@@ -20,7 +20,7 @@ class APITestCase(TestCase):
         """
         Test a 'select' api endpoint by emulating a web request
         """
-        with app.test_request_context('/variable/ce3datey', subdomain='api'):
+        with app.test_request_context('/api/variable/ce3datey'):
             rv = app.preprocess_request()
             if rv is not None:
                 response = app.make_response(rv)
