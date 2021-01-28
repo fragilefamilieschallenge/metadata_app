@@ -138,8 +138,8 @@ def var_page(varname=None):
         """Ordering the responses object to display non-negative responses (non-missing) first, ordered by frequency
          followed by negative valued responses ordered by frequency"""
         responses = \
-            sorted(filter(lambda x: not x.value.startswith('-'), responses), key=lambda x: x.freq,reverse=True) + \
-            sorted(filter(lambda x: x.value.startswith('-'), responses), key=lambda x: x.freq, reverse=True)
+            sorted(filter(lambda x: not x.value.startswith('-'), responses), key=lambda x: x.freq or 0, reverse=True) + \
+            sorted(filter(lambda x: x.value.startswith('-'), responses), key=lambda x: x.freq or 0, reverse=True)
 
     return make_response(render_template('web/variable.html', var_data=this_variable, neighbors=neighbors, responses=responses, filtermeta=valid_filters, filterlabs=filter_labels))
 
