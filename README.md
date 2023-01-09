@@ -9,15 +9,15 @@ This app also provides access to the Fragile Families Metadata through HTTP endp
 Access to the 'raw' metadata CSV file is also provided. The latest CSV files are available in the 'data' folder of the ffmeta package.
 
 The web interface is available at:
-[http://metadata.fragilefamilies.princeton.edu](http://metadata.fragilefamilies.princeton.edu)
+[http://metadata.ffcws.princeton.edu](http://metadata.ffcws.princeton.edu)
 
 The API interface is made available at:
-[http://api.metadata.fragilefamilies.princeton.edu](http://api.metadata.fragilefamilies.princeton.edu)
+[http://api.metadata.ffcws.princeton.edu](http://api.metadata.ffcws.princeton.edu)
 
 ## API
 
 The Base URI for the API interface is:
-[http://api.metadata.fragilefamilies.princeton.edu](http://api.metadata.fragilefamilies.princeton.edu)
+[http://api.metadata.ffcws.princeton.edu](http://api.metadata.ffcws.princeton.edu)
 
 At this URI, we provide 2 API endpoints:
 
@@ -187,7 +187,7 @@ Unsurprisingly, it also works in a similar way for **AND** searches:
 
 However, for **AND** searches, you may find it easier to stick to the simpler syntax above.
 
-More complicated search criteria involving multiple and nested AND/OR filters can be constructed in the same way (i.e. by replacing a `filter` at any point with a dictionary of filters keyed by `and` or `or`). However, in these cases, you may find using the Interactive <a href="http://metadata.fragilefamilies.princeton.edu/search">Advanced Search Tool</a> helpful, which generates and displays the API call corresponding to your search.
+More complicated search criteria involving multiple and nested AND/OR filters can be constructed in the same way (i.e. by replacing a `filter` at any point with a dictionary of filters keyed by `and` or `or`). However, in these cases, you may find using the Interactive <a href="http://metadata.ffcws.princeton.edu/search">Advanced Search Tool</a> helpful, which generates and displays the API call corresponding to your search.
 
 ##### Notes
 

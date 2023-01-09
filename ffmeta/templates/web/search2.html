@@ -75,7 +75,7 @@ $(document).ready(function() {
             var q = JSON.stringify({"filters": filters});
             var q_encoded = encodeURIComponent(q);
             var _url = "{{ url_for('apiv2.search_variable') }}?details=1&q="+q_encoded;
-            var url = 'http://api.metadata.fragilefamilies.princeton.edu/variable?q='+q;
+            var url = 'http://api.metadata.ffcws.princeton.edu/variable?q='+q;
             $("code#code").text(url);
             $("a#code_a").attr('href', url).attr('target', '_blank');
 
@@ -134,7 +134,7 @@ $(document).ready(function() {
                 <h2>API Call</h2>
                 <hr>
                 <p>The API call for these search filters is:</p>
-                <a id="code_a" href='http://api.metadata.fragilefamilies.princeton.edu/variable?q={"filters":[]}'><code id="code">http://api.metadata.fragilefamilies.princeton.edu/variable?q={"filters":[]}</code></a>
+                <a id="code_a" href='http://api.metadata.ffcws.princeton.edu/variable?q={"filters":[]}'><code id="code">http://api.metadata.ffcws.princeton.edu/variable?q={"filters":[]}</code></a>
             </div>
         </div>
     </div>

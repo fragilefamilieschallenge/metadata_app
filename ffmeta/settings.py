@@ -1,5 +1,5 @@
 DEBUG = False
-SERVER_NAME = 'metadata.fragilefamilies.princeton.edu'
+SERVER_NAME = 'metadata.ffcws.princeton.edu'
 
 # Database credentials. The following are just placeholders - replace with real credentials.
 DB_USER = "travis"
