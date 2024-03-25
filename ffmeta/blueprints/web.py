@@ -71,6 +71,7 @@ def populate_valid_filters():
             ("fp_father", "Father"),
             ("fp_PCG", "Primary Caregiver"),
             ("fp_partner", "Partner"),
+            ("fp_G3Child", "G3 Child"),
             ("fp_other", "Other"),
             ("fp_none", "None")
         ])
@@ -262,7 +263,7 @@ def advanced_search():
                 label='Focal Person',
                 type='string',
                 input='select',
-                values={'Focal Child': 'Focal Child', 'Mother': 'Mother', 'Father': 'Father', 'Primary Caregiver': 'Primary Caregiver', 'Partner': 'Partner', 'Other': 'Other'},
+                values={'Focal Child': 'Focal Child', 'Mother': 'Mother', 'Father': 'Father', 'Primary Caregiver': 'Primary Caregiver', 'Partner': 'Partner', 'G3 Child': 'G3 Child', 'Other': 'Other'},
                 operators=['contains', 'is_null', 'is_not_null']
             ),
             dict(

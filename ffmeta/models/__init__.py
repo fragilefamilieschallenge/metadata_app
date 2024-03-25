@@ -62,6 +62,7 @@ class Variable(Base):
             'fp_father': 'Father',
             'fp_PCG': 'Primary Caregiver',
             'fp_partner': 'Partner',
+            'fp_G3Child': 'G3 Child',
             'fp_other': 'Other'
         }
 

@@ -90,6 +90,7 @@ def populate_tables(quiet=False):
             'fp_father': 'Father',
             'fp_PCG': 'Primary Caregiver',
             'fp_partner': 'Partner',
+            'fp_G3Child': 'G3 Child',
             'fp_other': 'Other'
         }
         l = locals()
