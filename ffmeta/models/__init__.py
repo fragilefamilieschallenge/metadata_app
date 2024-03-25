@@ -31,6 +31,7 @@ class Variable(Base):
     fp_father = Column(Integer)
     fp_PCG = Column(Integer)
     fp_partner = Column(Integer)
+    fp_G3Child = Column(Integer)
     fp_other = Column(Integer)
 
     focal_person = Column(Text)
@@ -62,6 +63,7 @@ class Variable(Base):
             'fp_father': 'Father',
             'fp_PCG': 'Primary Caregiver',
             'fp_partner': 'Partner',
+            'fp_G3Child': 'G3 Child',
             'fp_other': 'Other'
         }
 
