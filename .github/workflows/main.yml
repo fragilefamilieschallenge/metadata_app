@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  run_tests:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.9']
+      fail-fast: false
+
+    env:
+      DB_DATABASE: test_db
+      DB_USER: root
+      DB_PASSWORD: root
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Upgrade setuptools
+        run: |
+          pip3 install wheel --upgrade
+          pip3 install setuptools --upgrade
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install requirements
+        run: |
+          pip install -r requirements.txt
+
+      - name: Start MySQL
+        run: |
+          sudo /etc/init.d/mysql start
+          mysql -e "CREATE DATABASE IF NOT EXISTS $DB_DATABASE;" -u$DB_USER -p$DB_PASSWORD
+     
+      - name: Run pytest
+        run: |
+          pytest tests
