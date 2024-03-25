@@ -82,6 +82,7 @@ def populate_tables(quiet=False):
         fp_father = row['fp_father']
         fp_PCG = row['fp_PCG']
         fp_partner = row['fp_partner']
+        fp_G3Child = row['fp_G3Child']
         fp_other = row['fp_other']
 
         focal_person_dict = {
@@ -90,6 +91,7 @@ def populate_tables(quiet=False):
             'fp_father': 'Father',
             'fp_PCG': 'Primary Caregiver',
             'fp_partner': 'Partner',
+            'fp_G3Child': 'G3 Child',
             'fp_other': 'Other'
         }
         l = locals()
@@ -136,6 +138,7 @@ def populate_tables(quiet=False):
             fp_father=fp_father,
             fp_PCG=fp_PCG,
             fp_partner=fp_partner,
+            fp_G3Child=fp_G3Child,
             fp_other=fp_other,
 
             focal_person=focal_person,
