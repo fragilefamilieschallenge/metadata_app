@@ -138,6 +138,7 @@ def populate_tables(quiet=False):
             fp_father=fp_father,
             fp_PCG=fp_PCG,
             fp_partner=fp_partner,
+            fp_G3Child=fp_G3Child,
             fp_other=fp_other,
 
             focal_person=focal_person,

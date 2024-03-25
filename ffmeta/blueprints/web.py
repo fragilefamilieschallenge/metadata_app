@@ -104,6 +104,7 @@ def search():
                             Variable.fp_father == 0,
                             Variable.fp_PCG == 0,
                             Variable.fp_partner == 0,
+                            Variable.fp_G3Child == 0,
                             Variable.fp_other == 0
                         ))
                     else:
