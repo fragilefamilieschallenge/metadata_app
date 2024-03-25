@@ -194,6 +194,7 @@ CREATE TABLE IF NOT EXISTS `raw2` (
   `fp_father` tinyint(1) DEFAULT NULL,
   `fp_PCG` tinyint(1) DEFAULT NULL,
   `fp_partner` tinyint(1) DEFAULT NULL,
+  `fp_G3Child` tinyint(1) DEFAULT NULL,
   `fp_other` tinyint(1) DEFAULT NULL,
   `fp_none` tinyint(1) DEFAULT NULL,
   `survey` char(100) DEFAULT NULL,

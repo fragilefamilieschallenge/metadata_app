@@ -82,6 +82,7 @@ def populate_tables(quiet=False):
         fp_father = row['fp_father']
         fp_PCG = row['fp_PCG']
         fp_partner = row['fp_partner']
+        fp_G3Child = row['fp_G3Child']
         fp_other = row['fp_other']
 
         focal_person_dict = {
