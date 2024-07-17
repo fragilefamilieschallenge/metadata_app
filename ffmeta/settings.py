@@ -2,8 +2,8 @@ DEBUG = False
 SERVER_NAME = 'metadata.ffcws.princeton.edu'
 
 # Database credentials. The following are just placeholders - replace with real credentials.
-DB_USER = "travis"
-DB_PASS = ""
+DB_USER = "root"
+DB_PASS = "root"
 DB_HOST = "localhost"
 DB_PORT = 3306
 DB_NAME = "FFMeta"
