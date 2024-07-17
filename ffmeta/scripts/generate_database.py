@@ -17,7 +17,7 @@ def execute_script(conn, script_path, quiet=False):
                 statement_singleline = statement.replace('\n', '')
                 with conn.cursor() as cur:
                     try:
-                        cur.execute(statement)
+                        cur.execute(text(statement))
                     except:
                         print('ERROR: ' + statement_singleline)
                     else:

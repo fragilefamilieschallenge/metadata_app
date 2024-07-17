@@ -1,6 +1,7 @@
 import sys
 import csv
 from sqlalchemy import Table
+from sqlalchemy.sql import text
 
 from ffmeta import create_app
 application = create_app(debug=True)
@@ -19,7 +20,7 @@ def populate_raw(csv_path, quiet=False):
     ) != 'yes':
         return
 
-    session.execute("DELETE FROM `raw2`")
+    session.execute(text("DELETE FROM `raw2`"))
     raw_table = Table("raw2", Base.metadata, autoload=True)
     with open(csv_path, encoding='utf-8') as f:
         reader = csv.DictReader(f)
@@ -42,10 +43,10 @@ def populate_tables(quiet=False):
     ) != 'yes':
         return
 
-    session.execute('DELETE FROM `response2`')
-    session.execute('DELETE FROM `variable3`')
-    session.execute('DELETE FROM `topics`')
-    session.execute('DELETE FROM `wave`')
+    session.execute(text('DELETE FROM `response2`'))
+    session.execute(text('DELETE FROM `variable3`'))
+    session.execute(text('DELETE FROM `topics`'))
+    session.execute(text('DELETE FROM `wave`'))
 
     session.commit()
 
@@ -54,7 +55,7 @@ def populate_tables(quiet=False):
     distinct_waves = set()
 
     print('-----------\nPopulating variables\n-----------')
-    for i, row in enumerate(session.execute('SELECT * FROM `raw2`'), start=1):
+    for i, row in enumerate(session.execute(text('SELECT * FROM `raw2`')), start=1):
         name = row['new_name']
         if row['varlab'] is not None:
             label = row['varlab'].replace('"', "'")  # replacement logic carried over from old import function
@@ -185,10 +186,10 @@ def populate_tables(quiet=False):
             session.commit()
 
     for topic in distinct_topics:
-        session.execute('INSERT INTO topics (topic) VALUES ("{}")'.format(topic))
+        session.execute(text('INSERT INTO topics (topic) VALUES ("{}")'.format(topic)))
 
     for subtopic in distinct_subtopics:
-        session.execute('INSERT INTO subtopics (subtopic) VALUES ("{}")'.format(subtopic))
+        session.execute(text('INSERT INTO subtopics (subtopic) VALUES ("{}")'.format(subtopic)))
 
     for wave in distinct_waves:
         if wave is not None:
@@ -197,7 +198,7 @@ def populate_tables(quiet=False):
                 order_id = int(order_id)
             except ValueError:
                 order_id = 0
-            session.execute("INSERT INTO wave (name, order_id) VALUES ('{}', {})".format(wave, order_id))
+            session.execute(text("INSERT INTO wave (name, order_id) VALUES ('{}', {})".format(wave, order_id)))
 
     session.commit()
 
