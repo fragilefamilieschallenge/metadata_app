@@ -2,6 +2,7 @@ import os.path
 import pymysql.cursors
 import ffmeta
 from ffmeta import create_app
+from sqlalchemy.sql import text
 
 
 def execute_script(conn, script_path, quiet=False):
