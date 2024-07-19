@@ -21,7 +21,7 @@ def populate_raw(csv_path, quiet=False):
 
     session.execute("DELETE FROM `raw2`")
     raw_table = Table("raw2", Base.metadata, autoload=True)
-    with open(csv_path, encoding='utf-8') as f:
+    with open(csv_path, encoding='utf-8', errors='ignore') as f:
         reader = csv.DictReader(f)
         print('-----------\nPopulating raw table\n-----------')
         for i, _d in enumerate(reader, start=1):
