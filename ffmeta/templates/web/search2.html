@@ -57,9 +57,9 @@ $(document).ready(function() {
         type: 'GET',
         url: '{{ url_for("web.advanced_search") }}',
         dataType: 'json'
-    }).success(function(data) {
+    }).done(function(data) {
         qb.queryBuilder('setFilters', true, data.filters);
-    }).error(function(data) {
+    }).fail(function(data) {
         alert('error while setting filters');
     });
 
