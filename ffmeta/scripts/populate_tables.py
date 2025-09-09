@@ -1,6 +1,7 @@
 import sys
 import csv
-from sqlalchemy import Table
+from sqlalchemy import Table, insert
+from sqlalchemy.sql import text
 
 from ffmeta import create_app
 application = create_app(debug=True)
@@ -8,7 +9,7 @@ application = create_app(debug=True)
 # Defer imports till app has been created and configured
 from ffmeta.utils import metadata_file
 from ffmeta.models import Variable, Response
-from ffmeta.models.db import session, Base
+from ffmeta.models.db import session, Base, engine
 
 
 def populate_raw(csv_path, quiet=False):
@@ -19,15 +20,27 @@ def populate_raw(csv_path, quiet=False):
     ) != 'yes':
         return
 
-    session.execute("DELETE FROM `raw2`")
-    raw_table = Table("raw2", Base.metadata, autoload=True)
+    session.execute(text("DELETE FROM `raw2`"))
+    session.commit()
+
+    raw_table = Table("raw2", Base.metadata, autoload_with=engine)
     with open(csv_path, encoding='utf-8', errors='ignore') as f:
         reader = csv.DictReader(f)
         print('-----------\nPopulating raw table\n-----------')
         for i, _d in enumerate(reader, start=1):
             # Remove keys with empty values
             d = dict((k, _d[k]) for k in _d if _d[k] != '')
-            session.execute(raw_table.insert(), [d])
+            # Remove invalid keys
+            d = dict((k, d[k]) for k in d if k in raw_table.c.keys())
+
+            # certain fields have been known to have non-printable chars
+            fields_to_clean = ('qtext', 'probe')
+            for field in fields_to_clean:
+                if field in d:
+                    d[field] = d[field].encode("ascii", errors="ignore").decode()
+
+            res = session.execute(insert(raw_table).values(**d))
+
             if not i % 500:
                 print('Added {} rows.'.format(i))
                 session.commit()
@@ -42,10 +55,10 @@ def populate_tables(quiet=False):
     ) != 'yes':
         return
 
-    session.execute('DELETE FROM `response2`')
-    session.execute('DELETE FROM `variable3`')
-    session.execute('DELETE FROM `topics`')
-    session.execute('DELETE FROM `wave`')
+    session.execute(text('DELETE FROM `response2`'))
+    session.execute(text('DELETE FROM `variable3`'))
+    session.execute(text('DELETE FROM `topics`'))
+    session.execute(text('DELETE FROM `wave`'))
 
     session.commit()
 
@@ -54,7 +67,8 @@ def populate_tables(quiet=False):
     distinct_waves = set()
 
     print('-----------\nPopulating variables\n-----------')
-    for i, row in enumerate(session.execute('SELECT * FROM `raw2`'), start=1):
+    for i, row in enumerate(session.execute(text('SELECT * FROM `raw2`')), start=1):
+        row = row._mapping
         name = row['new_name']
         if row['varlab'] is not None:
             label = row['varlab'].replace('"', "'")  # replacement logic carried over from old import function
@@ -96,6 +110,7 @@ def populate_tables(quiet=False):
         }
         l = locals()
         focal_person = ', '.join(v for k, v in focal_person_dict.items() if l[k])
+        focal_person = focal_person[:50]  # todo
 
         topics = row['topics']
         if topics is not None:
@@ -185,10 +200,10 @@ def populate_tables(quiet=False):
             session.commit()
 
     for topic in distinct_topics:
-        session.execute('INSERT INTO topics (topic) VALUES ("{}")'.format(topic))
+        session.execute(text('INSERT INTO topics (topic) VALUES ("{}")'.format(topic)))
 
     for subtopic in distinct_subtopics:
-        session.execute('INSERT INTO subtopics (subtopic) VALUES ("{}")'.format(subtopic))
+        session.execute(text('INSERT INTO subtopics (subtopic) VALUES ("{}")'.format(subtopic)))
 
     for wave in distinct_waves:
         if wave is not None:
@@ -197,7 +212,7 @@ def populate_tables(quiet=False):
                 order_id = int(order_id)
             except ValueError:
                 order_id = 0
-            session.execute("INSERT INTO wave (name, order_id) VALUES ('{}', {})".format(wave, order_id))
+            session.execute(text("INSERT INTO wave (name, order_id) VALUES ('{}', {})".format(wave, order_id)))
 
     session.commit()
 
