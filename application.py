@@ -13,4 +13,4 @@ if __name__ == '__main__':
     handler.setLevel(logging.INFO)
     application.logger.addHandler(handler)
     application.logger.setLevel(logging.INFO)
-    application.run(threaded=True)
+    application.run(threaded=True, host='127.0.0.1', port=5000)
