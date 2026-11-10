@@ -339,7 +339,7 @@ CREATE TABLE IF NOT EXISTS `variable3` (
   `focal_person` varchar(255) DEFAULT NULL,
   `survey` char(100) DEFAULT NULL,
   `data_type` char(30) DEFAULT NULL,
-  `wave` char(10) DEFAULT NULL,
+  `wave` char(30) DEFAULT NULL,
   `topics` char(200) DEFAULT NULL COMMENT 'Calculated field - concatenation of topic1/topic2 suitable for search results.',
   `subtopics` char(200) DEFAULT NULL COMMENT 'Calculated field - concatenation of subtopic1/subtopic2 suitable for search results.',
   `in_FFC_file` char(20) DEFAULT NULL,
