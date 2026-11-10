@@ -97,6 +97,7 @@ def populate_tables(quiet=False):
         fp_PCG = row['fp_PCG']
         fp_partner = row['fp_partner']
         fp_G3Child = row['fp_G3Child']
+        fp_G3coparent = row['fp_G3coparent']
         fp_other = row['fp_other']
 
         focal_person_dict = {
@@ -106,11 +107,11 @@ def populate_tables(quiet=False):
             'fp_PCG': 'Primary Caregiver',
             'fp_partner': 'Partner',
             'fp_G3Child': 'G3 Child',
+            'fp_G3coparent': 'G3 Coparent',
             'fp_other': 'Other'
         }
         l = locals()
         focal_person = ', '.join(v for k, v in focal_person_dict.items() if l[k])
-        focal_person = focal_person[:50]  # todo
 
         topics = row['topics']
         if topics is not None:
@@ -154,6 +155,7 @@ def populate_tables(quiet=False):
             fp_PCG=fp_PCG,
             fp_partner=fp_partner,
             fp_G3Child=fp_G3Child,
+            fp_G3coparent=fp_G3coparent,
             fp_other=fp_other,
 
             focal_person=focal_person,

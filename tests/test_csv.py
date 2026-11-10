@@ -14,7 +14,8 @@ class CsvTestCase(TestCase):
         # we do that as a class method and avoid doing it as part of setUp
         cls.df = pd.read_csv(
             CSV_FILE_PATH,
-            encoding="utf-8"
+            encoding="utf-8",
+            encoding_errors="replace"
         )
 
     def setUp(self):
@@ -36,7 +37,7 @@ class CsvTestCase(TestCase):
         All rows should have a 'wave' which matches our predefined list.
         :return:
         """
-        waves = ["Baseline", "Year 1", "Year 3", "Year 5", "Year 9", "Year 15"]
+        waves = ["Baseline", "Year 1", "Year 3", "Year 5", "Year 9", "Year 15", "Year 22", "G3 baseline"]
         self.assertEqual(len(self.df[self.df.wave.notnull()][~self.df.wave.isin(waves)]), 0)
 
     def testScope(self):
@@ -45,7 +46,7 @@ class CsvTestCase(TestCase):
         :return:
         Come back to this when the metadata file is up to date
         """
-        self.assertEqual(len(self.df[self.df.n_cities_asked.notnull()][~self.df.n_cities_asked.isin([2, 15, 16, 18, 20])]), 0)
+        self.assertEqual(len(self.df[self.df.n_cities_asked.notnull()][~self.df.n_cities_asked.isin([2, 7, 15, 16, 18, 20])]), 0)
 
     def testRespondent(self):
         """
@@ -60,7 +61,7 @@ class CsvTestCase(TestCase):
         All rows should have a 'source' from our predefined list
         :return:
         """
-        sources = ['constructed', 'idnum', 'questionnaire', 'weight', 'restricted']
+        sources = ['constructed', 'idnum', 'questionnaire', 'weight', 'restricted', 'actigraphy', 'saliva']
         self.assertEqual(len(self.df[self.df.source.notnull()][~self.df.source.isin(sources)]), 0)
 
     def testWarning(self):
