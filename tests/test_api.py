@@ -1,5 +1,6 @@
 from unittest import TestCase
 from flask import json
+from sqlalchemy.sql import text
 
 from ffmeta import create_app
 from ffmeta.blueprints.api2 import select, search
@@ -69,7 +70,7 @@ class APITestCase(TestCase):
         """
         with app.app_context():
             results = search({'name': 'wave', 'op': 'eq', 'val': 3}, as_json=False)
-            expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable3 WHERE wave=3'))[0]
+            expected_n_results = next(session.execute(text('SELECT COUNT(*) FROM variable3 WHERE wave=3')))[0]
         self.assertEqual(len(results), expected_n_results)
 
     def testSearchGt(self):
@@ -78,7 +79,7 @@ class APITestCase(TestCase):
         """
         with app.app_context():
             results = search({'name': 'wave', 'op': 'gt', 'val': 3}, as_json=False)
-            expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable3 WHERE wave>3'))[0]
+            expected_n_results = next(session.execute(text('SELECT COUNT(*) FROM variable3 WHERE wave>3')))[0]
             self.assertEqual(len(results), expected_n_results)
 
     def testSearchIn(self):
@@ -87,7 +88,7 @@ class APITestCase(TestCase):
         """
         with app.app_context():
             results = search({'name': 'wave', 'op': 'in', 'val': (4, 5)}, as_json=False)
-            expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable3 WHERE wave IN (4, 5)'))[0]
+            expected_n_results = next(session.execute(text('SELECT COUNT(*) FROM variable3 WHERE wave IN (4, 5)')))[0]
             self.assertEqual(len(results), expected_n_results)
 
     def testSearchNotIn(self):
@@ -96,7 +97,7 @@ class APITestCase(TestCase):
         """
         with app.app_context():
             results = search({'name': 'wave', 'op': 'not_in', 'val': (4, 5)}, as_json=False)
-            expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable3 WHERE wave NOT IN (4, 5)'))[0]
+            expected_n_results = next(session.execute(text('SELECT COUNT(*) FROM variable3 WHERE wave NOT IN (4, 5)')))[0]
             self.assertEqual(len(results), expected_n_results)
 
     def testSearchIsNull(self):
@@ -105,7 +106,7 @@ class APITestCase(TestCase):
         """
         with app.app_context():
             results = search({'name': 'qtext', 'op': 'is_null'}, as_json=False)
-            expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable3 WHERE qtext IS NULL'))[0]
+            expected_n_results = next(session.execute(text('SELECT COUNT(*) FROM variable3 WHERE qtext IS NULL')))[0]
             self.assertEqual(len(results), expected_n_results)
 
     def testSearchIsNotNull(self):
@@ -114,7 +115,7 @@ class APITestCase(TestCase):
         """
         with app.app_context():
             results = search({'name': 'qtext', 'op': 'is_not_null'}, as_json=False)
-            expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable3 WHERE qtext IS NOT NULL'))[0]
+            expected_n_results = next(session.execute(text('SELECT COUNT(*) FROM variable3 WHERE qtext IS NOT NULL')))[0]
             self.assertEqual(len(results), expected_n_results)
 
     def testSearchMultiple(self):
@@ -129,7 +130,7 @@ class APITestCase(TestCase):
                 ],
                 as_json=False
             )
-            expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable3 WHERE wave>3 AND name LIKE "%z%"'))[0]
+            expected_n_results = next(session.execute(text('SELECT COUNT(*) FROM variable3 WHERE wave>3 AND name LIKE "%z%"')))[0]
             self.assertEqual(len(results), expected_n_results)
 
     def testSearchNested(self):
@@ -147,5 +148,5 @@ class APITestCase(TestCase):
                 ],
                 as_json=False
             )
-            expected_n_results = next(session.execute('SELECT COUNT(*) FROM variable3 WHERE (wave<=3 OR name LIKE "%z%") AND data_source="constructed"'))[0]
+            expected_n_results = next(session.execute(text('SELECT COUNT(*) FROM variable3 WHERE (wave<=3 OR name LIKE "%z%") AND data_source="constructed"')))[0]
             self.assertEqual(len(results), expected_n_results)
