@@ -11,11 +11,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping database structure for FFMeta
-CREATE DATABASE IF NOT EXISTS `FFMeta` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `FFMeta`;
-
--- Dumping structure for table FFMeta.data_type
+-- Dumping structure for table data_type
 DROP TABLE IF EXISTS `data_type`;
 CREATE TABLE IF NOT EXISTS `data_type` (
   `id` char(30) NOT NULL,
@@ -24,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `data_type` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
--- Dumping structure for table FFMeta.group
+-- Dumping structure for table group
 DROP TABLE IF EXISTS `group`;
 CREATE TABLE IF NOT EXISTS `group` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -34,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `group` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
--- Dumping structure for table FFMeta.measure
+-- Dumping structure for table measure
 DROP TABLE IF EXISTS `measure`;
 CREATE TABLE IF NOT EXISTS `measure` (
   `id` tinyint(1) NOT NULL,
@@ -43,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `measure` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
--- Dumping structure for table FFMeta.raw2
+-- Dumping structure for table raw2
 DROP TABLE IF EXISTS `raw2`;
 CREATE TABLE IF NOT EXISTS `raw2` (
   `new_name` char(40) DEFAULT NULL,
@@ -205,7 +201,7 @@ CREATE TABLE IF NOT EXISTS `raw2` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
--- Dumping structure for table FFMeta.response2
+-- Dumping structure for table response2
 DROP TABLE IF EXISTS `response2`;
 CREATE TABLE IF NOT EXISTS `response2` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -220,7 +216,7 @@ CREATE TABLE IF NOT EXISTS `response2` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3843497 DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
--- Dumping structure for table FFMeta.subtopics
+-- Dumping structure for table subtopics
 DROP TABLE IF EXISTS `subtopics`;
 CREATE TABLE IF NOT EXISTS `subtopics` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -229,7 +225,7 @@ CREATE TABLE IF NOT EXISTS `subtopics` (
 ) ENGINE=InnoDB AUTO_INCREMENT=783 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
--- Dumping structure for table FFMeta.survey
+-- Dumping structure for table survey
 DROP TABLE IF EXISTS `survey`;
 CREATE TABLE IF NOT EXISTS `survey` (
   `id` char(1) CHARACTER SET latin1 NOT NULL,
@@ -238,7 +234,7 @@ CREATE TABLE IF NOT EXISTS `survey` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
--- Dumping structure for table FFMeta.topic
+-- Dumping structure for table topic
 DROP TABLE IF EXISTS `topic`;
 CREATE TABLE IF NOT EXISTS `topic` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -251,7 +247,7 @@ CREATE TABLE IF NOT EXISTS `topic` (
 ) ENGINE=InnoDB AUTO_INCREMENT=131070 DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
--- Dumping structure for table FFMeta.topics
+-- Dumping structure for table topics
 DROP TABLE IF EXISTS `topics`;
 CREATE TABLE IF NOT EXISTS `topics` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -260,7 +256,7 @@ CREATE TABLE IF NOT EXISTS `topics` (
 ) ENGINE=InnoDB AUTO_INCREMENT=246 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
--- Dumping structure for table FFMeta.umbrella
+-- Dumping structure for table umbrella
 DROP TABLE IF EXISTS `umbrella`;
 CREATE TABLE IF NOT EXISTS `umbrella` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -272,7 +268,7 @@ CREATE TABLE IF NOT EXISTS `umbrella` (
 ) ENGINE=InnoDB AUTO_INCREMENT=347 DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
--- Dumping structure for table FFMeta.variable
+-- Dumping structure for table variable
 DROP TABLE IF EXISTS `variable`;
 CREATE TABLE IF NOT EXISTS `variable` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -315,7 +311,7 @@ CREATE TABLE IF NOT EXISTS `variable` (
 ) ENGINE=InnoDB AUTO_INCREMENT=102286 DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
--- Dumping structure for table FFMeta.variable3
+-- Dumping structure for table variable3
 DROP TABLE IF EXISTS `variable3`;
 CREATE TABLE IF NOT EXISTS `variable3` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -366,7 +362,7 @@ CREATE TABLE IF NOT EXISTS `variable3` (
 ) ENGINE=InnoDB AUTO_INCREMENT=348995 DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
--- Dumping structure for table FFMeta.variable_bk
+-- Dumping structure for table variable_bk
 DROP TABLE IF EXISTS `variable_bk`;
 CREATE TABLE IF NOT EXISTS `variable_bk` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -387,7 +383,7 @@ CREATE TABLE IF NOT EXISTS `variable_bk` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
--- Dumping structure for table FFMeta.wave
+-- Dumping structure for table wave
 DROP TABLE IF EXISTS `wave`;
 CREATE TABLE IF NOT EXISTS `wave` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

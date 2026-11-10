@@ -4,12 +4,17 @@ import ffmeta
 from ffmeta import create_app
 
 
-def execute_script(conn, script_path, quiet=False):
+def execute_script(conn, script_path, db_name, quiet=False):
     if not quiet and input(
-        f'Are you sure you want to execute the script at {script_path}? '
+        f'Are you sure you want to execute the script at {script_path} against database {db_name}? '
         'This may lead to loss of data! (yes|no) '
     ) != 'yes':
         return
+
+    # The DDL script is database-agnostic; create/select the configured database here
+    with conn.cursor() as cur:
+        cur.execute(f'CREATE DATABASE IF NOT EXISTS `{db_name}` DEFAULT CHARACTER SET utf8')
+    conn.select_db(db_name)
 
     with open(script_path, 'r') as f:
         for statement in f.read().split(';'):
@@ -38,5 +43,6 @@ if __name__ == '__main__':
     DB_PASS = url.password
     DB_NAME = url.database
 
-    conn = pymysql.connect(host=DB_HOST, port=DB_PORT, user=DB_USER, password=DB_PASS, db=DB_NAME)
-    execute_script(conn, os.path.join(os.path.dirname(ffmeta.__file__), 'data', 'ffmetadata_ddl.sql'))
+    # Connect without selecting a database, since it may not exist yet
+    conn = pymysql.connect(host=DB_HOST, port=DB_PORT, user=DB_USER, password=DB_PASS)
+    execute_script(conn, os.path.join(os.path.dirname(ffmeta.__file__), 'data', 'ffmetadata_ddl.sql'), DB_NAME)
